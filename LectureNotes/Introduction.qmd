@@ -1,0 +1,352 @@
+---
+title: "Background Notes for ECON20222"
+format: 
+  html:
+    toc: true
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE)
+
+library(webexercises)
+```
+
+# Introduction
+
+These are the background notes are for ECON20222 Quantitative methods. You are assumed to have taken a first year course in statistics and therefore we assume that you are familiar with descriptive statistics, statistical inference (hypothesis testing and confidence intervals) and the basics of regression analysis as a descriptive tool as well as basic inference on regression parameters.
+
+These notes establish the methodology/econometrics (algebra/notation/terminology) that we will use throughout the unit. 
+
+These background notes are essential reading and are examinable.  The notes and slides go side-by-side, except that these notes focus solely on the methodology/econometrics, whereas the slides also refer to the empirical examples estimated using R. The book \emph{Mastering 'Metrics} by Angrist and Pischke (2015) gives a flavour of where the subject is currently at, but is too detailed for what we want to cover.  The same topics are covered in Cunningham's text \emph{Causal Inference: The MixTape}, which
+can be accessed online [here](https://mixtape.scunning.com/index.html). The notes are taken mainly from another well-known econometrics text, \emph{Introductory Econometrics - A Modern Approach}, by Wooldridge (2018).
+
+I am grateful to my colleague Martyn Andrews on whose material these notes are based on.
+
+# The simple regression model
+
+
+## The general case
+
+
+We start with the \textbf{simple linear regression model}
+
+$$
+y = \alpha + \beta x + u. 
+$$ {#eq-erikson}
+
+The sample version of this model is written:
+
+$$
+y_i = \alpha + \beta x_i + u_i, 
+$$
+
+as @eq-erikson  holds for each observation $i$.
+This notation emphasises that we have a sample of data at hand:
+
+$$
+\{(y_i, x_i): i=1,\dots,n \}.
+$$
+
+The subscript is useful as it reflects the type of data we are using, eg subscript $i$ is used for cross-section data, $t$ is used for time-series data, and $it$ is used for panel data or repeated cross-sections.  The subscript is also known as **the unit of observation*}**.  
+
+::: {.callout-note}
+### Card and Krueger - Example
+
+In the Card and Krueger example  $y_{it}, x_{it}$ are $EMPFT_{it}$ (number of full-time employees) and $WAGE_{it}$ (the starting wage) and the Card-Krueger dataset is an example of microeconometric panel data.  The unit of observation is a fast/food/outlet ($i$)--half-year ($t$).\footnote{Recall that $t=1$ refers to Feb/Mar 1992 and $t=2$ refers to Nov/Dec 1992.}
+:::
+
+By contrast to $(y_i, x_i)$, $u_i$ is unobserved, but, like $(y_i,x_i)$, $u_i$ is a random variable with mean, variance, etc.
+
+The ultimate objective is to estimate the parameters $\alpha$ and $\beta$ using some econometric estimator. The most well-known is OLS. To do this we need 2 **assumptions** because there are 2 unknown parameters $\alpha$ and $\beta$. They are:
+
+$$
+E(u)     = 0~(A1)
+$$
+
+$$
+E(u | x) = 0 ~ (A2).
+$$
+These are often called \textbf{moment conditions} or \textbf{exogeneity assumptions}.  The latter Assumption A2 is absolutely crucial throughout everything we do in empirical economics.  It is best to think of $E(u | x)$ as the same as $E(u x)$.  If the assumption is true, $E(u x)=0$, then it follows that $Cov(u x)=0$.  In words, $u$ and $x$ are said to be \textbf{uncorrelated}.  What this means and whether it is true (or otherwise) is a crucial and recurring theme in this course.
+
+
+Next, from @eq-erikson
+
+$$
+\begin{align*}
+E(y|x) &= E(\alpha |x) + E(\beta x |x) + E(u|x) \\
+        &= \alpha + \beta x + E(u|x)
+\end{align*}
+$$
+
+by **conditioning on $x$*. We now use A2 to define the **population regression function** or **conditional expectation function**:
+
+$$
+E(y|x) = \alpha + \beta x.
+$$
+
+When this is estimated, it is written
+
+$$
+\hat{y}_i = \hat{\alpha} + \hat{\beta} x_i.
+$$
+
+and is known as the **sample regression function** or **regression line** or **line of best fit**. It is often written out in full, with numbers in brackets underneath the numerical estimates. These are called standard errors (more below).  The estimate and its standard error allow us to test various hypotheses about the parameters (typically on $\beta$).
+
+From this sample regression function,
+
+$$
+\hat{\beta} = \Delta \hat{y}_i/ \Delta x_i,
+$$
+
+and so the correct way to interpret $\hat{beta}$ is the resulting change in $\hat{y}_i$ for a one unit change in $x_i$. If $y$ is specified as a logged variable in @eq-erikson, $\log y_i = \alpha + \beta x_i + u_i$, we have
+
+$$
+100\hat{\beta} \approx 100 \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i}
+\equiv \frac{\%\Delta \hat{y}_i}{\Delta x_i},
+$$
+
+which means, if we muliply $\hat{beta}$ by 100, the **percentage point** change in $y$ for a one-unit change in $x$.
+
+
+::: {.callout-warning}
+### Precentage point v. percentage change
+
+This is not a the **percentage change in $y$**. For instance, if the unemployment rate increases from 4% to 6% that is a 2% point increase but a 50% percent increase in the unemployment rate.
+
+:::
+
+If both $y$ and $x$ are specified as logged variables in @eq-erikson, $\log y_i = \alpha + \beta \log x_i + u_i$, we have
+
+$$
+\hat{\beta} \approx \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i/x_i}
+\equiv \frac{\%\Delta \hat{y}_i}{\%\Delta x_i},
+$$
+
+which means that $\hat{beta}$ is the percentage point change in $y$ for a one percentage point change in $x$.  Now $\hat{\beta}$ is interpreted as an **elasticity**. Elasticities are very useful because they are unit-free. (See the appendix to this section for another unit-free interpretation.)
+
+## Derivation of OLS Estimators
+
+We now derive the Ordinary Least Squares or **OLS estimators** $\hat{\alpha}$ and $\hat{\beta}$, using A1 and A2. These are formulae for $\hat{\alpha}$ and $\hat{\beta}$ which only involve quantities that can be computed from a sample of data.  First, we form expectations of both sides of @eq-erikson:
+
+$$
+\begin{align*}
+E(y) &= E(\alpha) + E(\beta x) + E(u), \\
+      &= \alpha + \beta E(x) + E(u),
+\end{align*}
+$$
+
+and then use A1:
+
+$$
+E(y) = \alpha + \beta E(x).
+$$ {#eq-alli}
+
+Subtracting from @eq-erikson:
+
+$$
+y-E(y) = \beta [x-E(x)] + u.
+$$
+Now multiply by $x-E(x)$
+
+$$
+[y-E(y)][x-E(x)] = \beta [x-E(x)]^2 + u[x-E(x)].
+$$
+
+and form expectations of each term
+
+$$
+Cov(y,x) = \beta~Var(x) + Cov(u,x).
+$$
+
+We now use Assumption A2, $Cov(u,x)=0$, and so obtain the following expression for the OLS estimator $\beta$:
+
+$$
+\beta = \frac{Cov(y,x)}{Var(x)}.
+$$ {#eq-kane}
+
+To compute this, we replace population variances and covariances by their sample equivalents (the **analogy principle**), and so obtain the **sample estimator** (unique for any given sample):
+
+$$
+\hat{\beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
+\frac{\Sigma_i (y_i-\bar{y})(x_i-\bar{x})/n}{\Sigma_i (x_i-\bar{x})^2/n} =
+\frac{\Sigma_i (y_i-\bar{y})(x_i-\bar{x})  }{\Sigma_i (x_i-\bar{x})^2  },
+$$ {#eq-harry}
+
+where $\bar{x} = \frac{1}{n} \Sigma_i x_i$ and $\bar{y} = \frac{1}{n} \Sigma_i y_i$ are the usual sample means. All this assumes that $\widehat{Var(x)}>0$, that is $x$ exhibits some variation in the sample. Finally, from @eq-alli, we can write:
+
+$$
+\alpha = E(y)- \beta E(x),
+$$
+
+which we compute using @eq-kane} and sample means $\bar{y}$ and $\bar{x}$:
+
+$$
+\hat{\alpha} = \bar{y} - \hat{\beta} \bar{x}.
+$$
+
+::: {.callout-note}
+
+### Regression without explanatory variable x
+
+When the model does not contain $x$, ie $\beta=0$, then $\alpha = E(y)$ and $\hat{\alpha} = \bar{y}$.
+
+:::
+
+The expression for the OLS estimator $\hat{\beta}$ in @eq-harry is key.  The corresponding key assumption is A2, and is said to **identify** the underlying population parameter $\beta$.  (A1 is less important, but is needed to derive the expression for $\hat{\alpha}$.)
+
+Next, we define $\hat{u}_i \equiv y_i-\hat{y}_i$ and this **residual** is computed for every observation $i$.  By construction,
+
+$$
+\Sigma_i \hat{u}_i=0 \qquad \Sigma_i \hat{u}_i x_i =0,
+$$
+
+and this is because they match Assumptions A1/A2:  $E(u) = E(ux)=0$. Whilst this makes intuitive sense, the obvious problem is that OLS imposes $\Sigma_i \hat{u}_i x_i =0$ even though A2 may not be true.
+
+An alternative and identical way of deriving $\hat{\alpha}, \hat{\beta}$ is to minimize
+
+$$
+\Sigma_i \hat{u}_i^2 \equiv \Sigma_i (y_i-\hat{y}_i)^2 =
+\Sigma_i (y_i - \hat{\alpha} - \hat{\beta} x_i)^2.
+$$
+
+Whilst this is less appealing, it does convey the idea of fitting a line as closely as possible to a scatter-plot of data and it is where OLS gets its name from.  We omit the details of this derivation. 
+
+We now give an intuitive explanation as to when $\hat{beta}$ can be said to be **unbiased**. First, from @eq-harry
+
+$$
+\begin{multline*}
+\hat{beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
+\frac{\widehat{Cov}(\alpha + \beta x +u,x)}{\widehat{Var}(x)} \quad
+\text{[using @eq-erikson]} = \\
+\frac{\beta \widehat{Cov}(x,x) + \widehat{Cov}(u,x)}{\widehat{Var}(x)} \quad
+\text{[as $\widehat{Cov}(\alpha,x) \equiv 0$ ]}
+=\beta + \frac{\widehat{Cov}(u,x)}{\widehat{Var}(x)},
+\end{multline*}
+$$
+
+[as $\widehat{Cov}(x,x) \equiv \widehat{Var}(x)$]. In one dataset we cannot know whether $\widehat{Cov}(u,x)$ is zero or otherwise. The key assumption is that $E [\widehat{Cov}(u,x)] =Cov(u,x)=0$ when averaging over all possible datasets that nature could have generated, not just the one dataset we end up with. This rather subtle argument means that $\hat{\beta}$ is unbiased
+
+
+
+$$
+E(\hat{beta}) =
+\beta + \frac{E [\widehat{Cov}(u,x)]}{E [\widehat{Var}(x)]} =
+\beta + \frac{Cov(u,x)}{Var(x)} = \beta.
+$$ {#eq-danny_danny}
+
+::: {.callout-caution}
+Normally $E(X/Y) \neq E(X)/E(Y)$, but here it turns out one can write $E[\frac{\widehat{Cov}(u,x)}{\widehat{Var}(x)}] = \frac{E[\widehat{Cov}(u,x)]}{E [\widehat{Var}(x)]}$.
+:::
+
+In words, over all possible datasets, the average value of the estimator $\hat{\beta}$ is the true $\beta$, __providing__ we can assume $Cov(u,x)=0$.  To slightly misquote Angrist and Pischke (2015, p.35):
+
+\begin{quotation}
+The sample estimate should not be expected to be bang on the corresponding population value: the sample estimate in one sample might be too big, while in other samples it will be too small. Unbiasedness tells us that these deviations are not systematically up or down; rather, in repeated samples they average out to zero.
+\end{quotation}
+
+Assumption A2 is absolutely crucial in all applied economics.  As $u$ is fundamentally unobserved, we cannot look at the data to examine/test/check whether it is true or not.  We can only use common sense/reasoned argument/economic theory to establish that Assumption A2 is true.  Applied economists spend a lot of time arguing about these things.  In a later section on endogeneity, we document three common situations when $Cov(u,x)$ often is not zero.  In later sections, we discuss what we can do about it, which is to use other estimators than OLS.  If $Cov(u,x)\neq 0$, then $x$ is said to be **endogenous**.
+
+Three important consequences of believing A2 to be true are:
+
+* $x$ is said to be **exogenous** (this is an econometric definition, more general than that used by economists);
+* the OLS estimator $\hat{\beta}$ is said to be **unbiased**; and
+* the effect of $x$ on $y$ (given by the OLS estimate $\hat{beta}$) is said to be **causal**  (rather than just a correlation).
+
+Finding causal relationships is often seen as the "holy grail" of applied economists.
+
+::: {callout-note}
+### Unbiasedness and Consistency
+
+A property related to **unbiasedness** is **consistency**, which is unbiasedness, but only in "large" samples.
+:::
+
+
+
+::: {callout-note}
+### Estimating regression models in R
+
+The above instructions for estimating regression models are implemented in R via the function `lm(y~x)`.
+:::
+
+## Regression Inference
+
+As you have seen from the discussion above we can use sample statistics like $\widehat{Cov}(y,x)$, $\widehat{Var}(y)$, $\bar{y}$ and $\bar{x}$ to obtain sample estimates for $\hat{\beta}$ and $\hat{\alpha}$. This immediately implies that for different samples we would obtain different estimates for $\hat{\beta}$ and $\hat{\alpha}$ or in other words, these are actually random variables and the values we obtain are draws from these random variables. 
+
+We wish to learn from the estimated values for $\hat{\beta}$ and $\hat{\alpha}$ something about the true (and assumed fixed) population values $\beta$ and $\alpha$. The process of using $\hat{\beta}$ and $\hat{\alpha}$ to learn something about the  population values $\beta$ and $\alpha$ is called statistical inference.
+
+::: {.callout-important}
+### What does it mean when $\hat{\beta}$ and $\hat{\alpha}$ are random variables?
+
+First recall what the difference between a random variable and a realisation of a random variable is. Take a dice. The outcome of rolling the dice ones is a random variable. If it is a fair dice then we actually know exactly how to describe this random variable. It is fully characterised by the distribution that puts a probability of $1/6$ on each of the possible outcomes 1 to 6.
+
+Once you rolled the dice you have a particular outcome, say a 4. 
+
+Once you calculated, say a $\hat{\beta} = 0.34$ that is equivalent of the 4, i.e. one particular outcome. However, we are not interested in a particular outcome of that sample. This is what inference is about.
+:::
+
+In econometrics, for every estimator like $\hat{\beta}$, there is an associated standard error, called $\text{se}(\hat{\beta})$. It captures the so-called **sampling variation** which comes about because a second, third, fourth sample etc would generate a different $\hat{\beta}$ each time. This pair of numbers, $\hat{\beta}$ and $\text{se}(\hat{beta})$, allows us to conduct **hypothesis tests** about $\beta$, written:
+
+$$
+H_0: \beta = b,
+$$
+
+where $b$ is often, but not always, zero. If the null hypothesis is true, then the quantity
+
+$$
+\frac{\hat{\beta}-b}{\text{se}(\hat{\beta})} \sim t(n-2).
+$$
+
+This says that the LHS, the so-called the **test statistic**, has a certain statistical distribution---hence the "$\sim$" symbol---on the RHS. Here we have a $t$ distribution with $n-2$ degrees of freedom. We can then use this distribution to evaluate how likely it would have been to obtain the actual sample we have, assuming the null hypothesis is indeed actually true; this probability is known as a **p-value**.
+
+
+Two equivalent decision rules follow:
+
+* **Decision Rule 1** (DR1):  If this p-value is smaller than a pre-specified **significance level** (typically 5%), then we "reject $H_0$". 5% is the probability of a Type-I error.  If, however, the p-value is larger than our pre-specified significance level, then we "do not reject $H_0$".
+* **Decision Rule 2** (DR2):  If the absolute value of the test statistic is larger than the so-called **critical value**, then we reject $H_0$.  If, however, the absolute value of the test statistic is smaller than the critical value, then we **do not reject $H_0$**.
+
+The critical value in decision rule 2 is chosen so that DR1 and DR2 \ul{always} give the same \textbf{test outcome}.
+
+::: {.callout-note}
+### Further comments on hypothesis testing
+
+* We never "accept $H_0$"; instead we "do not reject $H_0$"
+* This general approach to hypothesis testing recurs throughout econometrics.  It is only the details that vary (the hypothesis itself, thereby generating different distributions such as Normal, Chi-squared, F, etc)
+* In general, students do not need to know the formula for $\text{se}(\hat{beta})$ (the software needs to, of course). But see next point.
+* Depending on the type of problem there are different versions of $\text{se}(\hat{beta})$. The correct version depends on the type of assumption made on the unobserved error terms. There are "traditional" and "robust" ( or "heteroskedasticity robust" or "White" standard errors. By default we almost always want to use the latter, the "robust" standard errors. There are some additional specialised versions of standard errors, such as the "heteroskedasticity and autocorrelation robust" (or "HAC" or "Newey-West") standard errors and the "cluster robust" standard errors. We will mention later when these may be important. YOu will not need to know the formulae but you will need to know which ones to use such that you can ask your software to calculate the correct ones.
+
+:::
+
+## Special case: When $x$ is a dummy variable
+
+A very important special case is when $x$ is a so-called **dummy
+or binary variable**. Everything we discussed about regression model applies, but there are differences as well, on which we now focus.
+
+We start with the same model, given by
+
+$$
+y = \alpha + \beta x + u,
+$$ {#eq-erikson}
+
+but now $x$ is either 0 (eg a woman) or 1 (eg a man).  $x$ is said to be a dummy variable. There are many of these variables in cross-section datasets.
+
+The scatter plot changes in a big way. Instead of a "fuzz" of data-points, we get something like this:
+
+
+```{r, engine = 'tikz'}
+\begin{tikzpicture}
+ \draw (0,0) circle (1cm);
+ %\pause
+ \draw (0,0) circle (2cm);
+\end{tikzpicture}
+```
+
+# Reading
+
+Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.
+
+Cunningham, S. (2021) [Causal Inference: The MixTape](https://mixtape.scunning.com/index.html)
+
+Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.
