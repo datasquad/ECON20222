@@ -28,7 +28,7 @@ I am grateful to my colleague Martyn Andrews on whose material these notes are b
 # The simple regression model
 
 
-## The general case
+## The general case {#sec-the_general_case}
 
 
 We start with the \textbf{simple linear regression model}
@@ -334,16 +334,227 @@ but now $x$ is either 0 (eg a woman) or 1 (eg a man).  $x$ is said to be a dummy
 
 The scatter plot changes in a big way. Instead of a "fuzz" of data-points, we get something like this:
 
+![CAP](../images/yx_scatter.png){#fig-LABEL fig-alt="ALT"}
 
-```{r, engine = 'tikz'}
-\begin{tikzpicture}
- \draw (0,0) circle (1cm);
- %\pause
- \draw (0,0) circle (2cm);
-\end{tikzpicture}
+
+We can see two vertical distributions of data, one for $x_i=0$ (women) and the other for $x_i=1$ (men).  As an example, suppose $y_i$ are each individual's earnings.  The sample mean for the $x_i=0$ (female) sub-sample is denoted $\bar{y}_0$, and is located in the middle of the female distribution (highlighted in red).  $\bar{y}_1$ is defined analogously for men.
+
+The population regression function allows us to understand what is being estimated and what can be tested.  Assumptions A1/A2 imply:
+
+$$
+E(u|x=0) = E(u|x=1) = 0.~~~A3
+$$
+
+We next write out the population regression function for both values of $x$:
+
+$$
+\mu_0 \equiv E (y | x=0) = \alpha + E(u|x=0) \qquad
+\mu_1 \equiv E (y | x=1) = \alpha + \beta + E(u|x=1).
+$$ {#eq-llorente}
+
+We now impose Assumption A3,
+
+$$
+E (y | x=0) = \alpha + 0 \qquad
+E (y | x=1) = \alpha + \beta + 0,
+$$
+
+from which
+
+$$
+\beta = E (y | x=1) - E (y | x=0) \equiv \mu_1-\mu_0.
+$$ {#eq-levi}
+
+From this, @eq-erikson can be rewritten as
+
+$$
+y = \mu_0 + (\mu_1-\mu_0)x + u.
+$$
+
+@eq-levi  is the key result, that $\beta$ can be interpreted as the **population raw differential**. Using the same technique of replacing population means by their sample averages, we have
+
+$$
+\hat{\beta} = \bar{y}_1-\bar{y}_0,
+$$ {#eq-de_ghea}
+
+which is the **sample raw differential**. Also, $\hat{\alpha}=\bar{y}_0$.
+
+This result is __the__ workhorse result in microeconometrics and will be used repeatedly though these notes. Note that we can write the $\bar{y}$s in two different but interchangeable ways:
+
+$$
+\bar{y}_1 = n_1^{-1}\Sigma_{i \in 1} y_i = n^{-1}\Sigma^n_{i=1} x_i y_i.
+$$
+
+In the latter, multpliplying $y_i$ by $x_i$ before summing means that one is only summimg the $y_i$s for whom $x_i=1$. In the former, "$i \in 1$" means
+"all $i$s who belong to group 1". Similarly,
+
+$$
+\bar{y}_0 = n_0^{-1}\Sigma_{i \in 0} y_i = n^{-1}\Sigma^n_{i=1} (1-x_i)y_i.
+$$
+
+In the figure, this result makes perfect sense.  $\bar{y}_1-\bar{y}_0$ is the vertical distance between the 2 red squares.  The horizontal distance is unity, and so the regression is the line that joins the two blobs, whose slope is $\hat{\beta}$.  Comparing with the general case in @sec-the_general_case, the interpretation of the sample regression function is the same, but the scatter plot is different.
+
+We can write the regression line as
+
+$$
+\hat{y}_i = \bar{y}_0 + (\bar{y}_1-\bar{y}_0) x_i.
+$$ {#eq-david}
+
+The definition of a residual remains the same, $\hat{u}_i \equiv y_i-\hat{y}_i$. To interpret,  switch $x_i$ on and off:
+
+$$
+\hat{u}_i=
+\begin{cases}
+&y_i-\bar{y}_0 \quad \text{if $x_i=0$;} \\
+&y_i-\bar{y}_1 \quad \text{if $x_i=1$.}
+\end{cases}
+$$
+
+In words, $\hat{u}_i$ is the gap between an individual's (eg a woman) earnings and the average for their group (women).  $\hat{u}_i$ is often said to capture 
+**within variation**.  By contrast, $\bar{y}_1-\bar{y}_0$ is said to capture **between variation**. It is also the case that $\Sigma_{i \in 1}\hat{u}_i=\Sigma_{i \in 2}\hat{u}_i =0$ matching Assumption A3 above.
+
+In this context, the obvious hypothesis to test is whether the population means for the 2 sub-samples are the same:
+
+$$
+H_0: \mu_1=\mu_0 \equiv H_0: \beta=0.
+$$
+
+This occurs literally all the time in economics (and more generally in social science and public discourse). 
+
+::: {.callout-note}
+### Examples for interesting dummy setups
+
+There are numerous examples you can think of here
+
+* Do women earn more than men?
+* Do men run faster ultra marathons than women?
+* Do high-school graduates live longer than non-high-school graduates?
+
+the key features here are that the explanatory variables are binary and the outcome is a quantitative variable.
+:::
+
+If we repeat our general approach to hypothesis testing in @sec-the_general_case, the test statistic still has a $t$ distribution,
+
+$$
+\frac{\bar{y}_1-\bar{y}_0-0}{\text{se}(\bar{y}_1-\bar{y}_0)} \sim t(n-2).
+$$
+
+if the null hypothesis is true. Again, we will not discuss how to calculate $\text{se}(\bar{y}_1-\bar{y}_0)$ but rather assume that in doubt the software we use knows how to calculate this standard error.
+
+When the dependent variable is a logarithmic variable
+
+$$
+\log y = \alpha + \beta x + u
+$$
+
+then @eq-de_ghea becomes
+
+$$
+\hat{\beta} = \log \bar{y}_1 - \log \bar{y}_0.
+$$
+
+As in the general case before, the following algebra gives a unit-free interpretation:
+
+$$
+\begin{align*}
+\hat{\beta} &= \log \bar{y}_1 - \log \bar{y}_0 \\
+         &= \log \left(1+ \frac{\bar{y}_1 - \bar{y}_0}{\bar{y}_0} \right) \\
+         &\equiv \log \left(1+ \%\Delta y/100 \right) \\
+         &\approx  \%\Delta y/100 \quad \text{if $\%\Delta y/100$ is
+small}.
+\end{align*}
+$$
+
+In other words, when $\%\Delta y/100$ is small, one can interpret $\hat{\beta}$ as the raw differential in the dependent variable. This is typically described as a **log-point** change. When $\%\Delta y/100$ is not small, one needs to compute the same concept from the third line:
+
+$$
+\%\Delta y = 100[\exp(\hat{\beta})-1],
+$$
+
+and is described as a **percentage-point** raw differential.
+
+One advantage of the log-point interpretation is that it is invariant to a redefinition of $x$ by swapping $x=1$ with $x=0$ (eg now $x=0$ is man).  All that happens is that $\hat{\beta}$ swaps sign.
+
+Finally, one might wonder why we need to estimate a regression model when all one needs to do is compute 2 sample means and their variances. The answers will become apparent as the course develops. At the moment, we simply assert that regression is an all-embracing methodology.
+
+::: {.callout-tip}
+### Practice Question
+
+Assume that you estimated a log-level model, where the dependent variable is log-wages and the explanatory variable is a dummy variable indicating that whether an individual has a high-school degree ($x=1$) or not ($x = 0$). You obtained a $\hat{\beta} = 0.21$. 
+
+Which of the following interpretations is correct?
+
+```{r}
+#| echo: false
+opts <- c(
+  "The log income elasticity is 0.21",
+  answer = "Income for high-school graduates is, on average 21 log points higher than for those who have no high-school diploma",
+  "the raw differential between those and without high-school diploma is 21%"
+)
 ```
 
+`r longmcq(opts)`
+
+What is the (average) percentage point increase for those with a high-school diploma? [to 4 decimal points]
+
+`r fitb(100*(exp(0.21)-1), tol = 0.0001)`
+
+
+:::
+
+
+
+# Appendix: standardised coefficients
+
+Another way of producing unit-free estimates---as with elasticities---is the following. Suppose a simple regression has been estimated:
+
+$$
+\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i + \hat{u}_i.
+$$
+
+Subtract $\bar{y} =\hat{\alpha} +\hat{beta} \bar{x}$ (reflecting the fact that the point of averages is always on the regression line):
+
+$$
+\hat{y}_i - \bar{y} = \hat{\beta}_1 (x_i - \bar{x}) + \hat{u}_i,
+$$
+
+and divide by the sample deviation of $y$, $\hat{\sigma}_y$:
+
+$$
+\frac{\hat{y}_i - \bar{y}}{\hat{\sigma}_y} = \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\hat{\beta}_1 \left( \frac{x_i - \bar{x}}{\hat{\sigma}_x} \right ) + \frac{\hat{u}_i}{\hat{\sigma}_y},
+$$
+where $\hat{sigma}_x$ is the sample deviation of $x$. Both $y$ and $x$ have been **standardised**. The new regression is written:
+
+$$
+z_y = \hat{b}_1 z_x + \text{error}_i
+$$
+
+where
+
+$$
+\hat{b}_1 \equiv \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\hat{\beta}_1
+$$
+
+is the **standardised coefficient**. Its interpretation is obvious: if $x$ goes up by one standard deviation, the effect on $y$ is $\hat{b}_1$ standard deviations.
+
+In the simple regression case (as here), remember that $\hat{\beta}_1= \hat{\sigma}_{yx}/\hat{\sigma}^2_x$. This means that
+
+$$
+\hat{b}_1 = \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\frac{\hat{\sigma}_{yx}}{\hat{\sigma}^2_x} =
+\frac{\hat{\sigma}_{yx}}{\hat{\sigma}_y\hat{\sigma}_x},
+$$
+
+the sample correlation between $x$ and $y$.
+
+In a multiple regression, standardising all the variables by hand can be tedious. It is better to the estimate the model as usual, and then ask that standarised coefficients be produced post-estimation. 
+
+
+
+
+
 # Reading
+
+Most of the material in the section is taken from Wooldridge (2025, chapter 2). The appendix is from Section 6-1a of Wooldridge (2025).
 
 Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.
 
