@@ -170,6 +170,13 @@ education $e$:
 | $N$    | 2      | $y_{N2}$ | 1       | 1      | 57     | 16     |   | $\Delta y_{N}$  | 1                  | 0          | 6          |
 
 
+This is important, because some issues (education, discrimination etc) cannot be investigated using this approach (panel data and the FD
+estimator).
+
+But even if $\Delta x_{i}$ is not constant, it might not vary much, leading to large standard errors.
+
+Measurement error gets worse with differencing. We know from the Endogenity section that means that the FD estimator gets more biased.
+
 
 # Reading
 
