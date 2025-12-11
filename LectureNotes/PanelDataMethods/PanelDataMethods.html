@@ -2730,6 +2730,151 @@ Cov(x_{i2},u_{i1}) \\
 <p>All 4 covariances need to be zero. We have already assumed the first pair are zero (AFD1). If AFD1 is true, there is no reason why the second pair (“across” <span class="math inline">\(t=1,2\)</span>) should not be zero either.</p>
 <p>To summarise, if <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> are uncorrelated, then so are <span class="math inline">\(\Delta x\)</span> and <span class="math inline">\(\Delta u\)</span>.</p>
 </section>
+<section id="variation-in-delta-x_i" class="level2">
+<h2 class="anchored" data-anchor-id="variation-in-delta-x_i">Variation in <span class="math inline">\(\Delta x_i\)</span></h2>
+<p>The second assumption says that each <span class="math inline">\(\Delta x_{i}\)</span> must have some variation across <span class="math inline">\(i\)</span>. Age, gender, and education are good examples of <span class="math inline">\(\Delta x_{i}\)</span> being constant. To see what is happening, observe what happens when we first-difference the male dummy <span class="math inline">\(m\)</span>, age <span class="math inline">\(a\)</span> and education <span class="math inline">\(e\)</span>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 2%">
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(t\)</span></th>
+<th><span class="math inline">\(y_{it}\)</span></th>
+<th><span class="math inline">\(d^2_t\)</span></th>
+<th><span class="math inline">\(m\)</span></th>
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(e\)</span></th>
+<th></th>
+<th><span class="math inline">\(\Delta y_{it}\)</span></th>
+<th><span class="math inline">\(\Delta d^2_{t}\)</span></th>
+<th><span class="math inline">\(\Delta m\)</span></th>
+<th><span class="math inline">\(\Delta a\)</span></th>
+<th><span class="math inline">\(\Delta e\)</span>?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(y_{11}\)</span></td>
+<td>0</td>
+<td>1</td>
+<td>18</td>
+<td>11</td>
+<td></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>2</td>
+<td><span class="math inline">\(y_{12}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>24</td>
+<td>11</td>
+<td></td>
+<td><span class="math inline">\(\Delta y_{1}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>1</td>
+<td><span class="math inline">\(y_{21}\)</span></td>
+<td>0</td>
+<td>0</td>
+<td>28</td>
+<td>13</td>
+<td></td>
+<td>.</td>
+<td>. .</td>
+<td>.</td>
+<td>.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td><span class="math inline">\(y_{22}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>34</td>
+<td>13</td>
+<td></td>
+<td><span class="math inline">\(\Delta y_{2}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N\)</span></td>
+<td>1</td>
+<td><span class="math inline">\(y_{N1}\)</span></td>
+<td>0</td>
+<td>1</td>
+<td>51</td>
+<td>16</td>
+<td></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(N\)</span></td>
+<td>2</td>
+<td><span class="math inline">\(y_{N2}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>57</td>
+<td>16</td>
+<td></td>
+<td><span class="math inline">\(\Delta y_{N}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>6</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="reading" class="level1">
 <h1>Reading</h1>

@@ -153,6 +153,24 @@ All 4 covariances need to be zero.  We have already assumed the first pair are z
 
 To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$.
 
+## Variation in $\Delta x_i$
+
+The second assumption says that each $\Delta x_{i}$ must have some variation across $i$.  Age, gender, and education are good examples of
+$\Delta x_{i}$ being constant.  To see what is happening, observe what happens when we first-difference the male dummy $m$, age $a$ and
+education $e$:
+
+| $i$    | $t$    | $y_{it}$ | $d^2_t$ | $m$    | $a$    | $e$    |   | $\Delta y_{it}$ | $\Delta d^2_{t}$ | $\Delta m$ | $\Delta a$ | $\Delta e$? |
+|--------|--------|----------|---------|--------|--------|--------|---|-----------------|--------------------|------------|------------|-------------|
+| 1      | 1      | $y_{11}$ | 0       | 1      | 18     | 11     |   | .               | .                  | .          | .          |
+| 1      | 2      | $y_{12}$ | 1       | 1      | 24     | 11     |   | $\Delta y_{1}$  | 1                  | 0          | 6          |
+| 2      | 1      | $y_{21}$ | 0       | 0      | 28     | 13     |   | .               | . .                | .          | .          |
+| 2      | 2      | $y_{22}$ | 1       | 0      | 34     | 13     |   | $\Delta y_{2}$  | 1                  | 0          | 6          |
+| \vdots | \vdots | \vdots   | \vdots  | \vdots | \vdots | \vdots |   | \vdots          | \vdots             | \vdots     | \vdots     |
+| $N$    | 1      | $y_{N1}$ | 0       | 1      | 51     | 16     |   | .               | .                  | .          | .          |
+| $N$    | 2      | $y_{N2}$ | 1       | 1      | 57     | 16     |   | $\Delta y_{N}$  | 1                  | 0          | 6          |
+
+
+
 # Reading
 
 The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under
