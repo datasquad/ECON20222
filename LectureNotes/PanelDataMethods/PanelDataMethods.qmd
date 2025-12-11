@@ -2,9 +2,12 @@
 title: "Panel Data Methods"
 format: 
   html:
+    toc : true
     css: [webex.css]
     include-after-body: [webex.js]
     embed-resources: true 
+editor: 
+  render-on-save: true
 ---
 
 ```{r setup, include = FALSE}
@@ -34,7 +37,7 @@ Suppose we have a dataset comprising $N$ individuals (or other micro unit) obser
 | 1      | 2      | $y_{12}$ | 1      | 0       | 1       | $x_{12}$ | $a_{1}$ | $u_{12}$ |
 | 2      | 1      | $y_{21}$ | 1      | 1       | 0       | $x_{21}$ | $a_{2}$ | $u_{21}$ |
 | 2      | 2      | $y_{22}$ | 1      | 0       | 1       | $x_{22}$ | $a_{2}$ | $u_{22}$ |
-| \vdots | \vdots | \vdots   | \vdots | \vdots  | \vdots  | \vdots   | \vdots  | \vdots   |
+| ... | ... | ...   | ... | ...  | ...  | ...   | ...  | ...   |
 | $N$    | 1      | $y_{N1}$ | 1      | 1       | 0       | $x_{N1}$ | $a_{N}$ | $u_{N1}$ |
 | $N$    | 2      | $y_{N2}$ | 1      | 0       | 1       | $x_{N2}$ | $a_{N}$ | $u_{N2}$ |
 
@@ -110,7 +113,7 @@ To see what is happening, look at the schematic data above, and subtract the fir
 | 1      | 2      | $y_{12}$ | 1      | 0           | 1           | $x_{12}$ | $\Delta y_{1}$  | 0          | --1                | 1                  | $\Delta x_{1}$  |
 | 2      | 1      | $y_{21}$ | 1      | 1           | 0           | $x_{21}$ | .               | .          | .                  | . .                | .               |
 | 2      | 2      | $y_{22}$ | 1      | 0           | 1           | $x_{22}$ | $\Delta y_{2}$  | 0          | --1                | 1                  | $\Delta x_{2}$  |
-| \vdots | \vdots | \vdots   | \vdots | \vdots      | \vdots      | \vdots   | \vdots          | \vdots     | \vdots             | \vdots             | \vdots          |
+| ... | ... | ...   | ... | ...      | ...      | ...   | ...          | ...     | ...             | ...             | ...          |
 | $N$    | 1      | $y_{N1}$ | 1      | 1           | 0           | $x_{N1}$ | .               | .          | .                  | .                  | .               |
 | $N$    | 2      | $y_{N2}$ | 1      | 0           | 1           | $x_{N2}$ | $\Delta y_{N}$  | 0          | --1                | 1                  | $\Delta x_{N}$  |
 
@@ -126,14 +129,12 @@ Just to be clear about the variables that are being used in @eq-mee:
 
 When OLS is used on this transformed model, it is labelled the **first-difference estimator** (FD).  In this example, it is a Simple Regression. In general, FD is a multiple regression where **all** variables are differenced.
 
-
-
-## Exogeneity
-
 The important issue is whether the assumptions for OLS are satisfied?  If yes, FD is unbiased.  Recall that the assumptions are:
 
 * The RHS variable is exogenous (uncorrelated with the error);
 * The RHS variable cannot be constant.
+
+## Exogeneity
 
 The first assumption asks whether $\Delta x_{i}$ is uncorrelated with $\Delta u_{i}$?
 
@@ -151,7 +152,35 @@ $$
 
 All 4 covariances need to be zero.  We have already assumed the first pair are zero (AFD1).  If AFD1 is true, there is no reason why the second pair ("across" $t=1,2$) should not be zero either.
 
-To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$.
+To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$. But this is importantly an assumption. One needs to assume that there is no unobserved variation in the error terms that is correlated to the $x$ variable. What has been gained through the first-difference setup is that any such variation in the error term that is constant through time by $i$ has been removed. We do not have to worry any longer about such unobserved variation.
+
+::: {.callout-note}
+### Practise Question
+
+Consider the setup where
+
+* $y_{it}$ is log earnings (`lhrpay`)
+* $x_{it}$ is a variable encoding how many hours individual $i$ spent on learning new skills in period $t$
+Which of the following potentially unobserved heterogeneity will be removed/taken care of by applying a FD estimation in a context where you have a panel dataset for many individuals $i$ and two time periods for each individual.
+
+```{r}
+#| echo: false
+opts_p <- c(
+   answer = "different general ability by individual $i$",
+   "different levels of economic growth in individual $i$'s area",
+   answer = "different personalities of individuals $i$",
+   "different life circumstances for individuals $i$"
+)
+
+```
+
+`r longmcq(opts_p)`
+
+`r hide("Can you help me understand the answer")`
+It is important to understand that only unobserved variation that remains constant for individual $i$ across the time periods is differenced out. This is why economic growth (which varies through time) and life circumstances which often change from one year to the next, are not controlled for by using a FD estimation.
+`r unhide()`
+
+:::
 
 ## Variation in $\Delta x_i$
 
@@ -165,7 +194,7 @@ education $e$:
 | 1      | 2      | $y_{12}$ | 1       | 1      | 24     | 11     |   | $\Delta y_{1}$  | 1                  | 0          | 6          |
 | 2      | 1      | $y_{21}$ | 0       | 0      | 28     | 13     |   | .               | . .                | .          | .          |
 | 2      | 2      | $y_{22}$ | 1       | 0      | 34     | 13     |   | $\Delta y_{2}$  | 1                  | 0          | 6          |
-| \vdots | \vdots | \vdots   | \vdots  | \vdots | \vdots | \vdots |   | \vdots          | \vdots             | \vdots     | \vdots     |
+| ... | ... | ...   | ...  | ... | ... | ... |   | ...          | ...             | ...     | ...     |
 | $N$    | 1      | $y_{N1}$ | 0       | 1      | 51     | 16     |   | .               | .                  | .          | .          |
 | $N$    | 2      | $y_{N2}$ | 1       | 1      | 57     | 16     |   | $\Delta y_{N}$  | 1                  | 0          | 6          |
 
@@ -174,6 +203,35 @@ This is important, because some issues (education, discrimination etc) cannot be
 estimator).
 
 But even if $\Delta x_{i}$ is not constant, it might not vary much, leading to large standard errors.
+
+::: {.callout-note}
+### Practise Question
+
+Consider the setup where you have a panel dataset for many individuals $i$ and two time periods for each individual. All respondents are at least 30 years old.
+
+* $y_{it}$ is log earnings (`lhrpay`)
+
+You want to investigate the impact of a number of variables on $y$. Which of the following are variables, whose relation to $y$ **cannot** be investigated by a first difference estimation?
+
+```{r}
+#| echo: false
+opts_p <- c(
+   answer = "gender",
+   answer = "age",
+   "level of training",
+   "distance between home and workplace"
+)
+
+```
+
+`r longmcq(opts_p)`
+
+`r hide("Can you help me understand the answer")`
+The key to understand here is that the variable needs to have variation across all $i$ **after** differencing. Neither age nor gender have such variation. Everyones gender will remain unchanged and everyone will be one year older if observations are apart by a year. 
+`r unhide()`
+
+
+:::
 
 Measurement error gets worse with differencing. We know from the Endogenity section that means that the FD estimator gets more biased.
 

@@ -2379,10 +2379,28 @@ margin: 1em 0;
 </style>
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-panel-data-structures" id="toc-introduction-to-panel-data-structures" class="nav-link active" data-scroll-target="#introduction-to-panel-data-structures">Introduction to Panel Data Structures</a>
+  <ul class="collapse">
+  <li><a href="#two-period-panel-data" id="toc-two-period-panel-data" class="nav-link" data-scroll-target="#two-period-panel-data">Two-period panel data</a></li>
+  </ul></li>
+  <li><a href="#sec-FD" id="toc-sec-FD" class="nav-link" data-scroll-target="#sec-FD">The First Difference estimator (FD)</a>
+  <ul class="collapse">
+  <li><a href="#differencing-out-a_i" id="toc-differencing-out-a_i" class="nav-link" data-scroll-target="#differencing-out-a_i">Differencing out <span class="math inline">\(a_i\)</span></a></li>
+  <li><a href="#exogeneity" id="toc-exogeneity" class="nav-link" data-scroll-target="#exogeneity">Exogeneity</a></li>
+  <li><a href="#variation-in-delta-x_i" id="toc-variation-in-delta-x_i" class="nav-link" data-scroll-target="#variation-in-delta-x_i">Variation in <span class="math inline">\(\Delta x_i\)</span></a></li>
+  </ul></li>
+  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading">Reading</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -2482,15 +2500,15 @@ margin: 1em 0;
 <td><span class="math inline">\(u_{22}\)</span></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(N\)</span></td>
@@ -2655,18 +2673,18 @@ y_{i2} = \beta_0 + \delta_0 + \beta_1 x_{i2}  + a_i + u_{i2} \quad (t=2)
 <td><span class="math inline">\(\Delta x_{2}\)</span></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(N\)</span></td>
@@ -2707,14 +2725,14 @@ y_{i2} = \beta_0 + \delta_0 + \beta_1 x_{i2}  + a_i + u_{i2} \quad (t=2)
 <li><span class="math inline">\(\delta_0\)</span> is the parameter on <span class="math inline">\(\Delta d^2_t\)</span>, which is the new regression constant.</li>
 </ul>
 <p>When OLS is used on this transformed model, it is labelled the <strong>first-difference estimator</strong> (FD). In this example, it is a Simple Regression. In general, FD is a multiple regression where <strong>all</strong> variables are differenced.</p>
-</section>
-<section id="exogeneity" class="level2">
-<h2 class="anchored" data-anchor-id="exogeneity">Exogeneity</h2>
 <p>The important issue is whether the assumptions for OLS are satisfied? If yes, FD is unbiased. Recall that the assumptions are:</p>
 <ul>
 <li>The RHS variable is exogenous (uncorrelated with the error);</li>
 <li>The RHS variable cannot be constant.</li>
 </ul>
+</section>
+<section id="exogeneity" class="level2">
+<h2 class="anchored" data-anchor-id="exogeneity">Exogeneity</h2>
 <p>The first assumption asks whether <span class="math inline">\(\Delta x_{i}\)</span> is uncorrelated with <span class="math inline">\(\Delta u_{i}\)</span>?</p>
 <p><span class="math display">\[
 \begin{align*}
@@ -2728,7 +2746,28 @@ Cov(x_{i2},u_{i1}) \\
 \end{align*}
 \]</span></p>
 <p>All 4 covariances need to be zero. We have already assumed the first pair are zero (AFD1). If AFD1 is true, there is no reason why the second pair (“across” <span class="math inline">\(t=1,2\)</span>) should not be zero either.</p>
-<p>To summarise, if <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> are uncorrelated, then so are <span class="math inline">\(\Delta x\)</span> and <span class="math inline">\(\Delta u\)</span>.</p>
+<p>To summarise, if <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> are uncorrelated, then so are <span class="math inline">\(\Delta x\)</span> and <span class="math inline">\(\Delta u\)</span>. But this is importantly an assumption. One needs to assume that there is no unobserved variation in the error terms that is correlated to the <span class="math inline">\(x\)</span> variable. What has been gained through the first-difference setup is that any such variation in the error term that is constant through time by <span class="math inline">\(i\)</span> has been removed. We do not have to worry any longer about such unobserved variation.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practise Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider the setup where</p>
+<ul>
+<li><span class="math inline">\(y_{it}\)</span> is log earnings (<code>lhrpay</code>)</li>
+<li><span class="math inline">\(x_{it}\)</span> is a variable encoding what the maximum amount of formal eduction is (<code>educ</code>)</li>
+</ul>
+<p>Which of the following potentially unobserved heterogeneity will be removed/taken care of by applying a FD estimation in a context where you have a panel dataset for many individuals <span class="math inline">\(i\)</span> and two time periods for each individual.</p>
+<div id="radio_CFNNGPDFHN" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_CFNNGPDFHN" value="answer"> <span>different general ability by individual <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_CFNNGPDFHN" value> <span>different levels of economic growth in individual <span class="math inline">\(i\)</span>&#39;s area</span></label><label><input type="radio" autocomplete="off" name="radio_CFNNGPDFHN" value="answer"> <span>different personalities of individuals <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_CFNNGPDFHN" value> <span>different life circumstances for individuals <span class="math inline">\(i\)</span></span></label>
+</div>
+</div>
+</div>
 </section>
 <section id="variation-in-delta-x_i" class="level2">
 <h2 class="anchored" data-anchor-id="variation-in-delta-x_i">Variation in <span class="math inline">\(\Delta x_i\)</span></h2>
@@ -2828,18 +2867,18 @@ Cov(x_{i2},u_{i1}) \\
 <td></td>
 </tr>
 <tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 <td></td>
 </tr>
 <tr class="even">
