@@ -1,0 +1,481 @@
+---
+title: "Three types of Endogeneity"
+format: 
+  html:
+    toc : true
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+editor: 
+  render-on-save: true
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(webexercises)
+```
+
+# Introduction
+
+Econometricians generally say there are 3 different stories by which the regression error is correlated with the RHS variable of interest.  The consequences are:
+
+1. $x$ is said to be **endogenous** (this is an econometric definition, more general than that used by economists);
+2. the OLS estimator $\hat{\beta}$ is said to be **biased**; and
+3. the effect of $x$ on $y$ (given by the OLS estimate $\hat{\beta}$) __cannot__ said to be **causal**  (rather, its just a correlation).
+
+
+# Omitted variables bias (OVB) {#sec-OVB}
+
+Suppose the true model (also known as the data generation process or DGP) is
+
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e.
+$$ {#eq-hugo}
+
+$e$ is an unobserved variable (sometimes called an **error term**) that plays the same role as $u$ earlier, in that it captures everything not contained in $\beta_0 + \beta_1 x_1 + \beta_2 x_2$.  This means that A1/A2/A3 still hold:
+
+$$
+\begin{align}
+E(e)     &= 0 ~~~~ (A1)\\
+Cov(e, x_1) &= 0~~~~(A2)\\
+E(e|x) &=  0.~~~(A3)
+\end{align}
+$$
+
+$x_2$ is another variable like $x_1$ that should be in the model, but isn't. This is either because it has been omitted (forgotten about, not
+in the dataset at hand, etc) or because it is fundamentally unobserved. Just as with $x_1$, we assume:
+
+$$
+Cov(e, x_2) = 0.~~~(A4)
+$$
+
+What are the consequences of incorrectly estimating this model without $x_2$?
+
+$$
+y = \beta_0 + \beta_1 x_1 + u,
+$$ {#eq-erikson}
+
+Because $x_2$ is not in the model, the first thing to notice is that $u$ now contains $x_2$:
+
+$$
+u \equiv \beta_2 x_2 + e.
+$$
+
+Because it is the same regression model, we know that
+
+$$
+E(\hat{\beta}_1) = \beta_1 + \frac{Cov(u,x_1)}{Var(x_1)}.
+$$ {#eq-keiran}
+
+However, the error term $u$ has changed. How does this alter things, if at all?
+
+$$
+Cov(u,x_1) =
+Cov(\beta_2 x_2 + e,x_1) =
+\beta_2 Cov(x_2,x_1) +  Cov(e,x_1) =
+\beta_2 Cov(x_2,x_1) + 0.
+$$
+
+The last equality uses A2/A3. Substituting into @eq-keiran gives an expression for the bias in $\hat{\beta}_1$:
+
+$$
+\text{Bias}(\hat{\beta}_1) \equiv E(\hat{\beta}_1) - \beta_1 = \beta_2 \frac{Cov(x_2,x_1)}{Var(x_1)} = \beta_2 \delta_1,
+$$ {#eq-fernando}
+
+where $\delta_1$ is the "slope" parameter in population model that relates $x_1$ and $x_2$:
+
+$$
+x_2 = \delta_0 + \delta_1 x_1 + \text{error}.
+$$
+
+This very useful formula allows us to understand the consequences of **omitted variables bias** (OVB).  In particular, if we know
+**a priori** the signs of $\beta_2$ and $Cov(x_2,x_1)$, we can "sign the bias":
+
+* If both terms have the same sign (+/+) or (--/--), then the OLS estimator $\hat{\beta}_1$ is **biased upwards**: $\text{Bias}(\hat{\beta}_1)>0$;
+* If both terms have the opposite signs (+/--) or (--/+), then the OLS estimator $\hat{\beta}_1$ is **biased downwards**: $\text{Bias}(\hat{\beta}_1)<0$;
+* The OLS estimator $\hat{\beta}_1$ is **unbiased** if either: 
+  - $\beta_2=0$. This is trivial in that $x_2$ isn't in the model in the first place; or
+  - $Cov(x_2,x_1)=0$. In other words, __OLS is unbiased if $x_1$ and $x_2$ are uncorrelated__.
+
+Why uncorrelated? Because the sign of the covariance is the sign of the correlation. This very important result is used over-and-over in applied economics. 
+
+::: {.callout-note}
+## Canonical example on OVB - The returns to education
+
+This is the most well-known textbook example on illustrating OVB. Suppose
+
+* $y$ is log earnings (`lhrpay`)
+* $x_{1}$ is years of schooling (`educ`)
+* $x_{2}$ is unobserved innate ability (`abil`)
+
+$\beta_1$ is the parameter of interest because it captures the return to investing in education.  It captures the log-point increase in earnings for each extra year of education undertaken.  But does an OLS regression of `lhrpay` on `educ` deliver an unbiased estimate?
+
+* We expect both variables to have a positive impact on average earnings ($\beta_1>0$, $\beta_2>0$);
+* We expect $x_{1}$ and $x_{2}$ to be positively correlated, as individuals with more innate ability tend to choose more education ($\delta_1>0$)
+
+Then the OVB formula @eq-fernando tells us that the estimated effect of an extra year of schooling is too high
+
+$$
+\text{Bias}(\hat{\beta}_1) = E(\hat{\beta}_1)-\hat{\beta}_1 = \beta_2 \delta_1 >0.
+$$ {#eq-bias}
+
+What is the intuition? Earnings are determined by both actual education and an individual's ability.  We observe the effect of both variables
+($y$), but the regression model ascribes it all to education ($x_{1}$), when some of it is due to ability ($x_{2}$).
+
+:::
+
+::: {.callout-note}
+## Practice Question
+
+Consider the following example using observations for children across a country, all aged 10.
+
+* $y$ is a measure of reading skills (`read`) of a child
+* $x_{1}$ is the size of the class (`class`) the child is in
+* $x_{2}$ is a measure of the mother's education (`pe`)
+
+The model we can estimate is 
+
+$$
+y = \beta_0 + \beta_1 x_1 + u,
+$$
+
+$\beta_1$ is the parameter of interest because it captures the impact of classize on reading skills. In particular it tells us the impact of an additional student in the class on the reading skill of students in the class. But does an OLS regression of `read` on `class` deliver an unbiased estimate?
+
+I would expect $\beta_1$ to be `r mcq(c("zero", "positive", answer = "negative"))`
+
+`r hide("Why do we expect this?")`
+It seems plausible that teachers would be able to spend less time to support individual children with their reading if classes are larger.
+`r unhide()`
+
+I would expect $\beta_2$ (the coefficient to $x_2$ if it was included into the regression) to be `r mcq(c("zero",answer = "positive", "negative"))`
+
+`r hide("Why do we expect this?")`
+It seems plausible that a higher educated mother may be in a better place to support her child in her learning of reading. This is not a law of nature and you may argue that a lesser educated mother may actually be able to devote more time to the child. So this is, in the end an empirical question, but for now we continue with the assumption that $\beta_2>0$.
+`r unhide()`
+
+I would expect $\delta_1$ (the slope coefficient when regressing to $x_2$ (`pe`) on $x_1$ (`class`) to be `r mcq(c("zero", "positive", answer = "negative"))`
+
+`r hide("Why do we expect this?")`
+This is really a bit of speculation. The assumption we make here is that mother's with higher education may have higher income which may make it possible to afford her to send her kids to schools with smaller class sizes which are perceived to be better. Again this is an empirical question and the answer may differ for different countries. Let's continue with the assumption that $\delta_1 < 0$.
+`r unhide()`
+
+I would expect $\text{Bias}(\hat{\beta}_1)$ to be `r mcq(c("zero", "positive", answer = "negative"))`
+
+`r hide("Why do we expect this?")`
+Plugging $\beta_2 > 0$ and $\delta_1 < 0" into the bias formula (@eq-fernando) then you will obtain a negative bias.
+`r unhide()`
+
+What does this mean for the estimated effect?
+
+```{r}
+#| echo: false
+opts_p <- c(
+   answer = "As we expect a negative effect of classize a negative bias implies that we would expect to overestimate the negative effect.",
+   "As we expect a positive effect of classize a negative bias implies that we would expect to underestimate the negative effect.",
+   "As we expect a negative effect of classize a negative bias implies that we would expect to underestimate the negative effect.",
+   "As we expect a positive effect of classize a negative bias implies that we would expect to overestimate the negative effect."
+)
+```
+
+`r longmcq(opts_p)`
+
+:::
+
+The bottom line is the need for another estimator that does better than OLS, that is, deals with the bias caused by ability and education being (positively) correlated.
+
+::: {.callout-note}
+## The returns to education - Look ahead to multipple regression
+
+Now lets ignore ability for now and consider what happens if
+
+* $y$ is log earnings (`lhrpay`)
+* $x_{1}$ is years of schooling (`educ`)
+* $x_{2}$ is age (`age`)
+
+Now $x_{2}$ is a variable that is not fundamentally unobserved.  Its simply that its been forgotten.  Nonetheless, ignoring age might bias
+our estimates, if age and education are correlated ($\delta_1 \neq 0$) and age is relevant for earnings ($\beta_2 \neq 0$).  If our dataset did actually contain age, we can make the problem disappear by including age into the regression model and essentially esimating @eq-hugo. When we include multiple explanatory variables we call this multiple regression. It is still an OLS estimation method and will be covered in more detail in a later section. 
+:::
+
+
+# Measurement error (ME) bias {#sec-ME}
+
+We start with the following true model,
+
+$$
+y = \alpha + \beta x^* + \varepsilon.
+$$ {#eq-christian}
+
+As before, A2 is written
+
+$$
+Cov(\varepsilon,x^*)=0.~~~(A2)
+$$
+
+We write the "x" variable as $x^*$ to emphasise the fact that this variable is "measured with error", where
+
+$$
+x = x^* + e.
+$$ {#eq-davidson}
+
+To be clear:
+
+* $x^*$ is the true variable in @eq-christian, known as a **latent variable**, whereas;
+* $x$ is the variable actually in the data; and
+* $e$ is the **measurement error**.
+
+A concrete example would be asking individuals how many years of education they have.  Some will under-report, some will over-report, and
+some get it right.  Another would be ask individuals how many employees there are in their workplace.  A third is to use age as a proxy for
+labour market experience when modelling wages; they are related but not the same.
+
+The key assumptions are that 
+
+* $e$ is not correlated with any other variables, including $x^*$ and $\varepsilon$:
+
+$$
+\begin{align}
+Cov(e,x^*) &= 0 ~~~~(A5)\\
+Cov(e,\varepsilon) &= 0,~~~(A6)
+\end{align}
+$$
+
+and that, on average, individuals do report $x^*$ correctly, $E(e)= 0$.
+
+From @eq-davidson and A5 we get:
+
+$$
+Var(x)=Var(x^*)+Var(e).
+$$ {#eq-dembele}
+
+The model that is estimated is given by @eq-erikson above,
+
+$$
+y = \alpha + \beta x + u.
+$$
+
+Writing out @eq-keiran again:
+
+$$
+E(\hat{\beta}) = \beta + \frac{Cov(u,x)}{Var(x)}.
+$$
+
+Just as in @sec-OVB, we need to work out whether the regression error $u$ is correlated with the observed covariate $x$. Substituting $x = x^* + e$ into the true model @eq-christian
+
+$$
+y = \alpha + \beta (x-e) + \varepsilon = \alpha + \beta  x + (\varepsilon-\beta e).
+$$ {#eq-moussa}
+
+Comparing with @eq-erikson, the term in brackets is the regression error:
+
+$$
+u=\varepsilon-\beta e.
+$$
+
+Evaluating the numerator in the bias expression @eq-keiran:
+
+$$
+\begin{align*}
+Cov (u,x) &= Cov (\varepsilon-\beta e,x^* + e)  \\
+&= Cov (\varepsilon,x^*)+Cov(\varepsilon,e)-\beta Cov (e,x^*)-\beta Cov(e,e)  \\
+&=0+0-0-\beta Var(e) \\
+&= -\beta Var(e)\lessgtr 0.
+\end{align*}
+$$
+
+The 3 zero covariances come from A2, A5, and A6 respectively. $Cov (u,x)$ can be signed, as it is negative if $\beta>0$ or positive if $\beta<0$.
+
+Substituting into @eq-keiran  and using @eq-dembele:
+
+$$
+E(\hat{\beta}) =  \beta \left( 1 - \frac{Var(e)}{Var(x)} \right ) =
+\beta \frac{Var(x^*)}{Var(x)} \equiv \beta \lambda, \quad 0<\lambda<1.
+$$
+
+In words, the bias takes $\hat{\beta}$ towards zero whether or not $\beta \lessgtr 0$.  This is known as **attenuation bias**.
+
+::: {.callout-info}
+## Why is $\lambda$ a positive fraction?
+
+$$
+\lambda \equiv \frac{Var(x^*)}{Var(x^*)+Var(u)},
+$$
+
+and all variances are positive.
+
+Suppose 20% of the variation in $x$ is due to measurement error. Then $\lambda=0.8$.
+
+@fig-ME illustrates why we get attenuation..  The correlation/covariance between
+$x$ and $e$ is key:
+
+$$
+Cov(e,x) = Cov(e,x^* + e) = Cov(e,x^*)+Cov(e,e) = 0+Var(e)>0.
+$$
+
+It is __always__ positive and gets stronger the "bigger" (higher $Var(e)$) the measurement error is.  Suppose for individual $i$ observed $x_i$ is low, then, from @eq-moussa, $y_i$ is decomposed into (i) $\beta_0+\beta_1 x_i$, (ii) an $\varepsilon$ term, which we set to zero for illustration purposes, and (iii) $-\beta_1 e_i$. (i)+(ii) places $y_i$ on the blue line, the true model.  However, we need to add on $-\beta_1 e_i$. Because the measurement error $e_i$ is positively correlated with $x$, $e_i$ the measurement error is likely to be low ($<0$), and so $-\beta_1 e_i$ is likely to be positive.  The reverse is true for individual $j$ with a high observed $x_j$.  Joining these 2 individuals together explains why the estimated regression line (in black) is flatter, on average, than the true population model.
+
+![Measurement error and the population regression function](../../images/ME_illustration.png){#fig-ME fig-alt="ALT"}
+
+Were the true model downwards sloping, then the estimated model would be flatter, but still downwards sloping. Students should convince
+themselves that this is true by redrawing the figure.
+
+:::
+
+
+Measurement error bias is very similar to omitted-variables bias.  In both, the "problem" goes into the error term (here, the measurement
+error $e$; earlier, the omitted variable $x_2$).  In the measurement error case, the bias always takes the estimated $\beta$ towards zero, whereas for OVB the bias can take either sign.
+
+# Simultaneity bias/reverse causality {#sec-SimBias}
+
+This is the idea that $x$ causes $y$ in some economic situation, and at the same time as $y$ causes $x$.  In other words, the 2 variables are
+determined simultaneously. The classic example is a market:
+
+$$
+\begin{align}
+y_1 &= \alpha_1 y_2               +u_1 \qquad \alpha_1<0 ~~~~(Demand)\\
+y_2 &= \alpha_2 y_1 + \beta_2 z_2 +u_2 \qquad \alpha_2>0.~~~(Supply)
+\end{align}
+$$ {#eq-simeq}
+
+* The 2 equations represent demand and supply respectively.
+* $y_1$ is quantity and $y_2$ is price.
+* $y_1$ and $y_2$ are endogenous, in that they are both determined in the model.
+* $z_2$ is exogenous, determined outside the model. In a market for crops, $z_2$ might be rainfall, so that $\beta_2<0$, shifting the supply curve outwards.
+* There are 2 endogenous variables, 2 equations and 2 assumptions (on the slope coefficients) and an exogenous variable, $z_2$.
+* Because $z_2$ is exogenous:
+
+$$
+\begin{align*}
+Cov(u_1, z_2) =0 ~~~~(A7)\\
+Cov(u_2, z_2) =0.~~~(A8)
+\end{align*}
+$$
+
+\item $u_1$ and $u_2$ are the unobserved terms in each equation. We assume that the error terms are uncorrelated, i.e. $Cov(u_1,u_2)=0$. (Making them correlated overly complicates matters with no extra gain.)
+
+
+We are interested in estimating the parameters of the first (demand) equation. The OLS estimator for $\alpha_1$ is
+
+$$
+\hat{\alpha}_1 = \frac{\widehat{Cov(y_1,y_2)}}{\widehat{Var(y_2)}},
+$$
+
+whose bias is given by the usual formula:
+
+$$
+\text{Bias}(\hat{\alpha}_1) \equiv E(\hat{\alpha}_1)-\alpha_1 = \frac{Cov(u_1, y_2)}{Var(y_2)}.
+$$ {#eq-a1bias}
+
+As always, we need to evaluate the covariance in the numerator. This is a lot more involved, because first we need to
+work out the solution, or **reduced-form**, for $y_2$. To do this, substitute for $y_1$ from the demand equation into the supply equation from @qe-simeq.
+
+$$
+y_2 = \alpha_2 (\alpha_1 y_2 + u_1) + \beta_2 z_2 + u_2
+$$
+
+and collect all $y_2$ terms on the left hand side
+
+$$
+(1 - \alpha_1\alpha_2) y_2 = \beta_2 z_2 + \alpha_2 u_1 +u_2.
+$$
+
+To solve for $y_2$, we need to assume that $\alpha_1\alpha_2 \neq 1$:
+
+$$
+\begin{equation}
+y_2 =  \pi_{20} + \pi_{22}z_2 + v_2
+\end{equation}
+$$ {#eq-toby}
+
+where
+
+$$
+\pi_{22} \equiv \frac{         \beta_2}{1 - \alpha_1\alpha_2} \quad
+\pi_{20} \equiv \frac{1   }{1 - \alpha_1\alpha_2} \quad
+v_2      \equiv \frac{\alpha_2      u_1  +     u_2}{1 - \alpha_1\alpha_2}.
+$$
+
+This is called the **reduced-form** as it expresses an endogenous variable, here $y_2$ only in terms of the exogenous variable $z_2$. 
+
+Recall what we want to achieve. We need to evaluate whether, when estimating the demand equation in @eq-simeq, we obtain an unbiased estimator for $\alpha_1$. We had derived the bias (which should be 0 if the estimator is unbiased) in @eq-a1bias. The crucial term here was $Cov(u_1, y_2)$, and to evaluate this apply the covariance operator on @eq-toby:
+
+HERE
+
+$$
+Cov(u_1,y_2) = Cov(u_1,\pi_{20}) + \pi_{22} Cov(u_1,z_2) + Cov(u_1,v_2) = 0 + 0 + Cov(u_1,v_2),
+$$
+
+where the exogeneity of $z_2$ (Assumption A7) is used. Unfortunately $z_2$ being exogenous does not deliver unbiasedness. Using the definition of $v_2$:
+
+$$
+Cov(u_1,v_2) =  \frac{\alpha_2 Cov(u_1,u_1) + Cov(u_1,u_2)}{1-\alpha_1\alpha_2} =
+\frac{  \alpha_2 Var(u_1)  +0}{1-\alpha_1\alpha_2}.
+$$
+
+Bringing it all together:
+
+$$
+Cov(u_1,y_2) = Cov(u_1,v_2) = \frac{\alpha_2 Var(u_1)}{1-\alpha_1\alpha_2},
+$$
+
+with
+
+$$
+\text{Bias}(\hat{\alpha}_1) = E(\hat{\alpha}_1)-\alpha_1 =
+\frac{Cov(u_1, y_2)}{Var(y_2)} =
+\frac{\alpha_2}{1-\alpha_1\alpha_2}\frac{Var(u_1)}{Var(y_2)}.
+$$
+
+The supply model is upwards-sloping, $\alpha_2>0$. Typically, $\alpha_1\alpha_2<0$, and so this bias is positive. Why is this? Basically, 3 exogenous things can happen to the model:
+
+* The unobserved $u_1$ goes up or down.  This shifts the demand equation in @eq-simeq either in or out, thereby generating a positive locus of data points (the supply curve).  OLS will fit a line to this, which is obviously biased, and, in fact, biased upwards according to the algebra above.
+* Either the observed $z_2$ or the unobserved $u_2$ go up or down. See the @fig-system, where $z_1$ is our $z_2$.  Now
+the locus of datapoints being traced out is the correct demand equation. Clearly it is variations in the $z_2$ variable that will allow us to
+estimate the demand equation unbiasedly, but how?
+
+![Demand and Supply system from Wooldridge.](../../images/Figure16-1_Wooldridge_2012.png){#fig-system fig-alt="ALT"}
+
+What is needed is another estimator that identifies $\alpha_1$, and does that without bias. To recall the OLS estimator for the demand equation was
+
+$$
+\hat{\alpha}_1 = \frac{\widehat{Cov(y_1,y_2)}}{\widehat{Var(y_2)}} = \frac{\widehat{Cov(y_1,y_2)}}{\widehat{Cov(y_2,y_2)}},
+$$
+
+which produced a bias. Here we propose a different estimator (without much motivation which will be delivered in a later section) for $\alpha_1$.
+
+$$
+\widetilde{\alpha}_1 =
+\frac{\widehat{Cov(y_1,z_2)}}{\widehat{Cov(y_2,z_2)}}.
+$$
+This is called the **Instrumental Variables estimator** and the variable $z_2$ is called the instrument. All we wish to show at this stage is that you can have an estimator that can deliver an unbiased estimator. To show that it is unbiased, we substitute in the model being estimated (the demand equation in @eq-simeq) for $y_1$ in the numerator:
+
+$$
+\widetilde{\alpha}_1 =
+\frac{\widehat{Cov(\alpha_1 y_2 + u_1,z_2)}}{\widehat{Cov(y_2,z_2)}} 
+= \frac{\widehat{\alpha_1 Cov( y_2, z_2)}}{\widehat{Cov(y_2,z_2)}} + \frac{\widehat{Cov( u_1,z_2)}}{\widehat{Cov(y_2,z_2)}} =
+\alpha_1 + \frac{\widehat{Cov(u_1,z_2)}}{\widehat{Cov(y_2,z_2)}}.
+$$
+
+We then use similar arguments as before to show that, on average, but in large samples only, the IV estimator is unbiased. The argument goes, roughly, like this:
+
+$$
+E(\widetilde{\alpha}_1) =
+\alpha_1 + \frac{E[\widehat{Cov(u_1,z_2)]}}{E[\widehat{Cov(y_2,z_2)]}} =
+\alpha_1 + \frac{            Cov(u_1,z_2)  }{            Cov(y_2,z_2)  } =
+\alpha_1 + \frac{0                          }{            Cov(y_2,z_2)  } = \alpha_1.
+$$
+
+To conclude, when $y_2$ is correlated with $u_1$ because of simultaneity (or reverse causality), it is said that OLS suffers from **simultaneity bias**.  Instead of OLS, we can use the IV estimator introduced just now; this is covered properly in a later section. Crucial in this argument is the assumption that $Cov(u_1,z_2)=0$.
+
+STILL TO DO: Add a few understanding questions.
+
+
+# Reading
+
+The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under
+Measurement Error, and the section Simultaneity Bias in OLS.
+
+Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.
+
+Cunningham, S. (2021) [Causal Inference: The MixTape](https://mixtape.scunning.com/index.html)
+
+Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.

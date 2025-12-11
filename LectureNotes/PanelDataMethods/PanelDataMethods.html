@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Background Notes for ECON20222</title>
+<title>Panel Data Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -2379,36 +2379,15 @@ margin: 1em 0;
 </style>
 </head>
 
-<body class="quarto-light">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#the-simple-regression-model" id="toc-the-simple-regression-model" class="nav-link" data-scroll-target="#the-simple-regression-model">The simple regression model</a>
-  <ul class="collapse">
-  <li><a href="#sec-the_general_case" id="toc-sec-the_general_case" class="nav-link" data-scroll-target="#sec-the_general_case">The general case</a></li>
-  <li><a href="#derivation-of-ols-estimators" id="toc-derivation-of-ols-estimators" class="nav-link" data-scroll-target="#derivation-of-ols-estimators">Derivation of OLS Estimators</a>
-  <ul class="collapse">
-  <li><a href="#unbiasedness-and-consistency" id="toc-unbiasedness-and-consistency" class="nav-link" data-scroll-target="#unbiasedness-and-consistency">Unbiasedness and Consistency</a></li>
-  <li><a href="#estimating-regression-models-in-r" id="toc-estimating-regression-models-in-r" class="nav-link" data-scroll-target="#estimating-regression-models-in-r">Estimating regression models in R</a></li>
-  </ul></li>
-  <li><a href="#regression-inference" id="toc-regression-inference" class="nav-link" data-scroll-target="#regression-inference">Regression Inference</a></li>
-  <li><a href="#special-case-when-x-is-a-dummy-variable" id="toc-special-case-when-x-is-a-dummy-variable" class="nav-link" data-scroll-target="#special-case-when-x-is-a-dummy-variable">Special case: When <span class="math inline">\(x\)</span> is a dummy variable</a></li>
-  </ul></li>
-  <li><a href="#appendix-standardised-coefficients" id="toc-appendix-standardised-coefficients" class="nav-link" data-scroll-target="#appendix-standardised-coefficients">Appendix: standardised coefficients</a></li>
-  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading">Reading</a></li>
-  </ul>
-</nav>
-</div>
+
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Background Notes for ECON20222</h1>
+<h1 class="title">Panel Data Methods</h1>
 </div>
 
 
@@ -2425,442 +2404,336 @@ margin: 1em 0;
 </header>
 
 
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>These are the background notes are for ECON20222 Quantitative methods. You are assumed to have taken a first year course in statistics and therefore we assume that you are familiar with descriptive statistics, statistical inference (hypothesis testing and confidence intervals) and the basics of regression analysis as a descriptive tool as well as basic inference on regression parameters.</p>
-<p>These notes establish the methodology/econometrics (algebra/notation/terminology) that we will use throughout the unit.</p>
-<p>These background notes are essential reading and are examinable. The notes and slides go side-by-side, except that these notes focus solely on the methodology/econometrics, whereas the slides also refer to the empirical examples estimated using R. The book by Angrist and Pischke (2015) gives a flavour of where the subject is currently at, but is too detailed for what we want to cover. The same topics are covered in Cunningham’s text , which can be accessed online <a href="https://mixtape.scunning.com/index.html">here</a>. The notes are taken mainly from another well-known econometrics text, , by Wooldridge (2018).</p>
-<p>I am grateful to my colleague Martyn Andrews on whose material these notes are based on.</p>
-</section>
-<section id="the-simple-regression-model" class="level1">
-<h1>The simple regression model</h1>
-<section id="sec-the_general_case" class="level2">
-<h2 class="anchored" data-anchor-id="sec-the_general_case">The general case</h2>
-<p>We start with the </p>
-<p><span id="eq-erikson"><span class="math display">\[
-y = \alpha + \beta x + u.
+<section id="introduction-to-panel-data-structures" class="level1">
+<h1>Introduction to Panel Data Structures</h1>
+<p>We shall begin by introducing Panel Data structures. Being clear about data structures is a prerequisite for successful empirical work.</p>
+<p>Previously we discussed that parameter estimator bias can be caused by omitted variables sometimes also called unobserved heterogeneity. There will be situations when using panel data will give us a route to removing this bias.</p>
+<section id="two-period-panel-data" class="level2">
+<h2 class="anchored" data-anchor-id="two-period-panel-data">Two-period panel data</h2>
+<p>Suppose we have a dataset comprising <span class="math inline">\(N\)</span> individuals (or other micro unit) observed exactly <span class="math inline">\(T=2\)</span> times.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(t\)</span></th>
+<th><span class="math inline">\(y_{it}\)</span></th>
+<th><span class="math inline">\(1\)</span></th>
+<th><span class="math inline">\(d^1_t\)</span></th>
+<th><span class="math inline">\(d^2_t\)</span></th>
+<th><span class="math inline">\(x_{it}\)</span></th>
+<th><span class="math inline">\(a_{i}\)</span></th>
+<th><span class="math inline">\(u_{it}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(y_{11}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{11}\)</span></td>
+<td><span class="math inline">\(a_{1}\)</span></td>
+<td><span class="math inline">\(u_{11}\)</span></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>2</td>
+<td><span class="math inline">\(y_{12}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{12}\)</span></td>
+<td><span class="math inline">\(a_{1}\)</span></td>
+<td><span class="math inline">\(u_{12}\)</span></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>1</td>
+<td><span class="math inline">\(y_{21}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{21}\)</span></td>
+<td><span class="math inline">\(a_{2}\)</span></td>
+<td><span class="math inline">\(u_{21}\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td><span class="math inline">\(y_{22}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{22}\)</span></td>
+<td><span class="math inline">\(a_{2}\)</span></td>
+<td><span class="math inline">\(u_{22}\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N\)</span></td>
+<td>1</td>
+<td><span class="math inline">\(y_{N1}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{N1}\)</span></td>
+<td><span class="math inline">\(a_{N}\)</span></td>
+<td><span class="math inline">\(u_{N1}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(N\)</span></td>
+<td>2</td>
+<td><span class="math inline">\(y_{N2}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{N2}\)</span></td>
+<td><span class="math inline">\(a_{N}\)</span></td>
+<td><span class="math inline">\(u_{N2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The variables we observe are</p>
+<ul>
+<li><span class="math inline">\(y_{it}\)</span> and <span class="math inline">\(x_{it}\)</span>; both vary over both <span class="math inline">\(i\)</span> and <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(d^1_t\)</span> is a period 1 time dummy; it only varies over <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(d^2_t\)</span> is a period~2 time dummy; it only varies over <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(1\)</span> is the constant.</li>
+</ul>
+<p>whereas the variables not observed are:</p>
+<ul>
+<li><span class="math inline">\(a_i\)</span> does not vary over <span class="math inline">\(t\)</span>. It is a so-called <strong>fixed effect</strong>, or <strong>unobserved heterogeneity</strong>. Think about a personal characteristic of subject <span class="math inline">\(i\)</span> that is constant through time. This could be things like general levels of ability or intelligence.</li>
+<li><span class="math inline">\(u_{it}\)</span> (not shown) is an <strong>idiosyncratic error</strong>. It is uncorrelated with everything (like most error terms). In particular:</li>
+</ul>
+<p><span class="math display">\[
+Cov(x_{i1},u_{i1})=Cov(x_{i2},u_{i2})=0 ~~~(AFD1)
+\]</span></p>
+<p>The crucial problem is that the omitted variable <span class="math inline">\(a_i\)</span> is correlated with <span class="math inline">\(x_{it}\)</span>. For example, in the wage-education model in the Omitted Variable Bias Section (now with slightly different notation but essentially the same):</p>
+<p><span id="eq-woods"><span class="math display">\[
+y_{it} = \beta_0 + \delta_0 d^2_t + \beta_1 x_{it} + \beta_2 a_{i} + u_{it}.
 \tag{1}\]</span></span></p>
-<p>The sample version of this model is written:</p>
-<p><span class="math display">\[
-y_i = \alpha + \beta x_i + u_i,
-\]</span></p>
-<p>as <a href="#eq-erikson" class="quarto-xref">Equation 6</a> holds for each observation <span class="math inline">\(i\)</span>. This notation emphasises that we have a sample of data at hand:</p>
-<p><span class="math display">\[
-\{(y_i, x_i): i=1,\dots,n \}.
-\]</span></p>
-<p>The subscript is useful as it reflects the type of data we are using, eg subscript <span class="math inline">\(i\)</span> is used for cross-section data, <span class="math inline">\(t\)</span> is used for time-series data, and <span class="math inline">\(it\)</span> is used for panel data or repeated cross-sections. The subscript is also known as **the unit of observation*}**.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Card and Krueger - Example
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In the Card and Krueger example <span class="math inline">\(y_{it}, x_{it}\)</span> are <span class="math inline">\(EMPFT_{it}\)</span> (number of full-time employees) and <span class="math inline">\(WAGE_{it}\)</span> (the starting wage) and the Card-Krueger dataset is an example of microeconometric panel data. The unit of observation is a fast/food/outlet (<span class="math inline">\(i\)</span>)–half-year (<span class="math inline">\(t\)</span>).</p>
-</div>
-</div>
-<p>By contrast to <span class="math inline">\((y_i, x_i)\)</span>, <span class="math inline">\(u_i\)</span> is unobserved, but, like <span class="math inline">\((y_i,x_i)\)</span>, <span class="math inline">\(u_i\)</span> is a random variable with mean, variance, etc.</p>
-<p>The ultimate objective is to estimate the parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> using some econometric estimator. The most well-known is OLS. To do this we need 2 <strong>assumptions</strong> because there are 2 unknown parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. They are:</p>
-<p><span class="math display">\[
-E(u)     = 0~(A1)
-\]</span></p>
-<p><span class="math display">\[
-E(u | x) = 0 ~ (A2).
-\]</span> These are often called or . The latter Assumption A2 is absolutely crucial throughout everything we do in empirical economics. It is best to think of <span class="math inline">\(E(u | x)\)</span> as the same as <span class="math inline">\(E(u x)\)</span>. If the assumption is true, <span class="math inline">\(E(u x)=0\)</span>, then it follows that <span class="math inline">\(Cov(u x)=0\)</span>. In words, <span class="math inline">\(u\)</span> and <span class="math inline">\(x\)</span> are said to be . What this means and whether it is true (or otherwise) is a crucial and recurring theme in this course.</p>
-<p>Next, from <a href="#eq-erikson" class="quarto-xref">Equation 6</a></p>
-<p><span class="math display">\[
-\begin{align*}
-E(y|x) &amp;= E(\alpha |x) + E(\beta x |x) + E(u|x) \\
-        &amp;= \alpha + \beta x + E(u|x)
-\end{align*}
-\]</span></p>
-<p>by **conditioning on <span class="math inline">\(x\)</span>*. We now use A2 to define the <strong>population regression function</strong> or <strong>conditional expectation function</strong>:</p>
-<p><span class="math display">\[
-E(y|x) = \alpha + \beta x.
-\]</span></p>
-<p>When this is estimated, it is written</p>
-<p><span class="math display">\[
-\hat{y}_i = \hat{\alpha} + \hat{\beta} x_i.
-\]</span></p>
-<p>and is known as the <strong>sample regression function</strong> or <strong>regression line</strong> or <strong>line of best fit</strong>. It is often written out in full, with numbers in brackets underneath the numerical estimates. These are called standard errors (more below). The estimate and its standard error allow us to test various hypotheses about the parameters (typically on <span class="math inline">\(\beta\)</span>).</p>
-<p>From this sample regression function,</p>
-<p><span class="math display">\[
-\hat{\beta} = \Delta \hat{y}_i/ \Delta x_i,
-\]</span></p>
-<p>and so the correct way to interpret <span class="math inline">\(\hat{beta}\)</span> is the resulting change in <span class="math inline">\(\hat{y}_i\)</span> for a one unit change in <span class="math inline">\(x_i\)</span>. If <span class="math inline">\(y\)</span> is specified as a logged variable in <a href="#eq-erikson" class="quarto-xref">Equation 6</a>, <span class="math inline">\(\log y_i = \alpha + \beta x_i + u_i\)</span>, we have</p>
-<p><span class="math display">\[
-100\hat{\beta} \approx 100 \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i}
-\equiv \frac{\%\Delta \hat{y}_i}{\Delta x_i},
-\]</span></p>
-<p>which means, if we muliply <span class="math inline">\(\hat{beta}\)</span> by 100, the <strong>percentage point</strong> change in <span class="math inline">\(y\)</span> for a one-unit change in <span class="math inline">\(x\)</span>.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Precentage point v. percentage change
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This is not a the <strong>percentage change in <span class="math inline">\(y\)</span></strong>. For instance, if the unemployment rate increases from 4% to 6% that is a 2% point increase but a 50% percent increase in the unemployment rate.</p>
-</div>
-</div>
-<p>If both <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> are specified as logged variables in <a href="#eq-erikson" class="quarto-xref">Equation 6</a>, <span class="math inline">\(\log y_i = \alpha + \beta \log x_i + u_i\)</span>, we have</p>
-<p><span class="math display">\[
-\hat{\beta} \approx \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i/x_i}
-\equiv \frac{\%\Delta \hat{y}_i}{\%\Delta x_i},
-\]</span></p>
-<p>which means that <span class="math inline">\(\hat{beta}\)</span> is the percentage point change in <span class="math inline">\(y\)</span> for a one percentage point change in <span class="math inline">\(x\)</span>. Now <span class="math inline">\(\hat{\beta}\)</span> is interpreted as an <strong>elasticity</strong>. Elasticities are very useful because they are unit-free. (See the appendix to this section for another unit-free interpretation.)</p>
-</section>
-<section id="derivation-of-ols-estimators" class="level2">
-<h2 class="anchored" data-anchor-id="derivation-of-ols-estimators">Derivation of OLS Estimators</h2>
-<p>We now derive the Ordinary Least Squares or <strong>OLS estimators</strong> <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>, using A1 and A2. These are formulae for <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span> which only involve quantities that can be computed from a sample of data. First, we form expectations of both sides of <a href="#eq-erikson" class="quarto-xref">Equation 6</a>:</p>
-<p><span class="math display">\[
-\begin{align*}
-E(y) &amp;= E(\alpha) + E(\beta x) + E(u), \\
-      &amp;= \alpha + \beta E(x) + E(u),
-\end{align*}
-\]</span></p>
-<p>and then use A1:</p>
-<p><span id="eq-alli"><span class="math display">\[
-E(y) = \alpha + \beta E(x).
-\tag{2}\]</span></span></p>
-<p>Subtracting from <a href="#eq-erikson" class="quarto-xref">Equation 6</a>:</p>
-<p><span class="math display">\[
-y-E(y) = \beta [x-E(x)] + u.
-\]</span> Now multiply by <span class="math inline">\(x-E(x)\)</span></p>
-<p><span class="math display">\[
-[y-E(y)][x-E(x)] = \beta [x-E(x)]^2 + u[x-E(x)].
-\]</span></p>
-<p>and form expectations of each term</p>
-<p><span class="math display">\[
-Cov(y,x) = \beta~Var(x) + Cov(u,x).
-\]</span></p>
-<p>We now use Assumption A2, <span class="math inline">\(Cov(u,x)=0\)</span>, and so obtain the following expression for the OLS estimator <span class="math inline">\(\beta\)</span>:</p>
-<p><span id="eq-kane"><span class="math display">\[
-\beta = \frac{Cov(y,x)}{Var(x)}.
-\tag{3}\]</span></span></p>
-<p>To compute this, we replace population variances and covariances by their sample equivalents (the <strong>analogy principle</strong>), and so obtain the <strong>sample estimator</strong> (unique for any given sample):</p>
-<p><span id="eq-harry"><span class="math display">\[
-\hat{\beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
-\frac{\Sigma_i (y_i-\bar{y})(x_i-\bar{x})/n}{\Sigma_i (x_i-\bar{x})^2/n} =
-\frac{\Sigma_i (y_i-\bar{y})(x_i-\bar{x})  }{\Sigma_i (x_i-\bar{x})^2  },
-\tag{4}\]</span></span></p>
-<p>where <span class="math inline">\(\bar{x} = \frac{1}{n} \Sigma_i x_i\)</span> and <span class="math inline">\(\bar{y} = \frac{1}{n} \Sigma_i y_i\)</span> are the usual sample means. All this assumes that <span class="math inline">\(\widehat{Var(x)}&gt;0\)</span>, that is <span class="math inline">\(x\)</span> exhibits some variation in the sample. Finally, from <a href="#eq-alli" class="quarto-xref">Equation 2</a>, we can write:</p>
-<p><span class="math display">\[
-\alpha = E(y)- \beta E(x),
-\]</span></p>
-<p>which we compute using <a href="#eq-kane" class="quarto-xref">Equation 3</a>} and sample means <span class="math inline">\(\bar{y}\)</span> and <span class="math inline">\(\bar{x}\)</span>:</p>
-<p><span class="math display">\[
-\hat{\alpha} = \bar{y} - \hat{\beta} \bar{x}.
-\]</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Regression without explanatory variable x
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>When the model does not contain <span class="math inline">\(x\)</span>, ie <span class="math inline">\(\beta=0\)</span>, then <span class="math inline">\(\alpha = E(y)\)</span> and <span class="math inline">\(\hat{\alpha} = \bar{y}\)</span>.</p>
-</div>
-</div>
-<p>The expression for the OLS estimator <span class="math inline">\(\hat{\beta}\)</span> in <a href="#eq-harry" class="quarto-xref">Equation 4</a> is key. The corresponding key assumption is A2, and is said to <strong>identify</strong> the underlying population parameter <span class="math inline">\(\beta\)</span>. (A1 is less important, but is needed to derive the expression for <span class="math inline">\(\hat{\alpha}\)</span>.)</p>
-<p>Next, we define <span class="math inline">\(\hat{u}_i \equiv y_i-\hat{y}_i\)</span> and this <strong>residual</strong> is computed for every observation <span class="math inline">\(i\)</span>. By construction,</p>
-<p><span class="math display">\[
-\Sigma_i \hat{u}_i=0 \qquad \Sigma_i \hat{u}_i x_i =0,
-\]</span></p>
-<p>and this is because they match Assumptions A1/A2: <span class="math inline">\(E(u) = E(ux)=0\)</span>. Whilst this makes intuitive sense, the obvious problem is that OLS imposes <span class="math inline">\(\Sigma_i \hat{u}_i x_i =0\)</span> even though A2 may not be true.</p>
-<p>An alternative and identical way of deriving <span class="math inline">\(\hat{\alpha}, \hat{\beta}\)</span> is to minimize</p>
-<p><span class="math display">\[
-\Sigma_i \hat{u}_i^2 \equiv \Sigma_i (y_i-\hat{y}_i)^2 =
-\Sigma_i (y_i - \hat{\alpha} - \hat{\beta} x_i)^2.
-\]</span></p>
-<p>Whilst this is less appealing, it does convey the idea of fitting a line as closely as possible to a scatter-plot of data and it is where OLS gets its name from. We omit the details of this derivation.</p>
-<p>We now give an intuitive explanation as to when <span class="math inline">\(\hat{beta}\)</span> can be said to be <strong>unbiased</strong>. First, from <a href="#eq-harry" class="quarto-xref">Equation 4</a></p>
-<p><span class="math display">\[
-\begin{multline*}
-\hat{beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
-\frac{\widehat{Cov}(\alpha + \beta x +u,x)}{\widehat{Var}(x)} \quad
-\text{[using @eq-erikson]} = \\
-\frac{\beta \widehat{Cov}(x,x) + \widehat{Cov}(u,x)}{\widehat{Var}(x)} \quad
-\text{[as $\widehat{Cov}(\alpha,x) \equiv 0$ ]}
-=\beta + \frac{\widehat{Cov}(u,x)}{\widehat{Var}(x)},
-\end{multline*}
-\]</span></p>
-<p>[as <span class="math inline">\(\widehat{Cov}(x,x) \equiv \widehat{Var}(x)\)</span>]. In one dataset we cannot know whether <span class="math inline">\(\widehat{Cov}(u,x)\)</span> is zero or otherwise. The key assumption is that <span class="math inline">\(E [\widehat{Cov}(u,x)] =Cov(u,x)=0\)</span> when averaging over all possible datasets that nature could have generated, not just the one dataset we end up with. This rather subtle argument means that <span class="math inline">\(\hat{\beta}\)</span> is unbiased</p>
-<p><span id="eq-danny_danny"><span class="math display">\[
-E(\hat{beta}) =
-\beta + \frac{E [\widehat{Cov}(u,x)]}{E [\widehat{Var}(x)]} =
-\beta + \frac{Cov(u,x)}{Var(x)} = \beta.
-\tag{5}\]</span></span></p>
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Caution
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Normally <span class="math inline">\(E(X/Y) \neq E(X)/E(Y)\)</span>, but here it turns out one can write <span class="math inline">\(E[\frac{\widehat{Cov}(u,x)}{\widehat{Var}(x)}] = \frac{E[\widehat{Cov}(u,x)]}{E [\widehat{Var}(x)]}\)</span>.</p>
-</div>
-</div>
-<p>In words, over all possible datasets, the average value of the estimator <span class="math inline">\(\hat{\beta}\)</span> is the true <span class="math inline">\(\beta\)</span>, <strong>providing</strong> we can assume <span class="math inline">\(Cov(u,x)=0\)</span>. To slightly misquote Angrist and Pischke (2015, p.35):</p>
-<p>Assumption A2 is absolutely crucial in all applied economics. As <span class="math inline">\(u\)</span> is fundamentally unobserved, we cannot look at the data to examine/test/check whether it is true or not. We can only use common sense/reasoned argument/economic theory to establish that Assumption A2 is true. Applied economists spend a lot of time arguing about these things. In a later section on endogeneity, we document three common situations when <span class="math inline">\(Cov(u,x)\)</span> often is not zero. In later sections, we discuss what we can do about it, which is to use other estimators than OLS. If <span class="math inline">\(Cov(u,x)\neq 0\)</span>, then <span class="math inline">\(x\)</span> is said to be <strong>endogenous</strong>.</p>
-<p>Three important consequences of believing A2 to be true are:</p>
-<ul>
-<li><span class="math inline">\(x\)</span> is said to be <strong>exogenous</strong> (this is an econometric definition, more general than that used by economists);</li>
-<li>the OLS estimator <span class="math inline">\(\hat{\beta}\)</span> is said to be <strong>unbiased</strong>; and</li>
-<li>the effect of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span> (given by the OLS estimate <span class="math inline">\(\hat{beta}\)</span>) is said to be <strong>causal</strong> (rather than just a correlation).</li>
-</ul>
-<p>Finding causal relationships is often seen as the “holy grail” of applied economists.</p>
-<section id="unbiasedness-and-consistency" class="level3 {callout-note}">
-<h3 class="anchored" data-anchor-id="unbiasedness-and-consistency">Unbiasedness and Consistency</h3>
-<p>A property related to <strong>unbiasedness</strong> is <strong>consistency</strong>, which is unbiasedness, but only in “large” samples.</p>
-</section>
-<section id="estimating-regression-models-in-r" class="level3 {callout-note}">
-<h3 class="anchored" data-anchor-id="estimating-regression-models-in-r">Estimating regression models in R</h3>
-<p>The above instructions for estimating regression models are implemented in R via the function <code>lm(y~x)</code>.</p>
-</section>
-</section>
-<section id="regression-inference" class="level2">
-<h2 class="anchored" data-anchor-id="regression-inference">Regression Inference</h2>
-<p>As you have seen from the discussion above we can use sample statistics like <span class="math inline">\(\widehat{Cov}(y,x)\)</span>, <span class="math inline">\(\widehat{Var}(y)\)</span>, <span class="math inline">\(\bar{y}\)</span> and <span class="math inline">\(\bar{x}\)</span> to obtain sample estimates for <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\hat{\alpha}\)</span>. This immediately implies that for different samples we would obtain different estimates for <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\hat{\alpha}\)</span> or in other words, these are actually random variables and the values we obtain are draws from these random variables.</p>
-<p>We wish to learn from the estimated values for <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\hat{\alpha}\)</span> something about the true (and assumed fixed) population values <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span>. The process of using <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\hat{\alpha}\)</span> to learn something about the population values <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> is called statistical inference.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-What does it mean when <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\hat{\alpha}\)</span> are random variables?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>First recall what the difference between a random variable and a realisation of a random variable is. Take a dice. The outcome of rolling the dice ones is a random variable. If it is a fair dice then we actually know exactly how to describe this random variable. It is fully characterised by the distribution that puts a probability of <span class="math inline">\(1/6\)</span> on each of the possible outcomes 1 to 6.</p>
-<p>Once you rolled the dice you have a particular outcome, say a 4.</p>
-<p>Once you calculated, say a <span class="math inline">\(\hat{\beta} = 0.34\)</span> that is equivalent of the 4, i.e. one particular outcome. However, we are not interested in a particular outcome of that sample. This is what inference is about.</p>
-</div>
-</div>
-<p>In econometrics, for every estimator like <span class="math inline">\(\hat{\beta}\)</span>, there is an associated standard error, called <span class="math inline">\(\text{se}(\hat{\beta})\)</span>. It captures the so-called <strong>sampling variation</strong> which comes about because a second, third, fourth sample etc would generate a different <span class="math inline">\(\hat{\beta}\)</span> each time. This pair of numbers, <span class="math inline">\(\hat{\beta}\)</span> and <span class="math inline">\(\text{se}(\hat{beta})\)</span>, allows us to conduct <strong>hypothesis tests</strong> about <span class="math inline">\(\beta\)</span>, written:</p>
-<p><span class="math display">\[
-H_0: \beta = b,
-\]</span></p>
-<p>where <span class="math inline">\(b\)</span> is often, but not always, zero. If the null hypothesis is true, then the quantity</p>
-<p><span class="math display">\[
-\frac{\hat{\beta}-b}{\text{se}(\hat{\beta})} \sim t(n-2).
-\]</span></p>
-<p>This says that the LHS, the so-called the <strong>test statistic</strong>, has a certain statistical distribution—hence the “<span class="math inline">\(\sim\)</span>” symbol—on the RHS. Here we have a <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n-2\)</span> degrees of freedom. We can then use this distribution to evaluate how likely it would have been to obtain the actual sample we have, assuming the null hypothesis is indeed actually true; this probability is known as a <strong>p-value</strong>.</p>
-<p>Two equivalent decision rules follow:</p>
-<ul>
-<li><strong>Decision Rule 1</strong> (DR1): If this p-value is smaller than a pre-specified <strong>significance level</strong> (typically 5%), then we “reject <span class="math inline">\(H_0\)</span>”. 5% is the probability of a Type-I error. If, however, the p-value is larger than our pre-specified significance level, then we “do not reject <span class="math inline">\(H_0\)</span>”.</li>
-<li><strong>Decision Rule 2</strong> (DR2): If the absolute value of the test statistic is larger than the so-called <strong>critical value</strong>, then we reject <span class="math inline">\(H_0\)</span>. If, however, the absolute value of the test statistic is smaller than the critical value, then we <strong>do not reject <span class="math inline">\(H_0\)</span></strong>.</li>
-</ul>
-<p>The critical value in decision rule 2 is chosen so that DR1 and DR2 give the same .</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Further comments on hypothesis testing
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>We never “accept <span class="math inline">\(H_0\)</span>”; instead we “do not reject <span class="math inline">\(H_0\)</span>”</li>
-<li>This general approach to hypothesis testing recurs throughout econometrics. It is only the details that vary (the hypothesis itself, thereby generating different distributions such as Normal, Chi-squared, F, etc)</li>
-<li>In general, students do not need to know the formula for <span class="math inline">\(\text{se}(\hat{beta})\)</span> (the software needs to, of course). But see next point.</li>
-<li>Depending on the type of problem there are different versions of <span class="math inline">\(\text{se}(\hat{beta})\)</span>. The correct version depends on the type of assumption made on the unobserved error terms. There are “traditional” and “robust” ( or “heteroskedasticity robust” or “White” standard errors. By default we almost always want to use the latter, the “robust” standard errors. There are some additional specialised versions of standard errors, such as the “heteroskedasticity and autocorrelation robust” (or “HAC” or “Newey-West”) standard errors and the “cluster robust” standard errors. We will mention later when these may be important. YOu will not need to know the formulae but you will need to know which ones to use such that you can ask your software to calculate the correct ones.</li>
-</ul>
-</div>
-</div>
-</section>
-<section id="special-case-when-x-is-a-dummy-variable" class="level2">
-<h2 class="anchored" data-anchor-id="special-case-when-x-is-a-dummy-variable">Special case: When <span class="math inline">\(x\)</span> is a dummy variable</h2>
-<p>A very important special case is when <span class="math inline">\(x\)</span> is a so-called <strong>dummy or binary variable</strong>. Everything we discussed about regression model applies, but there are differences as well, on which we now focus.</p>
-<p>We start with the same model, given by</p>
-<p><span id="eq-erikson"><span class="math display">\[
-y = \alpha + \beta x + u,
-\tag{6}\]</span></span></p>
-<p>but now <span class="math inline">\(x\)</span> is either 0 (eg a woman) or 1 (eg a man). <span class="math inline">\(x\)</span> is said to be a dummy variable. There are many of these variables in cross-section datasets.</p>
-<p>The scatter plot changes in a big way. Instead of a “fuzz” of data-points, we get something like this:</p>
-<div id="fig-LABEL" class="quarto-float quarto-figure quarto-figure-center anchored" alt="ALT">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-LABEL-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img role="img" aria-label="ALT" src="data:image/png;base64,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" class="img-fluid figure-img" alt="ALT">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-LABEL-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: CAP
-</figcaption>
-</figure>
-</div>
-<p>We can see two vertical distributions of data, one for <span class="math inline">\(x_i=0\)</span> (women) and the other for <span class="math inline">\(x_i=1\)</span> (men). As an example, suppose <span class="math inline">\(y_i\)</span> are each individual’s earnings. The sample mean for the <span class="math inline">\(x_i=0\)</span> (female) sub-sample is denoted <span class="math inline">\(\bar{y}_0\)</span>, and is located in the middle of the female distribution (highlighted in red). <span class="math inline">\(\bar{y}_1\)</span> is defined analogously for men.</p>
-<p>The population regression function allows us to understand what is being estimated and what can be tested. Assumptions A1/A2 imply:</p>
-<p><span class="math display">\[
-E(u|x=0) = E(u|x=1) = 0.~~~A3
-\]</span></p>
-<p>We next write out the population regression function for both values of <span class="math inline">\(x\)</span>:</p>
-<p><span id="eq-llorente"><span class="math display">\[
-\mu_0 \equiv E (y | x=0) = \alpha + E(u|x=0) \qquad
-\mu_1 \equiv E (y | x=1) = \alpha + \beta + E(u|x=1).
-\tag{7}\]</span></span></p>
-<p>We now impose Assumption A3,</p>
-<p><span class="math display">\[
-E (y | x=0) = \alpha + 0 \qquad
-E (y | x=1) = \alpha + \beta + 0,
-\]</span></p>
-<p>from which</p>
-<p><span id="eq-levi"><span class="math display">\[
-\beta = E (y | x=1) - E (y | x=0) \equiv \mu_1-\mu_0.
-\tag{8}\]</span></span></p>
-<p>From this, <a href="#eq-erikson" class="quarto-xref">Equation 6</a> can be rewritten as</p>
-<p><span class="math display">\[
-y = \mu_0 + (\mu_1-\mu_0)x + u.
-\]</span></p>
-<p><a href="#eq-levi" class="quarto-xref">Equation 8</a> is the key result, that <span class="math inline">\(\beta\)</span> can be interpreted as the <strong>population raw differential</strong>. Using the same technique of replacing population means by their sample averages, we have</p>
-<p><span id="eq-de_ghea"><span class="math display">\[
-\hat{\beta} = \bar{y}_1-\bar{y}_0,
-\tag{9}\]</span></span></p>
-<p>which is the <strong>sample raw differential</strong>. Also, <span class="math inline">\(\hat{\alpha}=\bar{y}_0\)</span>.</p>
-<p>This result is <strong>the</strong> workhorse result in microeconometrics and will be used repeatedly though these notes. Note that we can write the <span class="math inline">\(\bar{y}\)</span>s in two different but interchangeable ways:</p>
-<p><span class="math display">\[
-\bar{y}_1 = n_1^{-1}\Sigma_{i \in 1} y_i = n^{-1}\Sigma^n_{i=1} x_i y_i.
-\]</span></p>
-<p>In the latter, multpliplying <span class="math inline">\(y_i\)</span> by <span class="math inline">\(x_i\)</span> before summing means that one is only summimg the <span class="math inline">\(y_i\)</span>s for whom <span class="math inline">\(x_i=1\)</span>. In the former, “<span class="math inline">\(i \in 1\)</span>” means “all <span class="math inline">\(i\)</span>s who belong to group 1”. Similarly,</p>
-<p><span class="math display">\[
-\bar{y}_0 = n_0^{-1}\Sigma_{i \in 0} y_i = n^{-1}\Sigma^n_{i=1} (1-x_i)y_i.
-\]</span></p>
-<p>In the figure, this result makes perfect sense. <span class="math inline">\(\bar{y}_1-\bar{y}_0\)</span> is the vertical distance between the 2 red squares. The horizontal distance is unity, and so the regression is the line that joins the two blobs, whose slope is <span class="math inline">\(\hat{\beta}\)</span>. Comparing with the general case in <a href="#sec-the_general_case" class="quarto-xref">Section 2.1</a>, the interpretation of the sample regression function is the same, but the scatter plot is different.</p>
-<p>We can write the regression line as</p>
-<p><span id="eq-david"><span class="math display">\[
-\hat{y}_i = \bar{y}_0 + (\bar{y}_1-\bar{y}_0) x_i.
-\tag{10}\]</span></span></p>
-<p>The definition of a residual remains the same, <span class="math inline">\(\hat{u}_i \equiv y_i-\hat{y}_i\)</span>. To interpret, switch <span class="math inline">\(x_i\)</span> on and off:</p>
-<p><span class="math display">\[
-\hat{u}_i=
-\begin{cases}
-&amp;y_i-\bar{y}_0 \quad \text{if $x_i=0$;} \\
-&amp;y_i-\bar{y}_1 \quad \text{if $x_i=1$.}
-\end{cases}
-\]</span></p>
-<p>In words, <span class="math inline">\(\hat{u}_i\)</span> is the gap between an individual’s (eg a woman) earnings and the average for their group (women). <span class="math inline">\(\hat{u}_i\)</span> is often said to capture <strong>within variation</strong>. By contrast, <span class="math inline">\(\bar{y}_1-\bar{y}_0\)</span> is said to capture <strong>between variation</strong>. It is also the case that <span class="math inline">\(\Sigma_{i \in 1}\hat{u}_i=\Sigma_{i \in 2}\hat{u}_i =0\)</span> matching Assumption A3 above.</p>
-<p>In this context, the obvious hypothesis to test is whether the population means for the 2 sub-samples are the same:</p>
-<p><span class="math display">\[
-H_0: \mu_1=\mu_0 \equiv H_0: \beta=0.
-\]</span></p>
-<p>This occurs literally all the time in economics (and more generally in social science and public discourse).</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Examples for interesting dummy setups
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>There are numerous examples you can think of here</p>
-<ul>
-<li>Do women earn more than men?</li>
-<li>Do men run faster ultra marathons than women?</li>
-<li>Do high-school graduates live longer than non-high-school graduates?</li>
-</ul>
-<p>the key features here are that the explanatory variables are binary and the outcome is a quantitative variable.</p>
-</div>
-</div>
-<p>If we repeat our general approach to hypothesis testing in <a href="#sec-the_general_case" class="quarto-xref">Section 2.1</a>, the test statistic still has a <span class="math inline">\(t\)</span> distribution,</p>
-<p><span class="math display">\[
-\frac{\bar{y}_1-\bar{y}_0-0}{\text{se}(\bar{y}_1-\bar{y}_0)} \sim t(n-2).
-\]</span></p>
-<p>if the null hypothesis is true. Again, we will not discuss how to calculate <span class="math inline">\(\text{se}(\bar{y}_1-\bar{y}_0)\)</span> but rather assume that in doubt the software we use knows how to calculate this standard error.</p>
-<p>When the dependent variable is a logarithmic variable</p>
-<p><span class="math display">\[
-\log y = \alpha + \beta x + u
-\]</span></p>
-<p>then <a href="#eq-de_ghea" class="quarto-xref">Equation 9</a> becomes</p>
-<p><span class="math display">\[
-\hat{\beta} = \log \bar{y}_1 - \log \bar{y}_0.
-\]</span></p>
-<p>As in the general case before, the following algebra gives a unit-free interpretation:</p>
-<p><span class="math display">\[
-\begin{align*}
-\hat{\beta} &amp;= \log \bar{y}_1 - \log \bar{y}_0 \\
-         &amp;= \log \left(1+ \frac{\bar{y}_1 - \bar{y}_0}{\bar{y}_0} \right) \\
-         &amp;\equiv \log \left(1+ \%\Delta y/100 \right) \\
-         &amp;\approx  \%\Delta y/100 \quad \text{if $\%\Delta y/100$ is
-small}.
-\end{align*}
-\]</span></p>
-<p>In other words, when <span class="math inline">\(\%\Delta y/100\)</span> is small, one can interpret <span class="math inline">\(\hat{\beta}\)</span> as the raw differential in the dependent variable. This is typically described as a <strong>log-point</strong> change. When <span class="math inline">\(\%\Delta y/100\)</span> is not small, one needs to compute the same concept from the third line:</p>
-<p><span class="math display">\[
-\%\Delta y = 100[\exp(\hat{\beta})-1],
-\]</span></p>
-<p>and is described as a <strong>percentage-point</strong> raw differential.</p>
-<p>One advantage of the log-point interpretation is that it is invariant to a redefinition of <span class="math inline">\(x\)</span> by swapping <span class="math inline">\(x=1\)</span> with <span class="math inline">\(x=0\)</span> (eg now <span class="math inline">\(x=0\)</span> is man). All that happens is that <span class="math inline">\(\hat{\beta}\)</span> swaps sign.</p>
-<p>Finally, one might wonder why we need to estimate a regression model when all one needs to do is compute 2 sample means and their variances. The answers will become apparent as the course develops. At the moment, we simply assert that regression is an all-embracing methodology.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Practice Question
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Assume that you estimated a log-level model, where the dependent variable is log-wages and the explanatory variable is a dummy variable indicating that whether an individual has a high-school degree (<span class="math inline">\(x=1\)</span>) or not (<span class="math inline">\(x = 0\)</span>). You obtained a <span class="math inline">\(\hat{\beta} = 0.21\)</span>.</p>
-<p>Which of the following interpretations is correct?</p>
-<div id="radio_QVDIUYXJZM" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_QVDIUYXJZM" value> <span>The log income elasticity is 0.21</span></label><label><input type="radio" autocomplete="off" name="radio_QVDIUYXJZM" value="answer"> <span>Income for high-school graduates is, on average 21 log points higher than for those who have no high-school diploma</span></label><label><input type="radio" autocomplete="off" name="radio_QVDIUYXJZM" value> <span>the raw differential between those and without high-school diploma is 21%</span></label>
-</div>
-<p>What is the (average) percentage point increase for those with a high-school diploma? [to 4 decimal points]</p>
-<p><input class="webex-solveme nospaces" data-tol="1e-04" size="16" data-answer="[&quot;23.3678059956743&quot;]"></p>
-</div>
-</div>
-</section>
-</section>
-<section id="appendix-standardised-coefficients" class="level1">
-<h1>Appendix: standardised coefficients</h1>
-<p>Another way of producing unit-free estimates—as with elasticities—is the following. Suppose a simple regression has been estimated:</p>
-<p><span class="math display">\[
-\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i + \hat{u}_i.
-\]</span></p>
-<p>Subtract <span class="math inline">\(\bar{y} =\hat{\alpha} +\hat{beta} \bar{x}\)</span> (reflecting the fact that the point of averages is always on the regression line):</p>
-<p><span class="math display">\[
-\hat{y}_i - \bar{y} = \hat{\beta}_1 (x_i - \bar{x}) + \hat{u}_i,
-\]</span></p>
-<p>and divide by the sample deviation of <span class="math inline">\(y\)</span>, <span class="math inline">\(\hat{\sigma}_y\)</span>:</p>
-<p><span class="math display">\[
-\frac{\hat{y}_i - \bar{y}}{\hat{\sigma}_y} = \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\hat{\beta}_1 \left( \frac{x_i - \bar{x}}{\hat{\sigma}_x} \right ) + \frac{\hat{u}_i}{\hat{\sigma}_y},
-\]</span> where <span class="math inline">\(\hat{sigma}_x\)</span> is the sample deviation of <span class="math inline">\(x\)</span>. Both <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> have been <strong>standardised</strong>. The new regression is written:</p>
-<p><span class="math display">\[
-z_y = \hat{b}_1 z_x + \text{error}_i
-\]</span></p>
 <p>where</p>
+<ul>
+<li><span class="math inline">\(y_{it}\)</span> is log earnings (<code>lhrpay</code>)</li>
+<li><span class="math inline">\(x_{it}\)</span> is years of schooling (<code>educ</code>)</li>
+<li><span class="math inline">\(a_{i}\)</span> is unobserved innate ability (<code>abil</code>)</li>
+</ul>
+<p>and we also included a dummy variable for the 2nd period, $d^2_t $. Because of the dummy-variable trap, one of two time dummies must be dropped, here <span class="math inline">\(d^1_t\)</span>. (Recall one cannot have a constant, male dummy <strong>and</strong> a female dummy in the same regression.)</p>
+<p>Here, ability is correlated with education. If <span class="math inline">\(a_i\)</span> were <strong>not</strong> correlated with <span class="math inline">\(x_{it}\)</span>, the OVB formula says OLS in unbiased and we wouldn’t have a problem in the first place. The way that panel data can help is through the crucial assumption that <span class="math inline">\(a_i\)</span> is constant over time. This is an untestable assumption as <span class="math inline">\(a_i\)</span> is not observed.</p>
+<p>The above equation is also called a <strong>fixed effects</strong> model.</p>
+</section>
+</section>
+<section id="sec-FD" class="level1">
+<h1>The First Difference estimator (FD)</h1>
+<p>The First Difference estimator makes use of this setup to estimate <span class="math inline">\(\beta_1\)</span>.</p>
+<section id="differencing-out-a_i" class="level2">
+<h2 class="anchored" data-anchor-id="differencing-out-a_i">Differencing out <span class="math inline">\(a_i\)</span></h2>
+<p>We could estimate <a href="#eq-woods" class="quarto-xref">Equation 1</a> by OLS, treating <span class="math inline">\(a_i + u_{it}\)</span> as a single <strong>composite error</strong>. This estimator is called <strong>Pooled OLS</strong> (POLS). However, we have already assumed that <span class="math inline">\(Cov(x_{it},a_i)\neq 0\)</span> which means that Pooled OLS is biased (and inconsistent). This is often called .</p>
+<p><strong>However</strong>, with panel data, we can difference-out the unobserved fixed effect <span class="math inline">\(a_i\)</span>. Let’s write <a href="#eq-woods" class="quarto-xref">Equation 1</a> for both time periods <span class="math inline">\(t=1\)</span> and <span class="math inline">\(t=2\)</span>.</p>
 <p><span class="math display">\[
-\hat{b}_1 \equiv \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\hat{\beta}_1
+\begin{gather*}
+y_{i1} = \beta_0            + \beta_1 x_{i1}  + a_i + u_{i1} \quad (t=1)\\
+y_{i2} = \beta_0 + \delta_0 + \beta_1 x_{i2}  + a_i + u_{i2} \quad (t=2)
+\end{gather*}
 \]</span></p>
-<p>is the <strong>standardised coefficient</strong>. Its interpretation is obvious: if <span class="math inline">\(x\)</span> goes up by one standard deviation, the effect on <span class="math inline">\(y\)</span> is <span class="math inline">\(\hat{b}_1\)</span> standard deviations.</p>
-<p>In the simple regression case (as here), remember that <span class="math inline">\(\hat{\beta}_1= \hat{\sigma}_{yx}/\hat{\sigma}^2_x\)</span>. This means that</p>
+<p>Subtracting the <span class="math inline">\(t=1\)</span> equation from the <span class="math inline">\(t=2\)</span> equation gives</p>
+<p><span id="eq-mee"><span class="math display">\[
+\begin{equation}
+  \Delta y_{i} = \delta_0  + \beta_1 \Delta x_{i} + \Delta u_{i}.
+\end{equation}
+\tag{2}\]</span></span></p>
+<p>To see what is happening, look at the schematic data above, and subtract the first row from the second for each <span class="math inline">\(i\)</span>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(i\)</span></th>
+<th><span class="math inline">\(t\)</span></th>
+<th><span class="math inline">\(y_{it}\)</span></th>
+<th>1</th>
+<th><span class="math inline">\(d^1_{t}\)</span></th>
+<th><span class="math inline">\(d^2_{t}\)</span></th>
+<th><span class="math inline">\(x_{it}\)</span></th>
+<th><span class="math inline">\(\Delta y_{it}\)</span></th>
+<th><span class="math inline">\(\Delta 1\)</span></th>
+<th><span class="math inline">\(\Delta d^1_{t}\)</span></th>
+<th><span class="math inline">\(\Delta d^2_{t}\)</span></th>
+<th><span class="math inline">\(\Delta x_{it}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(y_{11}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{11}\)</span></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>2</td>
+<td><span class="math inline">\(y_{12}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{12}\)</span></td>
+<td><span class="math inline">\(\Delta y_{1}\)</span></td>
+<td>0</td>
+<td>–1</td>
+<td>1</td>
+<td><span class="math inline">\(\Delta x_{1}\)</span></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>1</td>
+<td><span class="math inline">\(y_{21}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{21}\)</span></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>. .</td>
+<td>.</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td><span class="math inline">\(y_{22}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{22}\)</span></td>
+<td><span class="math inline">\(\Delta y_{2}\)</span></td>
+<td>0</td>
+<td>–1</td>
+<td>1</td>
+<td><span class="math inline">\(\Delta x_{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N\)</span></td>
+<td>1</td>
+<td><span class="math inline">\(y_{N1}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(x_{N1}\)</span></td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+<td>.</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(N\)</span></td>
+<td>2</td>
+<td><span class="math inline">\(y_{N2}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(x_{N2}\)</span></td>
+<td><span class="math inline">\(\Delta y_{N}\)</span></td>
+<td>0</td>
+<td>–1</td>
+<td>1</td>
+<td><span class="math inline">\(\Delta x_{N}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Expressing <a href="#eq-mee" class="quarto-xref">Equation 2</a> in words, the change in <span class="math inline">\(y_{it}\)</span> between periods 1 and 2 is regressed on the change in the regressor(s) and a constant, using <span class="math inline">\(N\)</span> obs. Note that the variables are not defined for period 1 and so the dataset comprises just <span class="math inline">\(N\)</span> obs, whereas regressing <a href="#eq-woods" class="quarto-xref">Equation 1</a> could be done on <span class="math inline">\(2N\)</span> observations.</p>
+<p>Just to be clear about the variables that are being used in <a href="#eq-mee" class="quarto-xref">Equation 2</a>:</p>
+<ul>
+<li><span class="math inline">\(\Delta y_{i} \equiv y_{i2}-y_{i1}\)</span> is the of <span class="math inline">\(y_{i}\)</span>.</li>
+<li>Ditto <span class="math inline">\(\Delta x_{i} \equiv x_{i2}-x_{i1}\)</span>. (In a multiple regression all the regressors are differenced.)</li>
+<li><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_0+\delta_0\)</span> are “macro” effects in that they affect all individuals identically, in the same time period. But only <span class="math inline">\(\delta_0\)</span> is identified. <span class="math inline">\(\beta_0\)</span> drops out because <span class="math inline">\(\Delta 1 =0 = \Delta d^1_{t} +\Delta d^2_{t}\)</span>.</li>
+<li><span class="math inline">\(\delta_0\)</span> is the parameter on <span class="math inline">\(\Delta d^2_t\)</span>, which is the new regression constant.</li>
+</ul>
+<p>When OLS is used on this transformed model, it is labelled the <strong>first-difference estimator</strong> (FD). In this example, it is a Simple Regression. In general, FD is a multiple regression where <strong>all</strong> variables are differenced.</p>
+</section>
+<section id="exogeneity" class="level2">
+<h2 class="anchored" data-anchor-id="exogeneity">Exogeneity</h2>
+<p>The important issue is whether the assumptions for OLS are satisfied? If yes, FD is unbiased. Recall that the assumptions are:</p>
+<ul>
+<li>The RHS variable is exogenous (uncorrelated with the error);</li>
+<li>The RHS variable cannot be constant.</li>
+</ul>
+<p>The first assumption asks whether <span class="math inline">\(\Delta x_{i}\)</span> is uncorrelated with <span class="math inline">\(\Delta u_{i}\)</span>?</p>
 <p><span class="math display">\[
-\hat{b}_1 = \frac{\hat{\sigma}_x}{\hat{\sigma}_y}\frac{\hat{\sigma}_{yx}}{\hat{\sigma}^2_x} =
-\frac{\hat{\sigma}_{yx}}{\hat{\sigma}_y\hat{\sigma}_x},
+\begin{align*}
+Cov (\Delta x_i, \Delta u_i) &amp;=
+Cov [(x_{i2}-x_{i1}),(u_{i2}-u_{i1})] \\
+&amp; =Cov(x_{i2},u_{i2}) +
+Cov(x_{i1},u_{i1}) -
+Cov(x_{i1},u_{i2}) -
+Cov(x_{i2},u_{i1}) \\
+&amp;=0.
+\end{align*}
 \]</span></p>
-<p>the sample correlation between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
-<p>In a multiple regression, standardising all the variables by hand can be tedious. It is better to the estimate the model as usual, and then ask that standarised coefficients be produced post-estimation.</p>
+<p>All 4 covariances need to be zero. We have already assumed the first pair are zero (AFD1). If AFD1 is true, there is no reason why the second pair (“across” <span class="math inline">\(t=1,2\)</span>) should not be zero either.</p>
+<p>To summarise, if <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> are uncorrelated, then so are <span class="math inline">\(\Delta x\)</span> and <span class="math inline">\(\Delta u\)</span>.</p>
+</section>
 </section>
 <section id="reading" class="level1">
 <h1>Reading</h1>
-<p>Most of the material in the section is taken from Wooldridge (2025, chapter 2). The appendix is from Section 6-1a of Wooldridge (2025).</p>
+<p>The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under Measurement Error, and the section Simultaneity Bias in OLS.</p>
 <p>Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.</p>
 <p>Cunningham, S. (2021) <a href="https://mixtape.scunning.com/index.html">Causal Inference: The MixTape</a></p>
 <p>Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.</p>

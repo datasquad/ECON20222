@@ -1,0 +1,165 @@
+---
+title: "Panel Data Methods"
+format: 
+  html:
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(webexercises)
+```
+
+```{r, echo = FALSE, results='asis'}
+# Uncomment to change widget colours:
+#style_widgets(incorrect = "goldenrod", correct = "purple", highlight = "firebrick")
+```
+
+# Introduction to Panel Data Structures
+
+We shall begin by introducing Panel Data structures. Being clear about data structures is a prerequisite for successful empirical work.
+
+Previously we discussed that parameter estimator bias can be caused by omitted variables sometimes also called unobserved heterogeneity. There will be situations when using panel data will give us a route to removing this bias. 
+
+## Two-period panel data
+
+Suppose we have a dataset comprising $N$ individuals (or other micro unit) observed exactly $T=2$ times.
+
+| $i$    | $t$    | $y_{it}$ | $1$      | $d^1_t$ | $d^2_t$ | $x_{it}$ | $a_{i}$ | $u_{it}$ |
+|--------|--------|----------|--------|---------|---------|----------|---------|----------|
+| 1      | 1      | $y_{11}$ | 1      | 1       | 0       | $x_{11}$ | $a_{1}$ | $u_{11}$ |
+| 1      | 2      | $y_{12}$ | 1      | 0       | 1       | $x_{12}$ | $a_{1}$ | $u_{12}$ |
+| 2      | 1      | $y_{21}$ | 1      | 1       | 0       | $x_{21}$ | $a_{2}$ | $u_{21}$ |
+| 2      | 2      | $y_{22}$ | 1      | 0       | 1       | $x_{22}$ | $a_{2}$ | $u_{22}$ |
+| \vdots | \vdots | \vdots   | \vdots | \vdots  | \vdots  | \vdots   | \vdots  | \vdots   |
+| $N$    | 1      | $y_{N1}$ | 1      | 1       | 0       | $x_{N1}$ | $a_{N}$ | $u_{N1}$ |
+| $N$    | 2      | $y_{N2}$ | 1      | 0       | 1       | $x_{N2}$ | $a_{N}$ | $u_{N2}$ |
+
+
+The variables we observe are
+
+* $y_{it}$ and $x_{it}$; both vary over both $i$ and $t$.
+* $d^1_t$ is a period 1 time dummy; it only varies over $t$.
+* $d^2_t$ is a period~2 time dummy; it only varies over $t$.
+* $1$ is the constant.
+
+whereas the variables not observed are:
+
+* $a_i$ does not vary over $t$. It is a so-called **fixed effect**, or **unobserved heterogeneity**. Think about a personal characteristic of subject $i$ that is constant through time. This could be things like general levels of ability or intelligence.
+* $u_{it}$ (not shown) is an **idiosyncratic error**. It is uncorrelated with everything (like most error terms). In particular:
+
+$$
+Cov(x_{i1},u_{i1})=Cov(x_{i2},u_{i2})=0 ~~~(AFD1)
+$$ 
+
+The crucial problem is that the omitted variable $a_i$ is correlated with $x_{it}$. For example, in the wage-education model in
+the Omitted Variable Bias Section (now with slightly different notation but essentially the same):
+
+$$
+y_{it} = \beta_0 + \delta_0 d^2_t + \beta_1 x_{it} + \beta_2 a_{i} + u_{it}.
+$$ {#eq-woods}
+
+where
+
+* $y_{it}$ is log earnings (`lhrpay`)
+* $x_{it}$ is years of schooling (`educ`)
+* $a_{i}$ is unobserved innate ability (`abil`)
+
+and we also included a dummy variable for the 2nd period, $d^2_t $. Because of the dummy-variable trap, one of two time dummies must be dropped, here $d^1_t$.  (Recall one cannot have a constant, male dummy __and__ a female dummy in the same regression.)
+
+
+Here, ability is correlated with education. If $a_i$ were __not__ correlated with $x_{it}$, the OVB formula says OLS in unbiased
+and we wouldn't have a problem in the first place. The way that panel data can help is through the crucial assumption that $a_i$ is constant over time. This is an untestable assumption as $a_i$ is not observed.
+
+The above equation is also called a **fixed effects** model.
+
+
+# The First Difference estimator (FD) {#sec-FD}
+
+The First Difference estimator makes use of this setup to estimate $\beta_1$.
+
+## Differencing out $a_i$
+
+We could estimate @eq-woods by OLS, treating $a_i + u_{it}$ as a single **composite error**.  This estimator is called **Pooled OLS** (POLS).  However, we have already assumed that $Cov(x_{it},a_i)\neq 0$ which means that Pooled OLS is biased (and inconsistent).  This is often called \textbf{heterogeneity bias}.
+
+__However__, with panel data, we can difference-out the unobserved fixed effect $a_i$. Let's write @eq-woods for both time periods $t=1$ and $t=2$.
+
+$$
+\begin{gather*}
+y_{i1} = \beta_0            + \beta_1 x_{i1}  + a_i + u_{i1} \quad (t=1)\\
+y_{i2} = \beta_0 + \delta_0 + \beta_1 x_{i2}  + a_i + u_{i2} \quad (t=2)
+\end{gather*}
+$$
+
+Subtracting the $t=1$ equation from the $t=2$ equation gives
+
+$$
+\begin{equation}
+  \Delta y_{i} = \delta_0  + \beta_1 \Delta x_{i} + \Delta u_{i}.
+\end{equation}
+$$ {#eq-mee}
+
+To see what is happening, look at the schematic data above, and subtract the first row from the second for each $i$:
+
+| $i$    | $t$    | $y_{it}$ | 1      | $d^1_{t}$   | $d^2_{t}$   | $x_{it}$ | $\Delta y_{it}$ | $\Delta 1$ | $\Delta d^1_{t}$   | $\Delta d^2_{t}$   | $\Delta x_{it}$ |
+|--------|--------|----------|--------|-------------|-------------|----------|-----------------|------------|--------------------|--------------------|-----------------|
+| 1      | 1      | $y_{11}$ | 1      | 1           | 0           | $x_{11}$ | .               | .          | .                  | .                  | .               |
+| 1      | 2      | $y_{12}$ | 1      | 0           | 1           | $x_{12}$ | $\Delta y_{1}$  | 0          | --1                | 1                  | $\Delta x_{1}$  |
+| 2      | 1      | $y_{21}$ | 1      | 1           | 0           | $x_{21}$ | .               | .          | .                  | . .                | .               |
+| 2      | 2      | $y_{22}$ | 1      | 0           | 1           | $x_{22}$ | $\Delta y_{2}$  | 0          | --1                | 1                  | $\Delta x_{2}$  |
+| \vdots | \vdots | \vdots   | \vdots | \vdots      | \vdots      | \vdots   | \vdots          | \vdots     | \vdots             | \vdots             | \vdots          |
+| $N$    | 1      | $y_{N1}$ | 1      | 1           | 0           | $x_{N1}$ | .               | .          | .                  | .                  | .               |
+| $N$    | 2      | $y_{N2}$ | 1      | 0           | 1           | $x_{N2}$ | $\Delta y_{N}$  | 0          | --1                | 1                  | $\Delta x_{N}$  |
+
+Expressing @eq-mee in words, the change in $y_{it}$ between periods 1 and 2 is regressed on the change in the regressor(s) and a constant, using $N$ obs. Note that
+the variables are not defined for period 1 and so the dataset comprises just $N$ obs, whereas regressing @eq-woods could be done on $2N$ observations. 
+
+Just to be clear about the variables that are being used in @eq-mee:
+
+* $\Delta y_{i} \equiv y_{i2}-y_{i1}$ is the \textbf{difference} of $y_{i}$.
+* Ditto $\Delta x_{i} \equiv x_{i2}-x_{i1}$.  (In a multiple regression all the regressors are differenced.)
+* $\beta_0$ and $\beta_0+\delta_0$ are "macro" effects in that they affect all individuals identically, in the same time period.  But only $\delta_0$ is identified.  $\beta_0$  drops out because $\Delta 1 =0 = \Delta d^1_{t} +\Delta d^2_{t}$.
+* $\delta_0$ is the parameter on $\Delta d^2_t$, which is the new regression constant.
+
+When OLS is used on this transformed model, it is labelled the **first-difference estimator** (FD).  In this example, it is a Simple Regression. In general, FD is a multiple regression where **all** variables are differenced.
+
+
+
+## Exogeneity
+
+The important issue is whether the assumptions for OLS are satisfied?  If yes, FD is unbiased.  Recall that the assumptions are:
+
+* The RHS variable is exogenous (uncorrelated with the error);
+* The RHS variable cannot be constant.
+
+The first assumption asks whether $\Delta x_{i}$ is uncorrelated with $\Delta u_{i}$?
+
+$$
+\begin{align*}
+Cov (\Delta x_i, \Delta u_i) &=
+Cov [(x_{i2}-x_{i1}),(u_{i2}-u_{i1})] \\
+& =Cov(x_{i2},u_{i2}) +
+Cov(x_{i1},u_{i1}) -
+Cov(x_{i1},u_{i2}) -
+Cov(x_{i2},u_{i1}) \\ 
+&=0.
+\end{align*}
+$$
+
+All 4 covariances need to be zero.  We have already assumed the first pair are zero (AFD1).  If AFD1 is true, there is no reason why the second pair ("across" $t=1,2$) should not be zero either.
+
+To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$.
+
+# Reading
+
+The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under
+Measurement Error, and the section Simultaneity Bias in OLS.
+
+Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.
+
+Cunningham, S. (2021) [Causal Inference: The MixTape](https://mixtape.scunning.com/index.html)
+
+Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.
