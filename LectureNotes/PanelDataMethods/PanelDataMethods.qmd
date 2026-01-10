@@ -8,6 +8,8 @@ format:
     embed-resources: true 
 editor: 
   render-on-save: true
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include = FALSE}
@@ -23,72 +25,93 @@ library(webexercises)
 
 # Introduction to Panel Data Structures
 
-We shall begin by introducing Panel Data structures. Being clear about data structures is a prerequisite for successful empirical work.
+We shall begin by introducing Panel Data structures. Being clear about
+data structures is a prerequisite for successful empirical work.
 
-Previously we discussed that parameter estimator bias can be caused by omitted variables sometimes also called unobserved heterogeneity. There will be situations when using panel data will give us a route to removing this bias. 
+Previously we discussed that parameter estimator bias can be caused by
+omitted variables sometimes also called unobserved heterogeneity. There
+will be situations when using panel data will give us a route to
+removing this bias.
 
 ## Two-period panel data
 
-Suppose we have a dataset comprising $N$ individuals (or other micro unit) observed exactly $T=2$ times.
+Suppose we have a dataset comprising $N$ individuals (or other micro
+unit) observed exactly $T=2$ times.
 
-| $i$    | $t$    | $y_{it}$ | $1$      | $d^1_t$ | $d^2_t$ | $x_{it}$ | $a_{i}$ | $u_{it}$ |
-|--------|--------|----------|--------|---------|---------|----------|---------|----------|
-| 1      | 1      | $y_{11}$ | 1      | 1       | 0       | $x_{11}$ | $a_{1}$ | $u_{11}$ |
-| 1      | 2      | $y_{12}$ | 1      | 0       | 1       | $x_{12}$ | $a_{1}$ | $u_{12}$ |
-| 2      | 1      | $y_{21}$ | 1      | 1       | 0       | $x_{21}$ | $a_{2}$ | $u_{21}$ |
-| 2      | 2      | $y_{22}$ | 1      | 0       | 1       | $x_{22}$ | $a_{2}$ | $u_{22}$ |
-| ... | ... | ...   | ... | ...  | ...  | ...   | ...  | ...   |
-| $N$    | 1      | $y_{N1}$ | 1      | 1       | 0       | $x_{N1}$ | $a_{N}$ | $u_{N1}$ |
-| $N$    | 2      | $y_{N2}$ | 1      | 0       | 1       | $x_{N2}$ | $a_{N}$ | $u_{N2}$ |
-
+| $i$ | $t$ | $y_{it}$ | $1$ | $d^1_t$ | $d^2_t$ | $x_{it}$ | $a_{i}$ | $u_{it}$ |
+|-----|-----|----------|-----|---------|---------|----------|---------|----------|
+| 1   | 1   | $y_{11}$ | 1   | 1       | 0       | $x_{11}$ | $a_{1}$ | $u_{11}$ |
+| 1   | 2   | $y_{12}$ | 1   | 0       | 1       | $x_{12}$ | $a_{1}$ | $u_{12}$ |
+| 2   | 1   | $y_{21}$ | 1   | 1       | 0       | $x_{21}$ | $a_{2}$ | $u_{21}$ |
+| 2   | 2   | $y_{22}$ | 1   | 0       | 1       | $x_{22}$ | $a_{2}$ | $u_{22}$ |
+| ... | ... | ...      | ... | ...     | ...     | ...      | ...     | ...      |
+| $N$ | 1   | $y_{N1}$ | 1   | 1       | 0       | $x_{N1}$ | $a_{N}$ | $u_{N1}$ |
+| $N$ | 2   | $y_{N2}$ | 1   | 0       | 1       | $x_{N2}$ | $a_{N}$ | $u_{N2}$ |
 
 The variables we observe are
 
-* $y_{it}$ and $x_{it}$; both vary over both $i$ and $t$.
-* $d^1_t$ is a period 1 time dummy; it only varies over $t$.
-* $d^2_t$ is a period~2 time dummy; it only varies over $t$.
-* $1$ is the constant.
+-   $y_{it}$ and $x_{it}$; both vary over both $i$ and $t$.
+-   $d^1_t$ is a period 1 time dummy; it only varies over $t$.
+-   $d^2_t$ is a period\~2 time dummy; it only varies over $t$.
+-   $1$ is the constant.
 
 whereas the variables not observed are:
 
-* $a_i$ does not vary over $t$. It is a so-called **fixed effect**, or **unobserved heterogeneity**. Think about a personal characteristic of subject $i$ that is constant through time. This could be things like general levels of ability or intelligence.
-* $u_{it}$ (not shown) is an **idiosyncratic error**. It is uncorrelated with everything (like most error terms). In particular:
+-   $a_i$ does not vary over $t$. It is a so-called **fixed effect**, or
+    **unobserved heterogeneity**. Think about a personal characteristic
+    of subject $i$ that is constant through time. This could be things
+    like general levels of ability or intelligence.
+-   $u_{it}$ (not shown) is an **idiosyncratic error**. It is
+    uncorrelated with everything (like most error terms). In particular:
 
 $$
 Cov(x_{i1},u_{i1})=Cov(x_{i2},u_{i2})=0 ~~~(AFD1)
-$$ 
+$$
 
-The crucial problem is that the omitted variable $a_i$ is correlated with $x_{it}$. For example, in the wage-education model in
-the Omitted Variable Bias Section (now with slightly different notation but essentially the same):
+Let's work with the following example:
+
+-   $y_{it}$ is log earnings (`lhrpay`)
+-   $x_{it}$ is years of schooling (`educ`)
+-   $a_{i}$ is unobserved innate ability (`abil`)
+
+If you wanted to establish whether years of schooling had some statistically significant impact on earnings you will be tempted to estimate the following  wage-education model (essentially the same as in the Omitted Variable Bias Section):
 
 $$
 y_{it} = \beta_0 + \delta_0 d^2_t + \beta_1 x_{it} + \beta_2 a_{i} + u_{it}.
 $$ {#eq-woods}
 
-where
+Note that we included a dummy variable for the 2nd period, \$d\^2_t \$.
+Because of the dummy-variable trap, one of two time dummies must be
+dropped, here $d^1_t$. (Recall one cannot have a constant, male dummy
+**and** a female dummy in the same regression and the same is true for time dummies. If there are two periods only one time dummy can be included).
 
-* $y_{it}$ is log earnings (`lhrpay`)
-* $x_{it}$ is years of schooling (`educ`)
-* $a_{i}$ is unobserved innate ability (`abil`)
+The crucial problem occurs when realising that $a_i$ is unobservable and therefore will have to be omitted. If the omitted variable $a_i$ is correlated
+with $x_{it}$ then we are basically dealing with the case of an omitted variable which causes an Omitted
+Variable Bias if $a_i$ is correlated with $X_{it}$.
 
-and we also included a dummy variable for the 2nd period, $d^2_t $. Because of the dummy-variable trap, one of two time dummies must be dropped, here $d^1_t$.  (Recall one cannot have a constant, male dummy __and__ a female dummy in the same regression.)
-
-
-Here, ability is correlated with education. If $a_i$ were __not__ correlated with $x_{it}$, the OVB formula says OLS in unbiased
-and we wouldn't have a problem in the first place. The way that panel data can help is through the crucial assumption that $a_i$ is constant over time. This is an untestable assumption as $a_i$ is not observed.
+Here, ability is correlated with education. If $a_i$ were **not**
+correlated with $x_{it}$, the OVB formula says that OLS is unbiased and we
+wouldn't have a problem in the first place. The way that panel data can
+help is through the crucial assumption that $a_i$ is constant over time.
+This is an untestable assumption as $a_i$ is not observed.
 
 The above equation is also called a **fixed effects** model.
 
-
 # The First Difference estimator (FD) {#sec-FD}
 
-The First Difference estimator makes use of this setup to estimate $\beta_1$.
+The First Difference estimator makes use of this setup to estimate
+$\beta_1$.
 
 ## Differencing out $a_i$
 
-We could estimate @eq-woods by OLS, treating $a_i + u_{it}$ as a single **composite error**.  This estimator is called **Pooled OLS** (POLS).  However, we have already assumed that $Cov(x_{it},a_i)\neq 0$ which means that Pooled OLS is biased (and inconsistent).  This is often called \textbf{heterogeneity bias}.
+We could estimate @eq-woods by OLS, treating $a_i + u_{it}$ as a single
+**composite error**. This estimator is called **Pooled OLS** (POLS) as it uses all data pooled across both time periods, hence $2N$ observations. However, we have already assumed that $Cov(x_{it},a_i)\neq 0$ which
+means that Pooled OLS is biased (and inconsistent). This is often called
+**heterogeneity bias** which is just a different name for OVB in this circumstance.
 
-__However__, with panel data, we can difference-out the unobserved fixed effect $a_i$. Let's write @eq-woods for both time periods $t=1$ and $t=2$.
+**However**, with panel data, we can difference-out the unobserved fixed
+effect $a_i$. Let's write @eq-woods for both time periods $t=1$ and
+$t=2$.
 
 $$
 \begin{gather*}
@@ -105,38 +128,54 @@ $$
 \end{equation}
 $$ {#eq-mee}
 
-To see what is happening, look at the schematic data above, and subtract the first row from the second for each $i$:
+Importantly, $\beta_1$, the coefficient to $\Delta x_{i}$, is exactly the same coefficient as the coefficient to $x_{it}$ in the original regression. Importantly, the fixed effect $a_i$ has been differenced out because it is (assumed to be) the same in both periods. This means that this term will not end up in an error term where it could cause trouble through any correlation with an explanatory variable.
 
-| $i$    | $t$    | $y_{it}$ | 1      | $d^1_{t}$   | $d^2_{t}$   | $x_{it}$ | $\Delta y_{it}$ | $\Delta 1$ | $\Delta d^1_{t}$   | $\Delta d^2_{t}$   | $\Delta x_{it}$ |
-|--------|--------|----------|--------|-------------|-------------|----------|-----------------|------------|--------------------|--------------------|-----------------|
-| 1      | 1      | $y_{11}$ | 1      | 1           | 0           | $x_{11}$ | .               | .          | .                  | .                  | .               |
-| 1      | 2      | $y_{12}$ | 1      | 0           | 1           | $x_{12}$ | $\Delta y_{1}$  | 0          | --1                | 1                  | $\Delta x_{1}$  |
-| 2      | 1      | $y_{21}$ | 1      | 1           | 0           | $x_{21}$ | .               | .          | .                  | . .                | .               |
-| 2      | 2      | $y_{22}$ | 1      | 0           | 1           | $x_{22}$ | $\Delta y_{2}$  | 0          | --1                | 1                  | $\Delta x_{2}$  |
-| ... | ... | ...   | ... | ...      | ...      | ...   | ...          | ...     | ...             | ...             | ...          |
-| $N$    | 1      | $y_{N1}$ | 1      | 1           | 0           | $x_{N1}$ | .               | .          | .                  | .                  | .               |
-| $N$    | 2      | $y_{N2}$ | 1      | 0           | 1           | $x_{N2}$ | $\Delta y_{N}$  | 0          | --1                | 1                  | $\Delta x_{N}$  |
+To see what is happening, look at the schematic data above, and subtract
+the first row from the second for each $i$:
 
-Expressing @eq-mee in words, the change in $y_{it}$ between periods 1 and 2 is regressed on the change in the regressor(s) and a constant, using $N$ obs. Note that
-the variables are not defined for period 1 and so the dataset comprises just $N$ obs, whereas regressing @eq-woods could be done on $2N$ observations. 
+| $i$ | $t$ | $y_{it}$ | 1 | $d^1_{t}$ | $d^2_{t}$ | $x_{it}$ | $\Delta y_{it}$ | $\Delta 1$ | $\Delta d^1_{t}$ | $\Delta d^2_{t}$ | $\Delta x_{it}$ |
+|------|------|------|------|------|------|------|------|------|------|------|------|
+| 1 | 1 | $y_{11}$ | 1 | 1 | 0 | $x_{11}$ | . | . | . | . | . |
+| 1 | 2 | $y_{12}$ | 1 | 0 | 1 | $x_{12}$ | $\Delta y_{1}$ | 0 | --1 | 1 | $\Delta x_{1}$ |
+| 2 | 1 | $y_{21}$ | 1 | 1 | 0 | $x_{21}$ | . | . | . | . . | . |
+| 2 | 2 | $y_{22}$ | 1 | 0 | 1 | $x_{22}$ | $\Delta y_{2}$ | 0 | --1 | 1 | $\Delta x_{2}$ |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+| $N$ | 1 | $y_{N1}$ | 1 | 1 | 0 | $x_{N1}$ | . | . | . | . | . |
+| $N$ | 2 | $y_{N2}$ | 1 | 0 | 1 | $x_{N2}$ | $\Delta y_{N}$ | 0 | --1 | 1 | $\Delta x_{N}$ |
+
+Expressing @eq-mee in words, the change in $y_{it}$ between periods 1
+and 2 is regressed on the change in the regressor(s) and a constant,
+using $N$ obs. Note that the variables are not defined for period 1 and
+so the dataset comprises just $N$ obs, whereas regressing @eq-woods
+could be estimated on $2N$ observations.
 
 Just to be clear about the variables that are being used in @eq-mee:
 
-* $\Delta y_{i} \equiv y_{i2}-y_{i1}$ is the \textbf{difference} of $y_{i}$.
-* Ditto $\Delta x_{i} \equiv x_{i2}-x_{i1}$.  (In a multiple regression all the regressors are differenced.)
-* $\beta_0$ and $\beta_0+\delta_0$ are "macro" effects in that they affect all individuals identically, in the same time period.  But only $\delta_0$ is identified.  $\beta_0$  drops out because $\Delta 1 =0 = \Delta d^1_{t} +\Delta d^2_{t}$.
-* $\delta_0$ is the parameter on $\Delta d^2_t$, which is the new regression constant.
+-   $\Delta y_{i} \equiv y_{i2}-y_{i1}$ is the \textbf{difference} of
+    $y_{i}$.
+-   $\Delta x_{i} \equiv x_{i2}-x_{i1}$ is the difference in the explanatory variable. (In a multiple regression all the regressors are differenced.)
+-   $\beta_0$ and $\beta_0+\delta_0$ are "macro" effects in that they
+    affect all individuals identically, in the same time period. But
+    only $\delta_0$ is identified. $\beta_0$ drops out because
+    $\Delta 1 =0 = \Delta d^1_{t} +\Delta d^2_{t}$.
+-   $\delta_0$ is the parameter on $\Delta d^2_t$, which is the new
+    regression constant.
 
-When OLS is used on this transformed model, it is labelled the **first-difference estimator** (FD).  In this example, it is a Simple Regression. In general, FD is a multiple regression where **all** variables are differenced.
+When OLS is used on this transformed model, it is labelled the
+**first-difference estimator** (FD). In this example, it is a Simple
+Regression. In general, FD is a multiple regression where **all**
+variables are differenced.
 
-The important issue is whether the assumptions for OLS are satisfied?  If yes, FD is unbiased.  Recall that the assumptions are:
+The important issue is whether the assumptions for OLS are satisfied? If
+yes, FD is unbiased. Recall that the assumptions are:
 
-* The RHS variable is exogenous (uncorrelated with the error);
-* The RHS variable cannot be constant.
+-   The RHS variable is exogenous (uncorrelated with the error);
+-   The RHS variable cannot be constant.
 
 ## Exogeneity
 
-The first assumption asks whether $\Delta x_{i}$ is uncorrelated with $\Delta u_{i}$?
+The first assumption asks whether $\Delta x_{i}$ is uncorrelated with
+$\Delta u_{i}$?
 
 $$
 \begin{align*}
@@ -150,18 +189,30 @@ Cov(x_{i2},u_{i1}) \\
 \end{align*}
 $$
 
-All 4 covariances need to be zero.  We have already assumed the first pair are zero (AFD1).  If AFD1 is true, there is no reason why the second pair ("across" $t=1,2$) should not be zero either.
+All 4 covariances need to be zero. We have already assumed the first
+pair are zero (AFD1). If AFD1 is true, there is no reason why the second
+pair ("across" $t=1,2$) should not be zero either.
 
-To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$. But this is importantly an assumption. One needs to assume that there is no unobserved variation in the error terms that is correlated to the $x$ variable. What has been gained through the first-difference setup is that any such variation in the error term that is constant through time by $i$ has been removed. We do not have to worry any longer about such unobserved variation.
+To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$
+and $\Delta u$. But this is an assumption. One needs to
+assume that there is no unobserved variation in the error terms that is
+correlated to the $x$ variable. What has been gained through the
+first-difference setup is that any such variation in the error term that
+is constant through time by $i$ has been removed. We do not have to
+worry any longer about such unobserved variation.
 
-::: {.callout-note}
+::: callout-note
 ### Practise Question
 
 Consider the setup where
 
-* $y_{it}$ is log earnings (`lhrpay`)
-* $x_{it}$ is a variable encoding how many hours individual $i$ spent on learning new skills in period $t$
-Which of the following potentially unobserved heterogeneity will be removed/taken care of by applying a FD estimation in a context where you have a panel dataset for many individuals $i$ and two time periods for each individual.
+-   $y_{it}$ is log earnings (`lhrpay`) of individual $i$ in period $t$.
+-   $x_{it}$ is a variable encoding how many hours individual $i$ spent
+    on learning new skills in period $t$ Which of the following
+    potentially unobserved heterogeneity will be removed/taken care of
+    by applying a FD estimation in a context where you have a panel
+    dataset for many individuals $i$ and two time periods for each
+    individual.
 
 ```{r}
 #| echo: false
@@ -169,49 +220,83 @@ opts_p <- c(
    answer = "different general ability by individual $i$",
    "different levels of economic growth in individual $i$'s area",
    answer = "different personalities of individuals $i$",
-   "different life circumstances for individuals $i$"
+   "different life circumstances for individuals $i$ at different $t$"
 )
 
 ```
 
 `r longmcq(opts_p)`
 
-`r hide("Can you help me understand the answer")`
-It is important to understand that only unobserved variation that remains constant for individual $i$ across the time periods is differenced out. This is why economic growth (which varies through time) and life circumstances which often change from one year to the next, are not controlled for by using a FD estimation.
-`r unhide()`
-
+`r hide("Can you help me understand the answer")` It is important to
+understand that only unobserved variation that remains constant for
+individual $i$ across the time periods is differenced out. This is why
+economic growth (which varies through time) and life circumstances which
+often change from one year to the next, are not controlled for by using
+a FD estimation. `r unhide()`
 :::
 
 ## Variation in $\Delta x_i$
 
-The second assumption says that each $\Delta x_{i}$ must have some variation across $i$.  Age, gender, and education are good examples of
-$\Delta x_{i}$ being constant.  To see what is happening, observe what happens when we first-difference the male dummy $m$, age $a$ and
+The second assumption says that each $\Delta x_{i}$ must have some
+variation across $i$. Age, gender, and (mostly) education are good examples of
+$x_{i}$ variables that are constant through time. To see what is happening, observe what
+happens when we first-difference the male dummy $m$, age $a$ and
 education $e$:
 
-| $i$    | $t$    | $y_{it}$ | $d^2_t$ | $m$    | $a$    | $e$    |   | $\Delta y_{it}$ | $\Delta d^2_{t}$ | $\Delta m$ | $\Delta a$ | $\Delta e$? |
-|--------|--------|----------|---------|--------|--------|--------|---|-----------------|--------------------|------------|------------|-------------|
-| 1      | 1      | $y_{11}$ | 0       | 1      | 18     | 11     |   | .               | .                  | .          | .          |
-| 1      | 2      | $y_{12}$ | 1       | 1      | 24     | 11     |   | $\Delta y_{1}$  | 1                  | 0          | 6          |
-| 2      | 1      | $y_{21}$ | 0       | 0      | 28     | 13     |   | .               | . .                | .          | .          |
-| 2      | 2      | $y_{22}$ | 1       | 0      | 34     | 13     |   | $\Delta y_{2}$  | 1                  | 0          | 6          |
-| ... | ... | ...   | ...  | ... | ... | ... |   | ...          | ...             | ...     | ...     |
-| $N$    | 1      | $y_{N1}$ | 0       | 1      | 51     | 16     |   | .               | .                  | .          | .          |
-| $N$    | 2      | $y_{N2}$ | 1       | 1      | 57     | 16     |   | $\Delta y_{N}$  | 1                  | 0          | 6          |
+| $i$ | $t$ | $y_{it}$ | $d^2_t$ | $m$ | $a$ | $e$ |   | $\Delta y_{it}$ | $\Delta d^2_{t}$ | $\Delta m$ | $\Delta a$ | $\Delta e$? |
+|------|------|------|------|------|------|------|------|------|------|------|------|------|
+| 1 | 1 | $y_{11}$ | 0 | 1 | 18 | 11 |  | . | . | . | . |  |
+| 1 | 2 | $y_{12}$ | 1 | 1 | 24 | 11 |  | $\Delta y_{1}$ | 1 | 0 | 6 |  |
+| 2 | 1 | $y_{21}$ | 0 | 0 | 28 | 13 |  | . | . . | . | . |  |
+| 2 | 2 | $y_{22}$ | 1 | 0 | 34 | 13 |  | $\Delta y_{2}$ | 1 | 0 | 6 |  |
+| ... | ... | ... | ... | ... | ... | ... |  | ... | ... | ... | ... |  |
+| $N$ | 1 | $y_{N1}$ | 0 | 1 | 51 | 16 |  | . | . | . | . |  |
+| $N$ | 2 | $y_{N2}$ | 1 | 1 | 57 | 16 |  | $\Delta y_{N}$ | 1 | 0 | 6 |  |
 
 
-This is important, because some issues (education, discrimination etc) cannot be investigated using this approach (panel data and the FD
-estimator).
-
-But even if $\Delta x_{i}$ is not constant, it might not vary much, leading to large standard errors.
-
-::: {.callout-note}
+::: callout-note
 ### Practise Question
 
-Consider the setup where you have a panel dataset for many individuals $i$ and two time periods for each individual. All respondents are at least 30 years old.
+What values should be in the $\Delta e$ column?
 
-* $y_{it}$ is log earnings (`lhrpay`)
+```{r}
+#| echo: false
+opts_p <- c(
+   answer = "0",
+   "1",
+   "2",
+   "-1",
+   "various values"
+)
 
-You want to investigate the impact of a number of variables on $y$. Which of the following are variables, whose relation to $y$ **cannot** be investigated by a first difference estimation?
+```
+
+`r longmcq(opts_p)`
+
+`r hide("Can you help me understand the answer")` 
+Certainly for the data shown in the table the years of education do not change and therefore it is 0 for all observations. This is quite typical for datasets which only contains people in working age. Although this would not be true any longer if some people in the dataset would actually go back to school or university.
+`r unhide()`
+:::
+
+This is important, because some issues (education, discrimination etc)
+cannot be investigated using this approach (panel data and the FD
+estimator).
+
+But even if $\Delta x_{i}$ is not constant, it might not vary much,
+leading to large standard errors.
+
+::: callout-note
+### Practise Question
+
+Consider the setup where you have a panel dataset for many individuals
+$i$ and two time periods for each individual. All respondents are at
+least 30 years old.
+
+-   $y_{it}$ is log earnings (`lhrpay`)
+
+You want to investigate the impact of a number of variables on $y$.
+Which of the following are variables, whose relation to $y$ **cannot**
+be investigated by a first difference estimation?
 
 ```{r}
 #| echo: false
@@ -226,23 +311,234 @@ opts_p <- c(
 
 `r longmcq(opts_p)`
 
-`r hide("Can you help me understand the answer")`
-The key to understand here is that the variable needs to have variation across all $i$ **after** differencing. Neither age nor gender have such variation. Everyones gender will remain unchanged and everyone will be one year older if observations are apart by a year. 
-`r unhide()`
-
-
+`r hide("Can you help me understand the answer")` The key to understand
+here is that the variable needs to have variation across all $i$
+**after** differencing. Neither age nor gender have such variation.
+Everyones gender will remain unchanged and everyone will be one year
+older if observations are apart by a year. `r unhide()`
 :::
 
-Measurement error gets worse with differencing. We know from the Endogenity section that means that the FD estimator gets more biased.
+Measurement error gets worse with differencing. We know from the
+Endogenity section that means that the FD estimator gets more biased.
 
+## Multi-period panels
+
+The setup above is for a two-period panel. Things do not change
+substantially when we have data for more than two periods.
+
+| $i$    | $t$    | $y_{it}$ | $1$      | $d^1_t$ | $d^2_t$ | $d^3_t$ | $x_{it}$ | $\Delta y_{it}$ | $\Delta 1$ | $\Delta d^1_{t}$ | $\Delta d^2_{t }$ | $\Delta d^3_{t }$ | $\Delta x_{it}$ |
+|--------|--------|----------|--------|-------------|-------------|-------------|----------|-----------------|------------|------------------|-------------------|-------------------|-----------------|
+| 1      | 1      | $y_{11}$ | 1      | 1           | 0           | 0           | $x_{11}$ | .               | .          | .                | .                 | .                 | .               |
+| 1      | 2      | $y_{12}$ | 1      | 0           | 1           | 0           | $x_{12}$ | $\Delta y_{12}$ | 0          | --1              | 1                 | 0                 | $\Delta x_{12}$ |
+| 1      | 3      | $y_{13}$ | 1      | 0           | 0           | 1           | $x_{13}$ | $\Delta y_{13}$ | 0          | 0                | --1               | 1                 | $\Delta x_{13}$ |
+| 2      | 1      | $y_{21}$ | 1      | 1           | 0           | 0           | $x_{21}$ | .               | .          | .                | .                 | .                 | .               |
+| 2      | 2      | $y_{22}$ | 1      | 0           | 1           | 0           | $x_{22}$ | $\Delta y_{22}$ | 0          | --1              | 1                 | 0                 | $\Delta x_{22}$ |
+| 2      | 3      | $y_{23}$ | 1      | 0           | 0           | 1           | $x_{23}$ | $\Delta y_{23}$ | 0          | 0                | --1               | 1                 | $\Delta x_{23}$ |
+| ... | ... | ...   | ... | ...      | ...      | ...      | ...   | ...          | ...     | ...           | ...            | ...            | ...          |
+| $N$    | 1      | $y_{N1}$ | 1      | 1           | 0           | 0           | $x_{N1}$ | .               | .          | .                | .                 | .                 | .               |
+| $N$    | 2      | $y_{N2}$ | 1      | 0           | 1           | 0           | $x_{N2}$ | $\Delta y_{N2}$ | 0          | --1              | 1                 | 0                 | $\Delta x_{N2}$ |
+| $N$    | 3      | $y_{N3}$ | 1      | 0           | 0           | 1           | $x_{N3}$ | $\Delta y_{N3}$ | 0          | 0                | --1               | 1                 | $\Delta x_{N3}$ |
+
+
+There are now 3 time dummies, not 2. Time dummies are important as they control for macroeconomic effects, but, due to the dummy variable trap, we can only include two of these, implying that we estimate:
+
+$$
+y_{it} = \beta_0 + \delta_2 d^2_t + \delta_3 d^3_t + \beta_1 x_{it} + a_i + u_{it}
+\qquad t=1,2,3
+$$
+
+When we estimate this model by FD, then this is the same as estimating
+
+$$
+\Delta y_{it} = \delta_2 \Delta d^2_t + \delta_3 \Delta d^3_t  + \beta_1 \Delta x_{it} + \Delta u_{it} \qquad t=2,3
+$$
+
+using POLS, pooling over the differenced observations we have for $t=2,3$. As you can see, all right hand side variables need to be differenced.
+
+# Twins Double the Fun
+
+Twinsburg, Ohio, near Cleveland, was founded as Millsville in the early
+nineteenth century. Prosperous Millsville businessmen Moses and Aaron
+Wilcox were identical twins whom few could distinguish. Moses and Aaron
+were generous to Millsville in their success, a fact recognized when
+Millsville was renamed Twinsburg in the early nineteenth century. Since
+1976, Twinsburg has embraced its zygotic heritage in the form of a
+summer festival celebrating twins. Millsville's annual Twins Days
+attract not only twins reveling in their similarities but also
+researchers looking for well-controlled comparisons.
+
+Twin siblings indeed have much in common: most grow up in the same
+family at the same time, while identical twins even share genes. Twins
+might therefore be said to have the same ability as well. Perhaps the
+fact that one twin gets more schooling than his or her twin sibling is
+due mostly to the sort of serendipitous or random forces. The notion
+that one twin provides a good control for the other motivates a pair of
+studies by Ashenfelter and Krueger (1994) as well as Ashenfelter and
+Rouse (1998). The key idea behind this work, as in many other studies
+using twins, is that if ability is common to a pair of twin siblings, we
+can remove it from the equation by subtracting one twin's data from the
+other's and working only with the differences between them.
+
+The long regression that motivates a twins analysis of the returns to
+schooling can be written as
+
+\$\$ \log y\_{fi} = \beta\_0 + \beta*1 s*{fi} + \mathbf{x}'*f*
+\mathbf{b} + a_f + u{fi} \qquad i=1,2
+
+\$\$
+
+Here, subscript $f$ stands for family, while subscript $i = 1,2$ indexes
+twin siblings, say, Ronald ($i=1$) and Donald ($i=2$). When Ronald and
+Donald have the same ability, we can simplify by writing $a_{fi} = a_f$
+and restating the above model seperately for both twins ($i=1$ and
+$i=2$).
+
+$$
+\begin{align*}
+\log y_{f1} &= \beta_0 + \beta_1 s_{f1} + \mathbf{x}'_f \mathbf{b} + a_f + u_{f1}\\
+\log y_{f2} &= \beta_0 + \beta_1 s_{f2} + \mathbf{x}'_f \mathbf{b} + a_f + u_{f2}
+\end{align*}
+$$
+
+Subtracting the equation for Donald from that for Ronald gives
+
+$$
+\begin{equation}
+  \Delta \log y_{f} = \delta_0  + \beta_1 \Delta s_{f} + \Delta u_{f}.
+\end{equation}
+$$
+
+an equation from which ability disappears
+($\Delta \log y_{f} = \log y_{f2} - \log y_{f1}$ and
+$\Delta s_{f}= s_{f2}-s_{f1}$). From this we learn that when ability is
+constant within twin pairs, a short regression of the difference in
+twins' earnings on the difference in their schooling recovers the long
+regression coefficient, $\beta_1$.
+
+Regression estimates constructed without differencing in the twins
+sample generate a schooling return of about 11%, remarkably similar to
+Mincer's estimate for the return to education. This can be seen in the
+first column of Table 6.2 (@fig_twins). The model that produces the
+estimates in column (1) includes age, age squared, a dummy for women,
+and a dummy for whites. White twins earn less than black twins, an
+unusual result in the realm of earnings comparisons by race, though the
+gap here is not significantly different from zero.
+
+The differenced equation (6.5) generates a schooling return of about 6%,
+a result shown in column (2) of Table 6.2. This is substantially below
+the short regression estimate in column (1). This decline may reflect
+ability bias in the short model. Yet, once again, more subtle forces may
+also be at work.
+
+![Copy of Table 6.2 in Mastering
+Metrics](../../images/MMtbl62.png){#fig-twins fig-alt="ALT"}
+
+\begin{footnotesize}
+
+Footnote~6.  Orley Ashenfelter and Alan B. Krueger, ``Estimates of the
+Economic Returns to Schooling from a New Sample of Twins'', American
+Economic Review, vol. 84, no. 5, December 1994, pages 1157--1173, and
+Orley Ashenfelter and Cecilia Rouse, ``Income, Schooling, and Ability:
+Evidence from a New Sample of Identical Twins'', Quarterly Journal of
+Economics, vol. 113, no. 1, February 1998, pages 253--284.
+
+Footnote~7. Estimates of this differenced model can also be obtained by adding a
+dummy for each family to an undifferenced model fit in a sample that
+includes both twins.  Family dummies are like selectivity-group dummies
+in equation (2.2) in Chapter 2 and state dummies in equation (5.5) in
+Section 5.2.  With only two observations per family, models estimated
+after differencing across twins within families to produce a single
+observation per family generate estimates of the returns to schooling
+identical to those generated by ``dummying out'' each family in a pooled
+sample that includes both twins.
+
+MJA also notes that he has added a constant $\delta_0$ that isnt in MM
+(6.5). This is because one \ul{always} needs a constant unless the sample
+means are zero, which need not be the case here.
+
+\end{footnotesize}
+
+\subsubsection*{Twin Reports from Twinsburg}
+
+Twins are similar in many ways, including---alas---their schooling. Of
+340 twin pairs interviewed for the Twinsburg schooling studies, about
+half report identical educational attainment. Schooling differences,
+$\Delta s_{f}$, vary much less than schooling levels, $s_{if}$. If most
+twins really have the same schooling, then a fair number of the nonzero
+differences in reported schooling may reflect mistaken reports by at
+least one of them. Erroneous reports, called \textbf{measurement
+error}, tend to reduce estimates of $\beta_1$ in equation (6.5), a fact
+that may account for the decline in the estimated returns to schooling
+after differencing. A few people reporting their schooling incorrectly
+sounds unimportant, yet the consequences of such measurement error can
+be major.
+
+To see why mistakes matter, imagine that twins from the same family
+always have the same schooling. In this scenario, the only reason
+$\Delta s_{f}$ isn't zero for everyone is because schooling is sometimes
+misreported. Suppose such erroneous reports are due to random
+forgetfulness or inattention rather than something systematic. The
+coefficient from a regression of earnings differences on schooling
+differences that are no more than random mistakes should be zero since
+random mistakes are unrelated to wages. In an intermediate case, where
+some but not all of the variation in observed schooling is due to
+misreporting, the coefficient in equation (6.5) is smaller than it would
+be if schooling were reported correctly. The bias generated by this sort
+of measurement error in regressors is called \textbf{attenuation
+bias}. The mathematical formula for attenuation bias is derived in the
+chapter appendix. \[MJA insert: see Section\~\ref{sub:ME} above.\]
+
+Misreported schooling attenuates the levels regression estimates shown
+in column (1) of Table 6.2, but less so than the differenced estimates
+in column (2). This difference in the extent of attenuation bias is also
+illustrated by the hypothetical scenario where all twins share the same
+schooling but schooling levels differ across families. When twins in the
+same family really have the same schooling, all variation in
+within-family differences in reported schooling comes from mistakes. By
+contrast, most of the cross-family variation in reported schooling
+reflects real differences in education. Real variation in schooling is
+related to earnings, a fact that moderates attenuation bias in estimates
+of the model for levels, equation (6.4). This reflects a general point
+about the consequences of covariates for models with mismeasured
+regressors---additional controls make attenuation bias worse---a point
+detailed in the chapter appendix.
+
+Measurement error raises an important challenge for the Twinsburg
+analysis, since measurement error alone may explain the pattern of
+results seen in columns (1) and (2) of Table 6.2. Moving from the levels
+to the differenced regression accentuates attenuation bias, probably
+more than a little. The decline in schooling coefficients across columns
+may therefore have little to do with ability bias. Fortunately, seasoned
+masters Ashenfelter, Krueger, and Rouse anticipated the attenuation
+problem. They asked each twin to report not only their own schooling but
+also that of their sibling. As a result, the Twinsburg data sets contain
+two measures of schooling for each twin, one self-report and one sibling
+report. The sibling reports provide leverage to reduce, and perhaps even
+eliminate, attenuation bias.
+
+The key tool in this case, as with many of the other problems we've
+encountered, is IV. \[MJA insert: We pick this up again in
+Section\~\ref{sub:IV}.\]
 
 # Reading
 
-The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under
+The material for the three biases comes from Wooldridge (2025). See the
+subsections on Omitted variable bias, Properties of OLS under
 Measurement Error, and the section Simultaneity Bias in OLS.
 
-Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.
+Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton
+University Press.
 
-Cunningham, S. (2021) [Causal Inference: The MixTape](https://mixtape.scunning.com/index.html)
+Ashenfelter, O. and A. Krueger (1994) Estimates of the Economic Return
+to Schooling from a New Sample of Twins, The American economic review,
+84(5), 1157 - 1173.
 
-Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.
+Ashenfelter, O. and C. Rouse, (1998) Income, Schooling, and Ability:
+Evidence from a New Sample of Identical Twins, The Quarterly journal of
+economics, 113(1), 253 - 284.
+
+Cunningham, S. (2021) [Causal Inference: The
+MixTape](https://mixtape.scunning.com/index.html)
+
+Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach,
+Cengage.
