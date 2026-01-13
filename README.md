@@ -4,11 +4,15 @@ Lecturers: Ralf Becker, Yidi Sun, The University of Manchester
 
 # Topic 1 - Introduction
 
-[Lecture Slides](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-1---Data-Introduction-2026 STUDENTS.pdf)
+[Lecture Slides - Lecture 1 - DiD intro](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-1---Data-Introduction-2026 STUDENTS.pdf)
 
-[Lecture Code](https://datasquad.github.io/ECON20222/LectureCodes/CardKrueger.html)
+[Lecture 1 Code](https://datasquad.github.io/ECON20222/LectureCodes/CardKrueger.html)
 
-[Computer Lab](https://datasquad.github.io/ECON20222/LectureCodes/Comp_Lab_1_2526.html)
+[Computer Lab 1](https://datasquad.github.io/ECON20222/ComputerLabs/Comp_Lab_1_2526.html)
+
+[Lecture Slides - Lecture 2 - Inference Revision](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-2---Data-Introduction-2026---Gun-example STUDENTS.pdf)
+
+[Lecture 2 code](https://datasquad.github.io/ECON20222/LectureCodes/Data_Intro_2_GunExample_2026.html)
 
 [Notes - The Simple Regression Model](https://datasquad.github.io/ECON20222/LectureNotes/Introduction.html)
 

@@ -6,8 +6,8 @@ date: ""
 output: 
   beamer_presentation:
     includes:
-#     in_header: ../latex_template.tex
-     in_header: ../latex_student.tex  # use for student version
+     in_header: ../latex_template.tex
+#     in_header: ../latex_student.tex  # use for student version
 ---
 
 ```{r setup, include=FALSE}
@@ -34,14 +34,14 @@ knitr::opts_chunk$set(echo = FALSE)
   \begin{column}{0.5\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=3cm]{david-card.jpg}\\
+    	\includegraphics[width=3cm]{../images/david-card.jpg}\\
     \end{figure}
 
   \end{column}
   \begin{column}{0.5\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=3cm]{Krueger.jpeg}\\
+    	\includegraphics[width=3cm]{../images/Krueger.jpeg}\\
     \end{figure}
 
   \end{column}
@@ -92,7 +92,7 @@ To learn in this unit you need to:
 
 \begin{figure}
 	\centering
-	\includegraphics[width=8cm]{Embrace.jpg}\\
+	\includegraphics[width=8cm]{../images/Embrace.jpg}\\
 \end{figure}
 \
 \begin{columns}
@@ -169,7 +169,7 @@ To learn in this unit you need to:
   \begin{column}{0.2\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=2cm]{Rimage.jpeg}\\
+    	\includegraphics[width=2cm]{../images/Rimage.jpeg}\\
     \end{figure}
 
   \end{column}
@@ -188,7 +188,7 @@ To learn in this unit you need to:
   \begin{column}{0.2\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=2cm]{RStudio_image.png}\\
+    	\includegraphics[width=2cm]{../images/RStudio_image.png}\\
     \end{figure}
 
   \end{column}
@@ -206,7 +206,7 @@ To learn in this unit you need to:
   \begin{column}{0.2\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=2cm]{ECLR.jpg}\\
+    	\includegraphics[width=2cm]{../images/ECLR.jpg}\\
     \end{figure}
 
   \end{column}
@@ -225,7 +225,7 @@ To learn in this unit you need to:
 
 \begin{figure}
 	\centering
-	\includegraphics[width=12cm]{RStudio_screen.jpg}\\
+	\includegraphics[width=12cm]{../images/RStudio_screen.jpg}\\
 \end{figure}
 
 ## Write Code Files or the Basic Workflow
@@ -688,27 +688,27 @@ Later: This can be calculated using a regression approach (has some additional a
 
 ## DiD
 
-![](2x2slide1.PNG)
+![](../images/2x2slide1.PNG)
 
 ## DiD
 
-![](2x2slide2.PNG)
+![](../images/2x2slide2.PNG)
 
 ## DiD
 
-![](2xTslide1.PNG)
+![](../images/2xTslide1.PNG)
 
 ## DiD
 
-![](2xTslide2.PNG)
+![](../images/2xTslide2.PNG)
 
 ## DiD
 
-![](2xTslide3.PNG)
+![](../images/2xTslide3.PNG)
 
 ## DiD
 
-![](2xTslide4.PNG)
+![](../images/2xTslide4.PNG)
 
 
 ## DiD and Regression
@@ -741,7 +741,7 @@ $$y_{st}=\eta + \alpha d_s + \lambda p_t + \tau d_s p_t + u_{st}$$
   \begin{column}{0.5\textwidth}
     \begin{figure}
     	\centering
-    	\includegraphics[width=5cm]{SiegelExtract.png}\\
+    	\includegraphics[width=5cm]{../images/SiegelExtract.png}\\
     \end{figure}
 
   \end{column}
