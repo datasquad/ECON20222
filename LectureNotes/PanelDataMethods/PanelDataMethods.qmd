@@ -124,7 +124,7 @@ Subtracting the $t=1$ equation from the $t=2$ equation gives
 
 $$
 \begin{equation}
-  \Delta y_{i} = \delta_0  + \beta_1 \Delta x_{i} + \Delta u_{i}.
+  \Delta y_{i} = \beta_1 \Delta x_{i} + \Delta u_{i}.
 \end{equation}
 $$ {#eq-mee}
 
@@ -321,7 +321,25 @@ older if observations are apart by a year. `r unhide()`
 Measurement error gets worse with differencing. We know from the
 Endogenity section that means that the FD estimator gets more biased.
 
-## Multi-period panels
+What this type of estimation basically does is to eliminate the variation in the explanatory variable $x_{it}$ between the different observations $i$. This is obvious if you were to think about the following three individuals.
+
+|indiv | $x_{t=1}$| $x_{t=2}$|$\Delta x$|
+|:------|:------|:------|:------|
+|John  |15 | 17| 2|
+|Xu | 4| 6 | 2 |
+|Ludmilla | 3 | 7 | 4 |
+
+There is a lot of variation between John and Xu, namely that John has a much higher average value of $x$, however, after calculating the difference there all we see is that they both have the same change $\Delta x$. So all the information we are using is the change "within" an individual. The "between" variation has been removed.
+
+# Fixed-effects estimator (FE)
+
+As we just discussed, differencing has removed the variation between individuals from the model. The effect size $\beta_1$ will be calculated using "within" variation only. This is why we do need that the values of $x_i$ actually change through time. Otherwise there would be no such variation.
+
+There is an alternative way to achieve the same.
+
+We could include a dummy variable for each individual (or for each minus 1) to avoid the dummy variable trap. We also say that we include a **fixed-effect** for individuals.
+
+# Multi-period panels
 
 The setup above is for a two-period panel. Things do not change
 substantially when we have data for more than two periods.
@@ -354,6 +372,10 @@ $$
 $$
 
 using POLS, pooling over the differenced observations we have for $t=2,3$. As you can see, all right hand side variables need to be differenced.
+
+
+
+
 
 # Twins Double the Fun
 

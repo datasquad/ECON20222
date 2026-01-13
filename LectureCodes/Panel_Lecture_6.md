@@ -1,0 +1,697 @@
+---
+title: "Introduction to Panel Data Models"
+output:
+ html_document:
+   df_print: paged
+   keep_md: yes
+---
+
+
+
+
+# Preparing your workfile
+
+We add the basic libraries needed for this week's work:
+
+
+``` r
+library(tidyverse)    # for almost all data handling tasks
+library(ggplot2)      # to produce nice graphics
+library(stargazer)    # to produce nice results tables
+library(haven)        # to import stata file
+library(AER)          # access to HS robust standard errors
+source("stargazer_HC.r")  # includes the robust regression display
+```
+
+As we are using panel methods we also require an additional package `plm`.
+
+
+``` r
+#install.packages("plm") # only execute this if plm is not installed yet
+library(plm)
+```
+
+
+# Introduction
+
+The data are an extract from the [Understanding Society Survey](https://www.understandingsociety.ac.uk/) (formerly the British Household Survey Panel).
+
+# Data Upload - and understanding data structure
+
+Upload the data, which are saved in a STATA datafile (extension `.dta`). There is a function which loads STATA file. It is called `read_dta` and is supplied by the `haven` package.
+
+
+``` r
+data_USoc <- read_dta("../data/20222_USoc_extract.dta")
+data_USoc <- as.data.frame(data_USoc)    # ensure data frame structure
+names(data_USoc)
+```
+
+```
+##  [1] "pidp"    "age"     "jbhrs"   "paygu"   "wave"    "cpi"     "year"   
+##  [8] "region"  "urate"   "male"    "race"    "educ"    "degree"  "mfsize9"
+```
+
+Let us ensure that categorical variables are stored as `factor` variables. It is easiest to work with these in R.
+
+
+``` r
+data_USoc$region <- as_factor(data_USoc$region)
+data_USoc$male <- as_factor(data_USoc$male)
+data_USoc$degree <- as_factor(data_USoc$degree)
+data_USoc$race <- as_factor(data_USoc$race)
+```
+
+The pay information (`paygu`) is provided as a measure of the (usual) gross pay per month. As workers work for varying numbers of hours per week (`jbhrs`) we divide the monthly pay by the approximate monthly hours (`4*jbhrs`). We shall also adjust for increasing price levels (as measured by `cpi`). These two adjustments leave us with an inflation adjusted hourly wage. We call this variable `hrpay` and also calculate the natural log of this variable (`lnhrpay`).
+
+
+``` r
+data_USoc <- data_USoc %>%
+              mutate(hrpay = paygu/(jbhrs*4)/(cpi/100)) %>%
+              mutate(lnhrpay = log(hrpay))
+```
+
+As we wanted to save these additional variables we assign the result of the operation to `data_USoc`.
+
+We will also use the logarithm of the unemployment rate
+
+
+``` r
+data_USoc <- data_USoc %>%
+              mutate(lnurate=log(urate)) 
+```
+
+# Understanding the Panel Structure
+
+To explain the meaning of these let us just pick out all the observations that pertain to one particular individual (`pidp == 272395767`). The following command does the following in words: "Take `data_USoc` filter/keep all observations which belong to individual pidp == 272395767, then select a list of variables (we don't need to see all 14 variables) and print the result":
+
+
+``` r
+data_USoc %>% filter(pidp == 272395767) %>% 
+              select(c("pidp","male","wave","year","paygu","age","educ")) %>% 
+              print()
+```
+
+```
+##        pidp   male wave year    paygu age educ
+## 1 272395767 female    1 2009 774.8302  40   11
+## 2 272395767 female    2 2010 812.2778  41   11
+## 3 272395767 female    3 2011 772.1625  42   11
+```
+
+The same person (female) was observed three years in a row (from 2009 to 2011). Their gross monthly income changed, as did, of course, their age, but not their education. This particular person was observed in three consequitive waves. Let's se whether this is a commom pattern.
+
+In the context of this exercise we will ignore the second wave and only look at waves 1 and 3.
+
+
+``` r
+data_USoc <- data_USoc %>%  
+  filter(wave != 2) %>% 
+  filter(!is.na(lnhrpay))
+```
+
+The code below figures how many waves we have for each individual (1 or 2) and then saves this in a new variable (`n_wave). This information will be used later as we may want to know whether only using observations for which we have both waves makes a difference to the analysis.
+
+
+``` r
+data_USoc <- data_USoc %>% 
+                group_by(pidp) %>% 
+                mutate(n_wave = n()) 
+```
+
+Now we need to let R know that we are dealing with panel data. This is why we loaded up the `plm` library which contains the `plm.data` function. Using the `index = c("pidp","wave")` we let the function know what identifies the individuals and what identifies the wave.
+
+
+``` r
+pdata_USoc <- pdata.frame(data_USoc, index = c("pidp","wave")) # defines the panel dimensions
+```
+
+We saved the output in `pdata_USoc` and we will use this for any panel data estimations.
+
+When dealing with panel data it is super useful to understand in how many and in which wave individuals are prepresented. We already calculated the `n_wave` variable which tells us in how many of our remaining two waves observations are represented. We also have information (`wave`) on which wave someone is represented in. To disentagle this we merely need a contingency `table` of the `n_wave` and `waves` variables.
+
+
+``` r
+table(pdata_USoc$n_wave,pdata_USoc$wave, dnn = c("n_waves","waves"))
+```
+
+```
+##        waves
+## n_waves     1     3
+##       1  9666  4112
+##       2 13078 13078
+```
+
+Naturally the 13078 respondents which have two observations (`n_wave == 2)` are represented in waves 1 and 3. Then we have (`n_wave == 1`) 9666 respondents which are represented in wave 1 and the 4112 which are represented in wave 3.
+
+For the respondents for which we have 2 waves of observations we can actually calculate a difference, or change in variables. This will become important in a later model estimation (although for that we could let R do the work in the background) and hence we will calculate these variables explicitly, here for `lnhrpay` and `lnurate`.
+
+
+``` r
+# the lag function below will recognise the panel nature of the data and 
+# will only calculate lags for individuals
+# we also need to specify that we are calculating k=2 step lag as
+# we calculate the difference between wave 3 and 1
+
+Dlnhrpay <- pdata_USoc$lnhrpay-lag(pdata_USoc$lnhrpay,k=2)
+Dlnurate <- pdata_USoc$lnurate-lag(pdata_USoc$lnurate,k=2)
+#Dregion <- ifelse(pdata_USoc$region==lag(pdata_USoc$region,k=2),"no move","move")
+pdata_USoc$Dlnhrpay <- Dlnhrpay   # add the new series to the dataframe
+pdata_USoc$Dlnurate <- Dlnurate
+```
+
+For a later purpose we will also identify all individuals who moved from one region to another between waves 1 and 3. It is not so important to understand this code.
+
+
+``` r
+temp <- pdata_USoc   # create a temporary dataframe
+
+temp <- temp %>%  filter(n_wave == 2) %>%   # only keep individuals with two waves
+                  group_by(pidp) %>%        # group data by individual
+                  mutate(move = ifelse(length(unique(region))==1,"no move","move")) %>% 
+                  select(pidp,wave,move)    # only keep these 3 variables
+
+# the move variable will take the value 1 if both regions are identical (no move) 
+# and 2 if there are two different regions (move) 
+
+temp$move <- as_factor(temp$move)  # convert to factor variable
+
+# the following merges the new variable into the pdata_USoc dataframe
+pdata_USoc <- merge(pdata_USoc,temp,all.x = TRUE) 
+```
+
+Let's check how many movers there are.
+
+
+``` r
+pdata_USoc %>%  count(move)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["move"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"no move","2":"25804"},{"1":"move","2":"352"},{"1":"NA","2":"13778"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+So ther are 352 observations associated with movers. That means that there are 176 movers.
+
+# Some data descriptions
+
+We will use the `lnhrpay` and the `urate` variables below. We therefore will have a look at these variables.
+
+
+``` r
+stargazer(pdata_USoc[,c("lnhrpay","urate","year","Dlnhrpay","Dlnurate")],type = "text")
+```
+
+```
+## 
+## ==================================================
+## Statistic   N      Mean    St. Dev.   Min    Max  
+## --------------------------------------------------
+## lnhrpay   39,934   2.284    0.635   -7.816  8.868 
+## urate     39,934   7.877    1.303    5.800  10.800
+## year      39,934 2,010.393  1.146    2,009  2,013 
+## Dlnhrpay  13,078  -0.009    0.524   -10.381 9.522 
+## Dlnurate  13,078   0.037    0.065   -0.464  0.547 
+## --------------------------------------------------
+```
+
+Let us look at some summary statistics grouped by region
+
+
+``` r
+pdata_USoc %>% group_by(region) %>% 
+              summarise(n = n(), mean_lnhrpay = mean(lnhrpay),mean_urate = mean(urate))
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["region"],"name":[1],"type":["pseries"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mean_lnhrpay"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean_urate"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"north east","2":"1576","3":"2.212529","4":"9.883376"},{"1":"north west","2":"4280","3":"2.243201","4":"8.443528"},{"1":"yorkshire and the humber","2":"3247","3":"2.199140","4":"9.003326"},{"1":"east midlands","2":"3107","3":"2.202686","4":"9.147956"},{"1":"west midlands","2":"3454","3":"2.234213","4":"7.665663"},{"1":"east of england","2":"3724","3":"2.317279","4":"6.579565"},{"1":"london","2":"5736","3":"2.422937","4":"9.303068"},{"1":"south east","2":"5125","3":"2.387675","4":"6.101737"},{"1":"south west","2":"3119","3":"2.249725","4":"6.109170"},{"1":"wales","2":"1831","3":"2.139070","4":"8.451884"},{"1":"scotland","2":"3020","3":"2.274794","4":"7.760828"},{"1":"northern ireland","2":"1715","3":"2.238871","4":"6.776851"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+Below we will want to use the mean `lnhrpay` and mean `lnurate` as calculated for every region-year. The following will group the data by region-wave (as we have 12 regions and 2 waves we will 24 such groups). This is similar to the above command but note that we start with `pdata_USoc <-` to ensure that the calculated average wage and unemployment rate values are added as variables to the data frame. Also, instead of `summarise` (which displays the calculated statistics) we use the `mutate` function as we want the calculated series to be saved in the data frame.
+
+
+``` r
+pdata_USoc <- pdata_USoc %>% 
+              group_by(region,year) %>% 
+              mutate(mean_lnhrpay = mean(lnhrpay),mean_urate = mean(urate)) 
+```
+
+
+# Estimating Models
+
+## Pooled Regression
+
+We start by estimating a model which does not use the panel nature of the data.
+
+
+``` r
+POLS0 <- lm(lnhrpay~lnurate, data = pdata_USoc)
+stargazer_HC(POLS0)
+```
+
+```
+## 
+## =========================================================
+##                              Dependent variable:         
+##                     -------------------------------------
+##                                    lnhrpay               
+## ---------------------------------------------------------
+## lnurate                           -0.102***              
+##                                    (0.019)               
+##                                                          
+## Constant                          2.493***               
+##                                    (0.039)               
+##                                                          
+## ---------------------------------------------------------
+## Observations                       39,934                
+## R2                                  0.001                
+## Adjusted R2                         0.001                
+## Residual Std. Error          0.634 (df = 39932)          
+## F Statistic               30.049*** (df = 1; 39932)      
+## =========================================================
+## Note:                         *p<0.1; **p<0.05; ***p<0.01
+##                     Robust standard errors in parenthesis
+```
+
+Let's add the predicted model values to the data frame. As our explanatory variable only has 24 different values we will only get 24 different predicted values.
+
+
+``` r
+pdata_USoc$pred_POLS0 <- POLS0$fitted.values
+```
+
+Here we basically used all observations available, whether they were from wave 1 or 3. We **pooled** the observations and hence we could use our normal `lm` function to estimate this model. The `plm` package we imported earlier has a few panel specific tricks up its sleeve and we could estimate this model with the `plm` function.
+
+
+``` r
+POLS0a <- plm(lnhrpay~lnurate, data = pdata_USoc, model = "pooling")
+stargazer_HC(POLS0a)
+```
+
+```
+## 
+## ==================================================
+##                       Dependent variable:         
+##              -------------------------------------
+##                             lnhrpay               
+## --------------------------------------------------
+## lnurate                    -0.102***              
+##                             (0.022)               
+##                                                   
+## Constant                   2.493***               
+##                             (0.046)               
+##                                                   
+## --------------------------------------------------
+## Observations                39,934                
+## R2                           0.001                
+## Adjusted R2                  0.001                
+## F Statistic        30.049*** (df = 1; 39932)      
+## ==================================================
+## Note:                  *p<0.1; **p<0.05; ***p<0.01
+##              Robust standard errors in parenthesis
+```
+
+Now we plot the predicted values and compare them against the 
+
+
+``` r
+# pdf("Lecture6plot_Pooled.pdf",width = 5.5, height = 4) # uncomment to save as pdf
+ggplot(pdata_USoc, aes(x=lnurate,y=pred_POLS0)) +
+  geom_point(aes(colour = "red")) +
+  geom_line(aes(colour = "red")) +
+  geom_point(aes(y = mean_lnhrpay,colour = "blue")) +
+  ggtitle("Predicted values - Pooled OLS") +
+  ylab("Log Hourly Wage") +
+  xlab("Log Unemployment Rate") +
+  scale_colour_manual(name="Data/Model", values = c(red = "red", blue = "blue"),
+                      labels=c("Data", "POLS"))
+```
+
+![](Panel_Lecture_6_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+``` r
+# dev.off() # uncomment to save as pdf
+```
+
+Now we will include a dummy variable for `wave == 3`. The `wave` variable is a factor variable with two levels (1 and 3) for waves 1 and 3.
+
+
+``` r
+POLS1 <- lm(lnhrpay~lnurate+wave, data = pdata_USoc)
+stargazer_HC(POLS1)
+```
+
+```
+## 
+## =========================================================
+##                              Dependent variable:         
+##                     -------------------------------------
+##                                    lnhrpay               
+## ---------------------------------------------------------
+## lnurate                           -0.097***              
+##                                    (0.019)               
+##                                                          
+## wave3                             -0.019***              
+##                                    (0.006)               
+##                                                          
+## Constant                          2.491***               
+##                                    (0.039)               
+##                                                          
+## ---------------------------------------------------------
+## Observations                       39,934                
+## R2                                  0.001                
+## Adjusted R2                         0.001                
+## Residual Std. Error          0.634 (df = 39931)          
+## F Statistic               19.596*** (df = 2; 39931)      
+## =========================================================
+## Note:                         *p<0.1; **p<0.05; ***p<0.01
+##                     Robust standard errors in parenthesis
+```
+
+The first wave is the base category of `wave` and hence is not included. So far we have used the standard `lm` function to estimate this model.
+
+Alternatively this could be estimated using the `plm` package
+
+
+``` r
+POLS1a <- plm(lnhrpay~lnurate+wave, data = pdata_USoc, model = "pooling")
+stargazer_HC(POLS1a)
+```
+
+```
+## 
+## ==================================================
+##                       Dependent variable:         
+##              -------------------------------------
+##                             lnhrpay               
+## --------------------------------------------------
+## lnurate                    -0.097***              
+##                             (0.022)               
+##                                                   
+## wave3                      -0.019***              
+##                             (0.005)               
+##                                                   
+## Constant                   2.491***               
+##                             (0.046)               
+##                                                   
+## --------------------------------------------------
+## Observations                39,934                
+## R2                           0.001                
+## Adjusted R2                  0.001                
+## F Statistic        19.596*** (df = 2; 39931)      
+## ==================================================
+## Note:                  *p<0.1; **p<0.05; ***p<0.01
+##              Robust standard errors in parenthesis
+```
+
+This regression will have observations for individuals for which we only observe one wave (`n_wave == 1`). Let's restrict the analysis to only individuals for which we have two waves (`n_wave == 2`).
+
+
+``` r
+POLS2 <- lm(lnhrpay~lnurate+wave, data = pdata_USoc, subset = (n_wave ==2))
+stargazer_HC(POLS2)
+```
+
+```
+## 
+## =========================================================
+##                              Dependent variable:         
+##                     -------------------------------------
+##                                    lnhrpay               
+## ---------------------------------------------------------
+## lnurate                           -0.096***              
+##                                    (0.023)               
+##                                                          
+## wave3                              -0.005                
+##                                    (0.008)               
+##                                                          
+## Constant                          2.544***               
+##                                    (0.046)               
+##                                                          
+## ---------------------------------------------------------
+## Observations                       26,156                
+## R2                                  0.001                
+## Adjusted R2                         0.001                
+## Residual Std. Error          0.611 (df = 26153)          
+## F Statistic               10.027*** (df = 2; 26153)      
+## =========================================================
+## Note:                         *p<0.1; **p<0.05; ***p<0.01
+##                     Robust standard errors in parenthesis
+```
+
+or using the `plm` function
+
+
+``` r
+POLS2a <- plm(lnhrpay~lnurate+wave, data = pdata_USoc, subset = (n_wave ==2), model = "pooling")
+stargazer_HC(POLS2a)
+```
+
+```
+## 
+## ==================================================
+##                       Dependent variable:         
+##              -------------------------------------
+##                             lnhrpay               
+## --------------------------------------------------
+## lnurate                    -0.096***              
+##                             (0.029)               
+##                                                   
+## wave3                       -0.005                
+##                             (0.005)               
+##                                                   
+## Constant                   2.544***               
+##                             (0.058)               
+##                                                   
+## --------------------------------------------------
+## Observations                26,156                
+## R2                           0.001                
+## Adjusted R2                  0.001                
+## F Statistic        10.027*** (df = 2; 26153)      
+## ==================================================
+## Note:                  *p<0.1; **p<0.05; ***p<0.01
+##              Robust standard errors in parenthesis
+```
+
+## First Difference Estimation
+
+Now we estimate a first difference (FD) model. We will only do this using the `plm` function. If we were to use the `lm` function we had to first calculate differenced series (which we have done on this occasion, but only to illustrate the mechanics). Before we estimate the model let's look at the data for a few respondents.
+
+
+``` r
+pdata_USoc %>% filter(pidp %in% c("3915445","68001367","68004087","68195851")) %>% 
+              select(c("pidp","male","wave","lnhrpay","Dlnhrpay","lnurate", "Dlnurate")) %>% 
+              print()
+```
+
+```
+## # A tibble: 6 × 9
+## # Groups:   region, year [5]
+##   region         year pidp     male   wave  lnhrpay Dlnhrpay lnurate Dlnurate
+##   <fct>         <dbl> <fct>    <fct>  <fct>   <dbl>    <dbl>   <dbl>    <dbl>
+## 1 scotland       2011 3915445  female 3        1.88  NA         2.09  NA     
+## 2 north east     2009 68001367 male   1        2.45  NA         2.22  NA     
+## 3 north east     2009 68004087 male   1        1.83  NA         2.22  NA     
+## 4 north east     2011 68004087 male   3        1.90   0.0728    2.38   0.160 
+## 5 north west     2009 68195851 female 1        2.20  NA         2.13  NA     
+## 6 west midlands  2011 68195851 female 3        1.84  -0.360     2.08  -0.0488
+```
+
+When estimating a FD model we are basically running a regression of `Dlnhrpay` on `Dlnurate`. Respondents for whom we do not have two waves will not be used in such a model. The calculation of the `Dlnhrpay` and `Dlnurate` series happens automatically inside the `plm` function when we specify `model = "fd"`.
+
+
+``` r
+FD1a <- plm(lnhrpay~lnurate, data = pdata_USoc, subset = (n_wave ==2), model = "fd")
+stargazer_HC(FD1a)
+```
+
+```
+## 
+## ==================================================
+##                       Dependent variable:         
+##              -------------------------------------
+##                             lnhrpay               
+## --------------------------------------------------
+## lnurate                      0.042                
+##                             (0.085)               
+##                                                   
+## Constant                    -0.011*               
+##                             (0.006)               
+##                                                   
+## --------------------------------------------------
+## Observations                13,078                
+## R2                          0.00003               
+## Adjusted R2                -0.00005               
+## F Statistic          0.353 (df = 1; 13076)        
+## ==================================================
+## Note:                  *p<0.1; **p<0.05; ***p<0.01
+##              Robust standard errors in parenthesis
+```
+
+We can show a scatter plot of the available difference observations and the regression line estimated by `FD1a`.
+
+
+``` r
+# pdf("Lecture6plot_FD_R.pdf",width = 5.5, height = 4) # uncomment to save as pdf
+ggplot(pdata_USoc, aes(x=Dlnurate,y=Dlnhrpay,color=move)) +
+  geom_point() +
+  geom_abline(intercept = FD1a$coefficients[1], slope = FD1a$coefficients[2],colour = "blue") +
+  ggtitle("Scatter plot and FD regression line") +
+  ylab("D(Log Hourly Wage)") +
+  xlab("D(Log Unemployment Rate)")
+```
+
+![](Panel_Lecture_6_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+
+``` r
+# dev.off() # uncomment to save as pdf
+```
+
+As you can see, there is no obvious relationship between the changes in hourly pay and the respective local unemployment rate.
+
+Now we will show models, `POLS0a`, `POLS1a`, `POLS2a` and `FD1a` in one table. In previous tables you may have seen that the F-stat takes up a lot of space and hence we use the `omit_stat` option to indicate that we do not want to see the F-statistic.
+
+
+``` r
+stargazer_HC(POLS0a,POLS1a,POLS2a,FD1a,omit.stat = "f")
+```
+
+```
+## 
+## =====================================================
+##                        Dependent variable:           
+##              ----------------------------------------
+##                              lnhrpay                 
+##                 (1)        (2)        (3)      (4)   
+## -----------------------------------------------------
+## lnurate      -0.102***  -0.097***  -0.096***  0.042  
+##               (0.022)    (0.022)    (0.029)  (0.085) 
+##                                                      
+## wave3                   -0.019***   -0.005           
+##                          (0.005)    (0.005)          
+##                                                      
+## Constant      2.493***   2.491***  2.544***  -0.011* 
+##               (0.046)    (0.046)    (0.058)  (0.006) 
+##                                                      
+## -----------------------------------------------------
+## Observations   39,934     39,934    26,156    13,078 
+## R2             0.001      0.001      0.001   0.00003 
+## Adjusted R2    0.001      0.001      0.001   -0.00005
+## =====================================================
+## Note:                     *p<0.1; **p<0.05; ***p<0.01
+##                 Robust standard errors in parenthesis
+```
+
+## Fixed Effects estimation
+
+What we have basically done by estimating the model as a FD model is to eliminate the "between" variation, estimating the effect size $\beta_1$ only on the basis of the "within" variation.
+
+The same can be achieved by including individual level dummy variables. To illustrate this we will create a little test dataset with many fewer observations. In particular we pick males with race declared as "other" and for whom we have two observations. The only reason we chose this particular subgroup is to get a small set of individuals. 
+
+
+``` r
+pdata_USoc_test <- pdata_USoc %>% filter(n_wave ==2) %>% 
+                      filter(male == "male", race == "other")
+```
+
+This results in 160 observations for 80 individuals. Let us first re-estimate the FD model from earlier. The "-1" in the specification removes the constant as that gets differenced out as well. We will only show the estimated coefficient to $lnurate$.
+
+
+``` r
+FD1a_test <- plm(lnhrpay~lnurate-1, data = pdata_USoc_test, model = "fd")
+stargazer_HC(FD1a_test, keep = "lnurate")
+```
+
+```
+## 
+## ==================================================
+##                       Dependent variable:         
+##              -------------------------------------
+##                             lnhrpay               
+## --------------------------------------------------
+## lnurate                      0.617                
+##                             (0.465)               
+##                                                   
+## --------------------------------------------------
+## Observations                  80                  
+## R2                           0.015                
+## Adjusted R2                  0.015                
+## F Statistic           0.638 (df = 1; 79)          
+## ==================================================
+## Note:                  *p<0.1; **p<0.05; ***p<0.01
+##              Robust standard errors in parenthesis
+```
+
+The actual value is of course different to the above estimated value and by itself is not of importance.
+
+Now we include dummy variables for each individual (`+pidp`). As `pidp` is a factor variable this will automatically include a dummy variable for all but one of the individuals.
+
+
+``` r
+FE1a_test <- plm(lnhrpay~lnurate+pidp, data = pdata_USoc_test, model = "pooling")
+```
+
+
+``` r
+stargazer_HC(FD1a_test, FE1a_test, keep = "lnurate")
+```
+
+```
+## 
+## ======================================================
+##                         Dependent variable:           
+##              -----------------------------------------
+##                               lnhrpay                 
+##                     (1)                  (2)          
+## ------------------------------------------------------
+## lnurate            0.617                0.617         
+##                   (0.465)              (0.658)        
+##                                                       
+## ------------------------------------------------------
+## Observations         80                  160          
+## R2                 0.015                0.791         
+## Adjusted R2        0.015                0.579         
+## F Statistic  0.638 (df = 1; 79) 3.737*** (df = 80; 79)
+## ======================================================
+## Note:                      *p<0.1; **p<0.05; ***p<0.01
+##                  Robust standard errors in parenthesis
+```
+
+You can see that the estimated coefficients are identical. There are all sorts of differences between the two models, like the number of observations, the $R^2$ and the standard errors. We shall not discuss these issues further but note that in terms of estimating the effect coefficient $\beta_1$ the result is identical. The coefficient has only been estimated using "within" variation in the data. 
+
+The reason that we reduced the dataset to demonstrate this was that otherwise there were more than 13,000 individuals which would require the inclusion of that many dummy variables. That is computationally very demanding and should be avoided.
+
+In fact there is yet an additional alternative way of achieving the same, i.e. estimating the effect on the basis of the "within" variation only. The `plm` package offers the option `model = "within"`:
+
+
+``` r
+FE1b_test <- plm(lnhrpay~lnurate, data = pdata_USoc_test, model = "within")
+stargazer_HC(FD1a_test, FE1a_test, FE1b_test, keep = "lnurate")
+```
+
+```
+## 
+## =========================================================================
+##                                  Dependent variable:                     
+##              ------------------------------------------------------------
+##                                        lnhrpay                           
+##                     (1)                  (2)                  (3)        
+## -------------------------------------------------------------------------
+## lnurate            0.617                0.617                0.617       
+##                   (0.465)              (0.658)              (0.464)      
+##                                                                          
+## -------------------------------------------------------------------------
+## Observations         80                  160                  160        
+## R2                 0.015                0.791                0.008       
+## Adjusted R2        0.015                0.579                -0.997      
+## F Statistic  0.638 (df = 1; 79) 3.737*** (df = 80; 79) 0.638 (df = 1; 79)
+## =========================================================================
+## Note:                                         *p<0.1; **p<0.05; ***p<0.01
+##                                     Robust standard errors in parenthesis
+```
+
+Again you see that the effect size is identical. What this does is to deduct the average for each individual from each variable before using them in the regression: $y_{it} - \bar{y_i}$ and $x_{it} - \bar{x_i}$ where $\bar{x_i}$ is the average of all $x$ observations for individual $i$. 
