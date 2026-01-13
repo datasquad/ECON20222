@@ -1,6 +1,6 @@
-This repository contains material for ECON20222 Quantitative Methods.
+This repository contains material for ECON20222 Quantitative Methods. The unit is taught to Ecoomics students at The University of Manchester.
 
-Lecturers: Ralf Becker, Yidi Sun, The University of Manchester
+Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yidi Sun, The University of Manchester
 
 # Topic 1 - Introduction
 
