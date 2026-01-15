@@ -1,5 +1,5 @@
 ---
-title: "Quantitative Methods - Computer Lab 0"
+title: "Quantitative Methods - Computer Lab 1"
 author: "Ralf Becker"
 date: ""
 output:

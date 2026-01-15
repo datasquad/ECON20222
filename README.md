@@ -14,6 +14,8 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 [Lecture 2 code](https://datasquad.github.io/ECON20222/LectureCodes/Data_Intro_2_GunExample_2026.html)
 
+[Computer Lab 2](https://datasquad.github.io/ECON20222/ComputerLabs/Comp_Lab_2_2526.html)
+
 [Notes - The Simple Regression Model](https://datasquad.github.io/ECON20222/LectureNotes/Introduction.html)
 
 # Topic 2 - Endogeneity
