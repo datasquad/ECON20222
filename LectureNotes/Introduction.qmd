@@ -108,7 +108,7 @@ $$
 \equiv \frac{\%\Delta \hat{y}_i}{\Delta x_i},
 $$
 
-which means, if we muliply $\hat{beta}$ by 100, the **percentage point** change in $y$ for a one-unit change in $x$.
+which means, if we muliply $\hat{\beta}$ by 100, the **percentage point** change in $y$ for a one-unit change in $x$.
 
 
 ::: {.callout-warning}
@@ -125,7 +125,7 @@ $$
 \equiv \frac{\%\Delta \hat{y}_i}{\%\Delta x_i},
 $$
 
-which means that $\hat{beta}$ is the percentage point change in $y$ for a one percentage point change in $x$.  Now $\hat{\beta}$ is interpreted as an **elasticity**. Elasticities are very useful because they are unit-free. (See the appendix to this section for another unit-free interpretation.)
+which means that $\hat{\beta}$ is the percentage point change in $y$ for a one percentage point change in $x$.  Now $\hat{\beta}$ is interpreted as an **elasticity**. Elasticities are very useful because they are unit-free. (See the appendix to this section for another unit-free interpretation.)
 
 ## Derivation of OLS Estimators
 
