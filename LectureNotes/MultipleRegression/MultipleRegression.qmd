@@ -159,6 +159,42 @@ Cov(y,x_1) &= \beta_1 Var(x_1),
 \end{align*}
 which takes us back to Equation $$ \beta = \frac{cov(y,x)}{var(x)}$$ in the introduction section.
 
+::: {.callout-tip}
+## Practice Questions : GPA and Time Allocation
+
+In a study relating college grade point average (GPA) to time spent in various activities. You distribute a survey to several students. Students are asked how many hours they spend each week in four activities: studying, sleeping, working, and leisure.  Any activity is put into one of the four categories, so that for each student: $study + sleep + work + leisure = 168$
+Consider the following model, 
+
+$$
+GPA = \beta_0 + \beta_1 study + \beta_2 sleep + \beta_3 work + \beta_4 leisure + u.
+$$
+1. Holding sleep, work, and leisure fixed, increasing study by one additional hour will increase GPA by $\beta_1$ units.
+`r torf(FALSE)`
+
+2.Why can the computer not estimate this model using OLS as written?
+```{r}
+opts_ci <- sample(c(
+  answer = "There is perfect multicollinearity among the regressors",
+  "The sample size is too small",
+  "One of the regressors has zero variance",
+  "GPA is not measured correctly"
+))
+```
+`r longmcq(opts_ci)`
+
+3. If we solve for $leisure = 168 - study - sleep - work$ and substitute this into the model, which expression is correct?
+```{r}
+opts_ci <- sample(c(
+  answer = "$GPA = (\\beta_0 + 168\\beta_4) + (\\beta_1 - \\beta_4)study + (\\beta_2 - \\beta_4)sleep + (\\beta_3 - \\beta_4)work + u$",
+  "$GPA = \\beta_0 + \\beta_1 study + \\beta_2 sleep + \\beta_3 work + u$",
+  "$GPA = 168 + \\beta_1 study + u$",
+  "$GPA = (\\beta_0 - \\beta_4) + \\beta_1 study + \\beta_2 sleep + \\beta_3 work + u$"
+))
+```
+`r longmcq(opts_ci)`
+:::
+
+
 In the rest of this section, we examine various uses for the multiple
 regression model.
 
@@ -572,6 +608,29 @@ two assumptions we make in the introduction section.
 This is essentially the same as the quotation in Angrist and Pischke (2015)  on
 Page 5.
 
+:::{.callout-tip}
+## Practice Questions
+
+Suppose the true model is  
+$$
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + u,
+$$
+but $x_2$ is omitted from the regression. If $\beta_2 < 0$ and $Corr(x_1, x_2) < 0$, what is the bias in $\tilde{\beta}_1$?
+
+```{r}
+opts_p <- c(
+   "Negative bias ",
+   answer = "Positive bias",
+   "Zero bias ",
+   "Bias cannot be determined"
+)
+```
+`r longmcq(opts_p)`
+
+
+:::
+
+
 
 # Appendix
 showing that @eq-southgate holds
@@ -635,133 +694,3 @@ This section is based on both Angrist & Pischke (2015, chapter 2) and Wooldridge
 Angrist, J. & Pischke, J.-S. (2015), Mastering ’Metrics: The Path From Cause To
 Effect, Princeton University Press, Princeton, NJ.
 
-#################################
-
-
-My name is Yidi
-
-This is a Web Exercise template created by the [#PsyTeachR team at the University of Glasgow](https://psyteachr.github.io), based on ideas from [Software Carpentry](https://software-carpentry.org/lessons/). This template shows how instructors can easily create interactive web documents that students can use in self-guided learning.
-
-My name is Ralf
-
-The `{webexercises}` package provides a number of functions that you use in [inline R code](https://github.com/rstudio/cheatsheets/raw/main/rmarkdown.pdf) or through code chunk options to create HTML widgets (text boxes, pull down menus, buttons that reveal hidden content). Examples are given below. Render this file to HTML to see how it works.
-
-**NOTE: To use the widgets in the compiled HTML file, you need to have a JavaScript-enabled browser.**
-
-## Example Questions
-
-### Fill-In-The-Blanks (`fitb()`)
-
-Create fill-in-the-blank questions using `fitb()`, providing the answer as the first argument.
-
-- 2 + 2 is `r fitb(4)`
-
-You can also create these questions dynamically, using variables from your R session.
-
-```{r}
-x <- sample(2:8, 1)
-```
-
-- The square root of `r x^2` is: `r fitb(x)`
-
-The blanks are case-sensitive; if you don't care about case, use the argument `ignore_case = TRUE`.
-
-- What is the letter after D? `r fitb("E", ignore_case = TRUE)`
-
-If you want to ignore differences in whitespace use, use the argument `ignore_ws = TRUE` (which is the default) and include spaces in your answer anywhere they could be acceptable.
-
-- How do you load the tidyverse package? `r fitb(c("library( tidyverse )", "library( \"tidyverse\" )", "library( 'tidyverse' )"), ignore_ws = TRUE, width = "20")`
-
-You can set more than one possible correct answer by setting the answers as a vector.
-
-- Type a vowel: `r fitb(c("A", "E", "I", "O" , "U"), ignore_case = TRUE)`
-
-You can use regular expressions to test answers against more complex rules.
-
-- Type any 3 letters: `r fitb("^[a-zA-Z]{3}$", width = 3, regex = TRUE)`
-
-### Multiple Choice (`mcq()`)
-
-- "Never gonna give you up, never gonna: `r mcq(c("let you go", "turn you down", "run away", answer = "let you down"))`"
-- "I `r mcq(c(answer = "bless the rains", "guess it rains", "sense the rain"))` down in Africa" -Toto
-
-### True or False (`torf()`)
-
-- True or False? You can permute values in a vector using `sample()`. `r torf(TRUE)`
-
-### Longer MCQs (`longmcq()`)
-
-When your answers are very long, sometimes a drop-down select box gets formatted oddly. You can use `longmcq()` to deal with this. Since the answers are long, It's probably best to set up the options inside an R chunk with `echo=FALSE`. 
-
-**What is a p-value?**
-
-```{r}
-opts_p <- c(
-   "the probability that the null hypothesis is true",
-   answer = "the probability of the observed, or more extreme, data, under the assumption that the null-hypothesis is true",
-   "the probability of making an error in your conclusion"
-)
-```
-
-`r longmcq(opts_p)`
-
-**What is true about a 95% confidence interval of the mean?**
-
-```{r}
-# use sample() to randomise the order
-opts_ci <- sample(c(
-  answer = "if you repeated the process many times, 95% of intervals calculated in this way contain the true mean",
-  "there is a 95% probability that the true mean lies within this range",
-  "95% of the data fall within this range"
-))
-```
-
-`r longmcq(opts_ci)`
-
-## Checked sections
-
-Create sections with the class `webex-check` to add a button that hides feedback until it is pressed. Add the class `webex-box` to draw a box around the section (or use your own styles).
-
-::: {.webex-check .webex-box}
-
-I am going to learn a lot: `r torf(TRUE)`
-
-```{r, results='asis'}
-opts <- c(
-   "the probability that the null hypothesis is true",
-   answer = "the probability of the observed, or more extreme, data, under the assumption that the null-hypothesis is true",
-   "the probability of making an error in your conclusion"
-)
-
-cat("What is a p-value?", longmcq(opts))
-```
-
-:::
-
-
-
-## Hidden solutions and hints
-
-You can fence off a solution area that will be hidden behind a button using `hide()` before the solution and `unhide()` after, each as inline R code.  Pass the text you want to appear on the button to the `hide()` function.
-
-If the solution is a code chunk, instead of using `hide()` and `unhide()`, simply set the `webex.hide` chunk option to TRUE, or set it to the string you wish to display on the button.
-
-**Recreate the scatterplot below, using the built-in `cars` dataset.**
-
-```{r}
-with(cars, plot(speed, dist))
-```
-
-
-`r hide("I need a hint")`
-
-See the documentation for `plot()` (`?plot`)
-
-`r unhide()`
-
-<!-- note: you could also just set webex.hide to TRUE -->
-
-```{r, echo = TRUE, eval = FALSE}
-#| webex.hide: "Click here to see the solution"
-plot(cars$speed, cars$dist)
-```
