@@ -2473,11 +2473,11 @@ y = \alpha + \beta x + u.
 <p><span class="math display">\[
 y_i = \alpha + \beta x_i + u_i,
 \]</span></p>
-<p>as <a href="#eq-erikson" class="quarto-xref">Equation 6</a> holds for each observation <span class="math inline">\(i\)</span>. This notation emphasises that we have a sample of data at hand:</p>
+<p>as <a href="#eq-erikson" class="quarto-xref">Equation 1</a> holds for each observation <span class="math inline">\(i\)</span>. This notation emphasises that we have a sample of data at hand:</p>
 <p><span class="math display">\[
 \{(y_i, x_i): i=1,\dots,n \}.
 \]</span></p>
-<p>The subscript is useful as it reflects the type of data we are using, eg subscript <span class="math inline">\(i\)</span> is used for cross-section data, <span class="math inline">\(t\)</span> is used for time-series data, and <span class="math inline">\(it\)</span> is used for panel data or repeated cross-sections. The subscript is also known as **the unit of observation*}**.</p>
+<p>The subscript is useful as it reflects the type of data we are using, eg subscript <span class="math inline">\(i\)</span> is used for cross-section data, <span class="math inline">\(t\)</span> is used for time-series data, and <span class="math inline">\(it\)</span> is used for panel data or repeated cross-sections. The subscript is also known as <strong>the unit of observation</strong>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2498,15 +2498,15 @@ E(u)     = 0~(A1)
 \]</span></p>
 <p><span class="math display">\[
 E(u | x) = 0 ~ (A2).
-\]</span> These are often called or . The latter Assumption A2 is absolutely crucial throughout everything we do in empirical economics. It is best to think of <span class="math inline">\(E(u | x)\)</span> as the same as <span class="math inline">\(E(u x)\)</span>. If the assumption is true, <span class="math inline">\(E(u x)=0\)</span>, then it follows that <span class="math inline">\(Cov(u x)=0\)</span>. In words, <span class="math inline">\(u\)</span> and <span class="math inline">\(x\)</span> are said to be . What this means and whether it is true (or otherwise) is a crucial and recurring theme in this course.</p>
-<p>Next, from <a href="#eq-erikson" class="quarto-xref">Equation 6</a></p>
+\]</span> These are often called <strong>moment conditions</strong> or <strong>exogeneity assumptions</strong>. The latter Assumption A2 is absolutely crucial throughout everything we do in empirical economics. It is best to think of <span class="math inline">\(E(u | x)\)</span> as the same as <span class="math inline">\(E(u x)\)</span>. If the assumption is true, <span class="math inline">\(E(u x)=0\)</span>, then it follows that <span class="math inline">\(Cov(u x)=0\)</span>. In words, <span class="math inline">\(u\)</span> and <span class="math inline">\(x\)</span> are said to be <strong>uncorrelated</strong>. What this means and whether it is true (or otherwise) is a crucial and recurring theme in this course.</p>
+<p>Next, from <a href="#eq-erikson" class="quarto-xref">Equation 1</a></p>
 <p><span class="math display">\[
 \begin{align*}
 E(y|x) &amp;= E(\alpha |x) + E(\beta x |x) + E(u|x) \\
         &amp;= \alpha + \beta x + E(u|x)
 \end{align*}
 \]</span></p>
-<p>by **conditioning on <span class="math inline">\(x\)</span>*. We now use A2 to define the <strong>population regression function</strong> or <strong>conditional expectation function</strong>:</p>
+<p>by <strong>conditioning on <span class="math inline">\(x\)</span></strong>. We now use A2 to define the <strong>population regression function</strong> or <strong>conditional expectation function</strong>:</p>
 <p><span class="math display">\[
 E(y|x) = \alpha + \beta x.
 \]</span></p>
@@ -2519,7 +2519,7 @@ E(y|x) = \alpha + \beta x.
 <p><span class="math display">\[
 \hat{\beta} = \Delta \hat{y}_i/ \Delta x_i,
 \]</span></p>
-<p>and so the correct way to interpret <span class="math inline">\(\hat{beta}\)</span> is the resulting change in <span class="math inline">\(\hat{y}_i\)</span> for a one unit change in <span class="math inline">\(x_i\)</span>. If <span class="math inline">\(y\)</span> is specified as a logged variable in <a href="#eq-erikson" class="quarto-xref">Equation 6</a>, <span class="math inline">\(\log y_i = \alpha + \beta x_i + u_i\)</span>, we have</p>
+<p>and so the correct way to interpret <span class="math inline">\(\hat{\beta}\)</span> is the resulting change in <span class="math inline">\(\hat{y}_i\)</span> for a one unit change in <span class="math inline">\(x_i\)</span>. If <span class="math inline">\(y\)</span> is specified as a logged variable in <a href="#eq-erikson" class="quarto-xref">Equation 1</a>, <span class="math inline">\(\log y_i = \alpha + \beta x_i + u_i\)</span>, we have</p>
 <p><span class="math display">\[
 100\hat{\beta} \approx 100 \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i}
 \equiv \frac{\%\Delta \hat{y}_i}{\Delta x_i},
@@ -2538,7 +2538,7 @@ E(y|x) = \alpha + \beta x.
 <p>This is not a the <strong>percentage change in <span class="math inline">\(y\)</span></strong>. For instance, if the unemployment rate increases from 4% to 6% that is a 2% point increase but a 50% percent increase in the unemployment rate.</p>
 </div>
 </div>
-<p>If both <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> are specified as logged variables in <a href="#eq-erikson" class="quarto-xref">Equation 6</a>, <span class="math inline">\(\log y_i = \alpha + \beta \log x_i + u_i\)</span>, we have</p>
+<p>If both <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span> are specified as logged variables in <a href="#eq-erikson" class="quarto-xref">Equation 1</a>, <span class="math inline">\(\log y_i = \alpha + \beta \log x_i + u_i\)</span>, we have</p>
 <p><span class="math display">\[
 \hat{\beta} \approx \frac{\Delta \hat{y}_i/\hat{y}_i}{\Delta x_i/x_i}
 \equiv \frac{\%\Delta \hat{y}_i}{\%\Delta x_i},
@@ -2547,7 +2547,7 @@ E(y|x) = \alpha + \beta x.
 </section>
 <section id="derivation-of-ols-estimators" class="level2">
 <h2 class="anchored" data-anchor-id="derivation-of-ols-estimators">Derivation of OLS Estimators</h2>
-<p>We now derive the Ordinary Least Squares or <strong>OLS estimators</strong> <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>, using A1 and A2. These are formulae for <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span> which only involve quantities that can be computed from a sample of data. First, we form expectations of both sides of <a href="#eq-erikson" class="quarto-xref">Equation 6</a>:</p>
+<p>We now derive the Ordinary Least Squares or <strong>OLS estimators</strong> <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>, using A1 and A2. These are formulae for <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span> which only involve quantities that can be computed from a sample of data. First, we form expectations of both sides of <a href="#eq-erikson" class="quarto-xref">Equation 1</a>:</p>
 <p><span class="math display">\[
 \begin{align*}
 E(y) &amp;= E(\alpha) + E(\beta x) + E(u), \\
@@ -2558,7 +2558,7 @@ E(y) &amp;= E(\alpha) + E(\beta x) + E(u), \\
 <p><span id="eq-alli"><span class="math display">\[
 E(y) = \alpha + \beta E(x).
 \tag{2}\]</span></span></p>
-<p>Subtracting from <a href="#eq-erikson" class="quarto-xref">Equation 6</a>:</p>
+<p>Subtracting from <a href="#eq-erikson" class="quarto-xref">Equation 1</a>:</p>
 <p><span class="math display">\[
 y-E(y) = \beta [x-E(x)] + u.
 \]</span> Now multiply by <span class="math inline">\(x-E(x)\)</span></p>
@@ -2615,7 +2615,7 @@ Cov(y,x) = \beta~Var(x) + Cov(u,x).
 <p>We now give an intuitive explanation as to when <span class="math inline">\(\hat{beta}\)</span> can be said to be <strong>unbiased</strong>. First, from <a href="#eq-harry" class="quarto-xref">Equation 4</a></p>
 <p><span class="math display">\[
 \begin{multline*}
-\hat{beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
+\hat{\beta} = \frac{\widehat{Cov}(y,x)}{\widehat{Var}(x)} =
 \frac{\widehat{Cov}(\alpha + \beta x +u,x)}{\widehat{Var}(x)} \quad
 \text{[using @eq-erikson]} = \\
 \frac{\beta \widehat{Cov}(x,x) + \widehat{Cov}(u,x)}{\widehat{Var}(x)} \quad
@@ -2648,7 +2648,7 @@ Caution
 <ul>
 <li><span class="math inline">\(x\)</span> is said to be <strong>exogenous</strong> (this is an econometric definition, more general than that used by economists);</li>
 <li>the OLS estimator <span class="math inline">\(\hat{\beta}\)</span> is said to be <strong>unbiased</strong>; and</li>
-<li>the effect of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span> (given by the OLS estimate <span class="math inline">\(\hat{beta}\)</span>) is said to be <strong>causal</strong> (rather than just a correlation).</li>
+<li>the effect of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span> (given by the OLS estimate <span class="math inline">\(\hat{\beta}\)</span>) is said to be <strong>causal</strong> (rather than just a correlation).</li>
 </ul>
 <p>Finding causal relationships is often seen as the “holy grail” of applied economists.</p>
 <section id="unbiasedness-and-consistency" class="level3 {callout-note}">
@@ -2716,10 +2716,10 @@ H_0: \beta = b,
 <section id="special-case-when-x-is-a-dummy-variable" class="level2">
 <h2 class="anchored" data-anchor-id="special-case-when-x-is-a-dummy-variable">Special case: When <span class="math inline">\(x\)</span> is a dummy variable</h2>
 <p>A very important special case is when <span class="math inline">\(x\)</span> is a so-called <strong>dummy or binary variable</strong>. Everything we discussed about regression model applies, but there are differences as well, on which we now focus.</p>
-<p>We start with the same model, given by</p>
-<p><span id="eq-erikson"><span class="math display">\[
+<p>We start with the same model, given by {<a href="#eq-erikson" class="quarto-xref">Equation 1</a>}</p>
+<p><span class="math display">\[
 y = \alpha + \beta x + u,
-\tag{6}\]</span></span></p>
+\]</span></p>
 <p>but now <span class="math inline">\(x\)</span> is either 0 (eg a woman) or 1 (eg a man). <span class="math inline">\(x\)</span> is said to be a dummy variable. There are many of these variables in cross-section datasets.</p>
 <p>The scatter plot changes in a big way. Instead of a “fuzz” of data-points, we get something like this:</p>
 <div id="fig-LABEL" class="quarto-float quarto-figure quarto-figure-center anchored" alt="ALT">
@@ -2741,7 +2741,7 @@ E(u|x=0) = E(u|x=1) = 0.~~~A3
 <p><span id="eq-llorente"><span class="math display">\[
 \mu_0 \equiv E (y | x=0) = \alpha + E(u|x=0) \qquad
 \mu_1 \equiv E (y | x=1) = \alpha + \beta + E(u|x=1).
-\tag{7}\]</span></span></p>
+\tag{6}\]</span></span></p>
 <p>We now impose Assumption A3,</p>
 <p><span class="math display">\[
 E (y | x=0) = \alpha + 0 \qquad
@@ -2750,15 +2750,15 @@ E (y | x=1) = \alpha + \beta + 0,
 <p>from which</p>
 <p><span id="eq-levi"><span class="math display">\[
 \beta = E (y | x=1) - E (y | x=0) \equiv \mu_1-\mu_0.
-\tag{8}\]</span></span></p>
-<p>From this, <a href="#eq-erikson" class="quarto-xref">Equation 6</a> can be rewritten as</p>
+\tag{7}\]</span></span></p>
+<p>From this, <a href="#eq-erikson" class="quarto-xref">Equation 1</a> can be rewritten as</p>
 <p><span class="math display">\[
 y = \mu_0 + (\mu_1-\mu_0)x + u.
 \]</span></p>
-<p><a href="#eq-levi" class="quarto-xref">Equation 8</a> is the key result, that <span class="math inline">\(\beta\)</span> can be interpreted as the <strong>population raw differential</strong>. Using the same technique of replacing population means by their sample averages, we have</p>
+<p><a href="#eq-levi" class="quarto-xref">Equation 7</a> is the key result, that <span class="math inline">\(\beta\)</span> can be interpreted as the <strong>population raw differential</strong>. Using the same technique of replacing population means by their sample averages, we have</p>
 <p><span id="eq-de_ghea"><span class="math display">\[
 \hat{\beta} = \bar{y}_1-\bar{y}_0,
-\tag{9}\]</span></span></p>
+\tag{8}\]</span></span></p>
 <p>which is the <strong>sample raw differential</strong>. Also, <span class="math inline">\(\hat{\alpha}=\bar{y}_0\)</span>.</p>
 <p>This result is <strong>the</strong> workhorse result in microeconometrics and will be used repeatedly though these notes. Note that we can write the <span class="math inline">\(\bar{y}\)</span>s in two different but interchangeable ways:</p>
 <p><span class="math display">\[
@@ -2772,7 +2772,7 @@ y = \mu_0 + (\mu_1-\mu_0)x + u.
 <p>We can write the regression line as</p>
 <p><span id="eq-david"><span class="math display">\[
 \hat{y}_i = \bar{y}_0 + (\bar{y}_1-\bar{y}_0) x_i.
-\tag{10}\]</span></span></p>
+\tag{9}\]</span></span></p>
 <p>The definition of a residual remains the same, <span class="math inline">\(\hat{u}_i \equiv y_i-\hat{y}_i\)</span>. To interpret, switch <span class="math inline">\(x_i\)</span> on and off:</p>
 <p><span class="math display">\[
 \hat{u}_i=
@@ -2815,7 +2815,7 @@ H_0: \mu_1=\mu_0 \equiv H_0: \beta=0.
 <p><span class="math display">\[
 \log y = \alpha + \beta x + u
 \]</span></p>
-<p>then <a href="#eq-de_ghea" class="quarto-xref">Equation 9</a> becomes</p>
+<p>then <a href="#eq-de_ghea" class="quarto-xref">Equation 8</a> becomes</p>
 <p><span class="math display">\[
 \hat{\beta} = \log \bar{y}_1 - \log \bar{y}_0.
 \]</span></p>
@@ -2848,8 +2848,8 @@ small}.
 <div class="callout-body-container callout-body">
 <p>Assume that you estimated a log-level model, where the dependent variable is log-wages and the explanatory variable is a dummy variable indicating that whether an individual has a high-school degree (<span class="math inline">\(x=1\)</span>) or not (<span class="math inline">\(x = 0\)</span>). You obtained a <span class="math inline">\(\hat{\beta} = 0.21\)</span>.</p>
 <p>Which of the following interpretations is correct?</p>
-<div id="radio_RYTGQVIYHB" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_RYTGQVIYHB" value> <span>The log income elasticity is 0.21</span></label><label><input type="radio" autocomplete="off" name="radio_RYTGQVIYHB" value="answer"> <span>Income for high-school graduates is, on average 21 log points higher than for those who have no high-school diploma</span></label><label><input type="radio" autocomplete="off" name="radio_RYTGQVIYHB" value> <span>the raw differential between those and without high-school diploma is 21%</span></label>
+<div id="radio_FNQAFVGRWB" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_FNQAFVGRWB" value> <span>The log income elasticity is 0.21</span></label><label><input type="radio" autocomplete="off" name="radio_FNQAFVGRWB" value="answer"> <span>Income for high-school graduates is, on average 21 log points higher than for those who have no high-school diploma</span></label><label><input type="radio" autocomplete="off" name="radio_FNQAFVGRWB" value> <span>the raw differential between those and without high-school diploma is 21%</span></label>
 </div>
 <p>What is the (average) percentage point increase for those with a high-school diploma? [to 4 decimal points]</p>
 <p><input class="webex-solveme nospaces" data-tol="1e-04" size="16" data-answer="[&quot;23.3678059956743&quot;]"></p>
