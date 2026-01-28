@@ -1,0 +1,585 @@
+---
+title: "Simple OLS Regression with a Dummy"
+subtitle: "ECON20222 - Lecture 3"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Recap
+
+\begin{itemize}
+  \item \textbf{3 examples:}
+  \begin{itemize}
+    \item Minimum Wage ($x$) and Employment ($y$)
+    \item Law Officers per capita ($x$) and Violent Crime per capita ($y$)
+    \item Gun Legislation ($x$) and Death Rate by Firearms ($y$) 
+  \end{itemize}
+
+  \vspace{0.3cm}
+
+  \item \textbf{2 datasets:}
+  \begin{itemize}
+    \item Card \& Krueger (CK)
+    \item Siegel et al.\ (2019) (S)
+  \end{itemize}
+
+  \vspace{0.3cm}
+
+  \item Some revision econometrics
+  \item One software: R
+\end{itemize}
+
+
+## Structures of Economic Data
+\begin{itemize}
+  \item Just like Economics is classified into Macro and Micro, we divide data/econometrics in the same way:
+
+  \vspace{0.2cm}
+
+  \item \textbf{Micro-econometric data} :
+  \begin{itemize}
+    \item Cross-sectional data
+    \item Pooled/repeated cross sections
+    \item Panel or longitudinal data (e.g.\ CK \& S)
+  \end{itemize}
+
+  \vspace{0.2cm}
+
+  \item \textbf{Macro-econometric data} :
+  \begin{itemize}
+    \item Cross-sectional data
+    \item Time series data
+    \item Macro panel data
+  \end{itemize}
+
+\end{itemize}
+
+\textcolor{red}{The unit-of-observation is very important.}
+
+## Micro-econometric Data
+
+\begin{itemize}
+  \item Consist of samples of individuals, households, firms, or other micro-level units. Observations refer to micro-economic units; widely used in development economics, labour economics, and industrial organisation.
+  \item Commonly used to test microeconomic hypotheses and evaluate economic policies.
+  \item Typically collected through: Surveys, Administrative databases, Web-scraped data. Ideally obtained using random sampling methods.
+  
+  \item Observed either:
+  \begin{itemize}
+    \item At a single point in time: \textbf{cross-sectional data},
+    \item Over multiple time periods (usually a few years): 
+    	\begin{itemize}
+		\item When the \textcolor{blue}{same} micro-units are followed over time: \textbf{panel data}
+		\item When different samples are observed over time: \textbf{repeated cross-sections}	
+	\end{itemize}
+  \end{itemize}
+  
+  \item Dummy variables and categorical variables are commonly used.
+  
+\end{itemize}
+
+## Example: US Gun Policy Dataset
+
+\begin{itemize}
+  \item The \textcolor{blue}{US Gun Policy dataset} from Siegel et al.\ (2019). The dataset contains:
+  \begin{itemize}
+    \item 51 states, indexed by $s$,
+    \item 21 years, indexed by $t$ (2001--2021),
+    \item A total of $1{,}071$ state--year ($st$) observations,
+    \item A unit of observation defined as a \underline{state--year}.\\
+ \textbf{This is an example of an aggregated (balanced) panel dataset. }
+   
+  \end{itemize}
+
+  \item The \textcolor{blue}{Card--Krueger dataset} is a micro-level (balanced) panel: Two observations for each of 410 fast-food outlets.
+
+  \item The \textcolor{blue}{BHPS/US dataset}(next example): Household-level panel dataset.
+
+\end{itemize}
+
+## UK Datasets
+
+Examples of well-used publicly available datasets:
+\begin{itemize}
+  \item \textcolor{blue}{FES}  Family Expenditure Survey; Annual survey; About 30,000 different households each year.
+  \item \textcolor{blue}{CP} Census of Production; Annual survey; Sample of firms aggregated to 4-digit (225) industries.
+
+  \item \textcolor{blue}{BHPS/US}  British Household Panel Survey; Annual survey; About 10,000 households each year since 1991;The same households are interviewed every year; Since 2009/10 it has been called \textit{Understanding Society}.
+
+  \item \textcolor{blue}{LFS}  Labour Force Survey; Quarterly rolling panel; About 55,000 households; Each household is interviewed for five consecutive quarters and then dropped.
+\end{itemize}
+\vspace{0.3cm}
+Much better to look at \textcolor{blue}{The UK Data Archive}.
+
+## Econometrics so far
+
+\begin{itemize}
+  \item Simple regression:
+  \[
+  y = \alpha + \beta x + u.
+  \]
+
+  \item The key issue is whether or not the \underline{exogeneity assumption}  holds
+  \[
+  E(u \mid x) \equiv E(ux) = \text{Cov}(u,x) = 0 \tag{A2}
+  \]
+ \item Even though OLS \underline{by construction} imposes the sample analogue:
+  \[
+  \sum_i \hat{u}_i x_i = 0.
+  \]
+\end{itemize}
+\textit{Reference: Lecture notes - Introduction }
+
+## Econometrics so far
+\begin{itemize}
+  \item Given (A2), the OLS estimator for $\beta$ is:
+  \[
+  \hat{\beta}
+  = \frac{\widehat{\text{Cov}}(y,x)}{\widehat{\text{Var}}(x)}
+  = \frac{\sum_i (y_i - \bar{y})(x_i - \bar{x})}
+         {\sum_i (x_i - \bar{x})^2}.
+  \]
+
+  \item The data \underline{cannot} help us decide whether (A2) is true, since $u$ is unobserved.
+
+  \item If (A2) is true, we can talk about \textbf{causal effects} and OLS being an \textbf{unbiased estimator}.
+
+  \item Hypothesis testing was covered twice:
+  \[
+  H_0 : \beta = 0 
+  \qquad \text{and} \qquad
+  H_0 : \mu_1 = \mu_2.
+  \]
+\end{itemize}
+
+## Example 1
+
+\begin{block}{\textbf{Are Danes the happiest nation in the world?}}
+This ``stylised fact'' is well known, and Danes are often thought to be happier than their neighbours, the Swedes.
+\end{block}
+
+\vspace{0.3cm}
+
+You can test this Danes vs.\ Swedes comparison using methods from Lecture 2:
+
+\[
+H_0 : \mu_1 = \mu_2 
+\qquad \text{and} \qquad 
+H_a : \mu_1 \neq \mu_2,
+\]
+using $\bar{y}_1 - \bar{y}_2$ to construct a test statistic.
+
+## Example 2
+\begin{block}{\textbf{Pfizer--BioNTech Vaccine Efficacy}}
+For microeconomists, the Random Control Trial (RCT) is the gold standard in causal inference.  
+Sometimes, RCTs are important globally. The results of the first Pfizer--BioNTech clinical trial
+(published December 2020) are:
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+ & Pfizer--BioNTech & Placebo injection \\
+\hline
+Number in each group        & 18,198 & 18,325 \\
+Number of Covid-19 cases   & 8      & 162    \\
+Proportion getting the disease & 0.043\% & 0.884\% \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{0.3cm}
+The vaccine \textbf{efficacy} is 95\%.
+\end{block}
+
+
+## Example 2
+
+\begin{itemize}
+  \item Taken from Table 22.1 in \textit{Covid by Numbers}.  
+  Do not read the original article (in the \textit{New England Journal of Medicine}).
+
+  \item Efficacy is defined as:
+  \[
+  E = 1 - \frac{\mu_T}{\mu_C}
+    = \frac{\mu_C - \mu_T}{\mu_C}.
+  \]
+
+  \item This is a \textbf{normalised difference in probabilities}.
+
+  \item When $\mu_T = 0$ (none of the treated are ill), then $E = 1$ (total efficacy).
+
+  \item When $\mu_C = \mu_T$, then $E = 0$ (the vaccine has no effect).
+
+  \item \textbf{Vaccine efficacy} is the correct terminology  
+  (and is not the same as vaccine \textbf{effectiveness}).
+
+  \item Population probabilities $\mu$ are estimated by sample proportions $p$.
+\end{itemize}
+
+
+## Example 2
+
+\begin{itemize}
+  \item The underlying individual variable $y_i$ is binary:
+  \[
+  y_i = 
+  \begin{cases}
+  1 & \text{if the outcome is true (here: gets Covid)},\\
+  0 & \text{otherwise.}
+  \end{cases}
+  \]
+
+  \item The reported statistics are sample means, i.e.\ the proportion of (sub)samples for which $y=1$:
+  \(
+  p = \bar{y} = \frac{1}{n}\sum_i y_i.
+  \)
+
+  \item The data can be summarised by a \textbf{cross tabulation}:
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{l|cc|c}
+ & \textbf{Covid} & \textbf{Not Covid} &  \\
+  & $(y_i=1)$ &  $(y_i=0)$ &  \\
+\hline
+Treated $(d_i=1)$  & $n_{11}$ & $n_{01}$ & 
+$p_T = n_{11}/(n_{11}+n_{01})$ \\[0.2cm]
+Control $(d_i=0)$  & $n_{10}$ & $n_{00}$ & 
+$p_C = n_{10}/(n_{10}+n_{00})$ \\
+\hline
+\end{tabular}
+\end{center}
+
+## Example 2
+\begin{itemize}
+  \item In the trial,
+  \[
+  n_{11} = 8, 
+  \quad n_{10} = 168, 
+  \quad n_{11} + n_{01} = 18{,}198, 
+  \quad n_{10} + n_{00} = 18{,}325,
+  \]
+  and the estimated efficacy is calculated as:
+  \[
+  \hat{E}
+  = 1 - \frac{p_T}{p_C}
+  = \frac{p_C - p_T}{p_C}
+  = 1 - \frac{0.00043}{0.00884}
+  = 0.95.
+  \]
+
+  \item The reported 95\% confidence interval is $(0.90,\,0.98)$.  
+  (Do not worry about how this is calculated.)
+\end{itemize}
+
+## Example 3
+\begin{block}{\textbf{How much should tuition fees be?}}
+In the early 2000s, the claim was that graduates, on average, earn more than \pounds 400{,}000 more than non-graduates over their lifetime.  
+This argument was used by the Government at the time to increase tuition fees to \pounds 3{,}200 per year in 2006.  
+After that, fees increased to \pounds 9{,}000 per year following the October 2010 Spending Review (and are now \pounds 9{,}250 per year).
+\end{block}
+
+\vspace{0.4cm}
+
+\begin{itemize}
+  \item \pounds 400{,}000 is only an average and varies by subject, occupation, and other characteristics.
+  \item More generally, what is the return to investment in education (schooling)? 5\% per annum? 10\% per annum?
+  
+\end{itemize}
+
+## Example 4 
+\begin{block}{\textbf{GCSE results}}
+Do girls do better than boys at GCSE?  Is this ``education gender gap'' rising?  Did it change with Covid?
+\end{block}
+
+\vspace{0.15cm}
+
+Every summer we compare the proportion of girls who \textit{pass} their GCSEs with the proportion for boys:
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{lccc}
+ & 2008 & 2014 & 2018 \\
+\hline
+Girls & 69.4\% & 73.1\% & 71.2\% \\
+Boys  & 60.4\% & 64.3\% & 62.1\% \\
+\hline
+Gap   & 9.0\%  & 8.8\%  & 9.1\% \\
+\end{tabular}
+\end{center}
+
+\vspace{0.4cm}
+
+\small
+See BBC: \textit{``GCSE Grades Rise...''} and  
+See BBC: \textit{``GCSE results rise despite tougher exams''}.
+
+## Example 5
+
+\begin{block}{\textbf{August babies flop at exams}}
+``Amongst girls born in September, 60.7\% achieve at least five A* to C grade GCSEs, 
+compared with only 55.2\% for those born in August'' (IFS).  
+
+The corresponding figures for boys are 50.3\% and 44.2\%.
+\end{block}
+
+\vspace{0.15cm}
+Is this August/September difference statistically significant?  
+What information do we need in order to carry out a formal test?
+
+\vspace{0.4cm}
+
+A similar US variation in educational achievement by month of birth was exploited in a famous paper by 
+Joshua Angrist (from the textbook \textit{Mastering ’Metrics}) and Alan Krueger (already seen in Lecture~1).  
+Angrist shared half of the 2021 Nobel Prize for this paper and related work.  
+See \textit{Mastering ’Metrics}, Section~6.3.
+
+
+## Example 6
+
+\begin{block}{\textbf{Did the Education Maintenance Allowance (EMA) improve staying-on rates?}}
+In England, between 2004 and 2010, a young person was eligible to receive an allowance of up to \pounds 30 per week provided they stayed on at school and their parents earned less than \pounds 30{,}000 per year.  
+The aim of the programme was to encourage more young people to stay on in education.
+\end{block}
+
+\vspace{0.15cm}
+
+From the \textit{Longitudinal Survey of Young People in England}, 5,011 young persons were observed in Year~11:
+
+\begin{itemize}
+  \item 2,393 were eligible, of whom 58.1\% stayed on.
+  \item 2,618 were ineligible, of whom 63.4\% stayed on.
+\end{itemize}
+
+The raw differential is $-5.3$ percentage points, and so the policy appears \underline{not} to have worked.
+
+## More Examples
+
+\begin{block}{Examples}
+\begin{itemize}
+\item Is there still gender or race discrimination in the UK labour market?
+
+\item Did the introduction of the National Minimum Wage (NMW) in April 1999 affect the employment prospects of low-paid workers?
+\end{itemize}
+\end{block}
+
+\vspace{0.15cm}
+
+Can we use the same Difference-in-Differences (DiD) methodology as introduced in Lecture 1 and developed more formally in Lecture 7?
+
+
+## Raw Differentials
+\begin{itemize}
+  \item Every week we see evidence like this being reported, mainly coming from micro-econometric data.
+  \vspace{-0.05cm}
+  \item Although we are interested in raw averages themselves, more often we want to compare averages across categories:
+  \begin{itemize}
+  \vspace{-0.1cm}
+    \item Danes vs.\ Swedes
+     \vspace{-0.1cm}
+    \item Treated vs.\ control
+    \vspace{-0.1cm}
+    \item Boys vs.\ girls
+    \vspace{-0.1cm}
+    \item (Not) affected by the NMW
+    \vspace{-0.1cm}
+    \item (In)eligible for EMA
+    \vspace{-0.1cm}
+  \end{itemize}
+   \vspace{-0.05cm}
+  \item These comparisons are called \textbf{raw differentials}.
+ 
+  \item Regression handles this naturally: the RHS variable $x$ becomes a \textbf{dummy variable}.
+  \item Differences in raw differentials are also very common and are known as 
+  \textbf{differences-in-differences} (or \textbf{diff-in-diffs}, DiDs).
+\end{itemize}
+
+## Simple Regression when x is a Dummy
+\begin{itemize}
+    \item We start with the same model,
+    \[
+    y = \alpha + \beta x + u, \qquad x \in \{0,1\}, \tag{1}
+    \]
+    but now \(x\) is either 0 (e.g.\ a woman) or 1 (e.g.\ a man).
+    \item \(x\) is said to be a dummy variable. There are many of these variables in cross-section datasets.
+\end{itemize}
+
+## Simple Regression when x is a Dummy
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/simplereg_dummy.png}
+\end{figure}
+
+
+## Simple Regression when x is a Dummy
+\begin{itemize}
+    \item To estimate the two parameters \(\alpha\) and \(\beta\), we require two moment conditions (exogeneity assumptions):
+    \begin{equation}
+        E(u \mid x = 0) = E(u \mid x = 1) = 0. \tag{A3}
+    \end{equation}
+    \item Write the population regression function for the cases \(x = 0\) and \(x = 1\), and take conditional expectations:
+    \begin{align}
+        \mu_2 &\equiv E(y \mid x = 0) 
+        = \alpha + E(u \mid x = 0), \tag{2} \\
+        \mu_1 &\equiv E(y \mid x = 1) 
+        = \alpha + \beta + E(u \mid x = 1). \tag{3}
+    \end{align}
+    \item Imposing Assumption (A3) yields:
+    \[
+        E(y \mid x = 0) = \alpha + 0, 
+        \qquad 
+        E(y \mid x = 1) = \alpha + \beta + 0.
+    \]
+    \item Consequently,
+    \begin{equation}
+        \beta 
+        = E(y \mid x = 1) - E(y \mid x = 0)
+        = \mu_1 - \mu_2. \tag{4}
+    \end{equation}
+\end{itemize}
+\noindent
+Thus, \(\beta\) - \textbf{population raw differential}
+
+## Simple Regression when x is a Dummy
+\begin{itemize}
+    \item Replacing population means by their sample averages, the OLS estimator is given by
+    \begin{equation}
+        \hat{\beta} = \bar{y}_1 - \bar{y}_2, \tag{5}
+    \end{equation}
+    which is the \textbf{sample raw differential}. Moreover, \(\hat{\alpha} = \bar{y}_2\).
+    \item The fitted regression line \(\hat{\alpha} + \hat{\beta} x_i\) can be written as
+    \begin{equation}
+        \hat{y}_i = \bar{y}_2 + (\bar{y}_1 - \bar{y}_2)x_i. \tag{6}
+    \end{equation}
+    \item The residual is defined as \(\hat{u}_i \equiv y_i - \hat{y}_i\). Hence,
+    \[
+        \hat{u}_i =
+        \begin{cases}
+            y_i - \bar{y}_2, & \text{if } x_i = 0; \\[0.5em]
+            y_i - \bar{y}_1, & \text{if } x_i = 1.
+        \end{cases}
+    \]
+\end{itemize}
+
+## Simple Regression when x is a Dummy
+Hypothesis test: To examine whether the population means of the two sub-samples are equal:
+    \[
+        H_0 : \mu_1 = \mu_2 
+        \quad \Longleftrightarrow \quad 
+       H_0 : \beta = 0.
+    \]
+  \begin{itemize} 
+    \item The test statistic is given by \(\hat{\beta}/\mathrm{se}(\hat{\beta})\), which turns out to be exactly the same as
+    \begin{equation}
+        \frac{\bar{y}_1 - \bar{y}_2}
+        {\sqrt{\dfrac{\hat{\sigma}_1^2}{n_1} + \dfrac{\hat{\sigma}_2^2}{n_2}}}. \tag{7}
+    \end{equation}
+    This is a very well-known formula.
+    \item One might ask why we need to estimate a regression model when it suffices to compute the two sample means and their variances to obtain the same result. The reason is that regression analysis provides a unified and general framework that encompasses a wide range of econometric models and hypothesis tests.
+\end{itemize}
+
+## Simple Regression when x is a Dummy
+\begin{itemize}
+    \item When the dependent variable is in logarithmic form,
+    \[
+        \log y = \alpha + \beta x + u,
+    \]
+    then equation (5) becomes
+    \[
+        \hat{\beta} = \log \bar{y}_1 - \log \bar{y}_2.
+    \]
+    \item The following algebra provides a unit-free interpretation:
+    \begin{align*}
+        \hat{\beta}
+        &= \log \bar{y}_1 - \log \bar{y}_2 \\
+        &= \log \left( 1 + \frac{\bar{y}_1 - \bar{y}_2}{\bar{y}_2} \right) \\
+        &\equiv \log \left( 1 + \frac{\%\Delta y}{100} \right) \\
+        &\approx \frac{\%\Delta y}{100}, \qquad \text{if } \frac{\%\Delta y}{100} \text{ is small.}
+    \end{align*}
+    \item Why does this approximation hold? 
+    \(\log(1 + x) \approx x \quad \text{for small } x  \; (\text{e.g., } |x| < 0.1). \)
+\end{itemize}
+
+## Simple Regression when x is a Dummy
+\begin{itemize}
+    \item when \(\%\Delta y / 100\) is small, one can interpret \(\hat{\beta}\) as the raw differential in the dependent variable. This is typically described as a \textbf{log-point change}.
+    \item When \(\%\Delta y / 100\) is \underline{not} small, the same concept must be computed from the third line:
+    \[
+        \%\Delta y = 100\,[\exp(\hat{\beta}) - 1],
+    \]
+    which is described as a \textbf{percentage-point raw differential}.
+\end{itemize}
+
+## BHPS/US Example
+\begin{itemize}
+    \item Formerly known as the British Household Panel Survey (BHPS).
+    \item The BHPS/US is particularly well suited for studying differences between individuals since, by design, it records a rich set of information on people’s lives.
+    \item We will examine an extract from the data in order to replicate some of the examples discussed above.
+    \item We will later show why panel data are superior to repeated cross-sections.
+    \item The 14 variables that have been extracted correspond to 58{,}640 individuals \(i\), who are observed one, two, or three times across waves \(t = 1, 2, 3\).
+\end{itemize}
+
+
+## BHPS/US Example
+Data file: 20222_USoc_extract.dta
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/USoc_varlabel.png}
+\end{figure}
+
+## BHPS/US Example
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{/Users/gitrepos/ECON20222/images/USoc_pattern.png}
+\end{figure}
+There are 58,640 individuals observed a total of 133,272 times. 
+The unit of observation is an individual--wave.
+
+There are seven types of individuals: 31,091 are observed three times, \(\ldots\), 
+and \(10,448+2{,}855 + 1{,}796\) are observed only once.
+
+## BHPS/US Example
+Some raw diffs
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/logpay_gender.png}
+\end{figure}
+Reference: R work \texttt{Regression\_Intro\_1.pdf}
+## BHPS/US Example
+Some raw diffs
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/logpay_degree.png}
+\end{figure}
+Reference: R work \texttt{Regression\_Intro\_1.pdf}
+
+## BHPS/US Example
+\begin{itemize}
+    \item The R work is contained in \texttt{Regression\_Intro\_1.pdf}.
+    \item In \texttt{20222\_USoc\_extract.dta}, about half of the sample (59{,}216 observations) are in paid employment. 
+    Their ages vary substantially, and therefore they also differ considerably in their years of work experience, among other characteristics.
+    \item When we take logs of real hourly pay and regress on a male dummy variable, we obtain an estimate of 0.183(0.0051). This says, on average earn\(0.183\) log-points more than females which converts to 20.1\%.
+    \item A large proportion of individuals do not hold a university degree (102{,}644 observations), while the remainder do (30{,}397 observations). (Note the recoding of the degree variable.) When we regress log real hourly pay on a degree dummy variable, we obtain
+0.472 (0.0051), which corresponds to 60.3\%.
+    \item This represents a very large raw differential. What is its implication over a lifetime? 
+\end{itemize}
+
+## Outlook
+Next week: Lecture 4 Endogeneity
+Lecture 5: Multiple regression
+\begin{itemize}
+    \item In multiple regression, one can run both regressions simultaneously; that is, more than one right-hand-side (RHS) variable (in addition to the constant) can be included. One typically obtains similar, though not identical, estimates and standard errors.
+    \item There are additional variables in \texttt{20222\_USoc\_extract.dta} relating to individuals’ ethnicity, place of residence, and the size of the firm that employs them. These are multi-category dummy variables. Multiple regression applies in this context as well, although some recoding is required beforehand.
+    \item Multiple regression is covered in Lecture~5.
+    \item The differences-in-differences methodology can also be implemented using multiple regression (covered in Lecture~7).
+    \item Indeed, multiple regression is the workhorse technique in almost all of microeconometrics.
+\end{itemize}
