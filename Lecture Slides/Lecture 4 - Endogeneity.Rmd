@@ -1,0 +1,461 @@
+---
+title: "Endogeneity"
+subtitle: "ECON20222 - Lecture 4"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Recap
+
+\begin{itemize}
+\item Recall the simple regression model
+\begin{equation}
+y = \alpha + \beta x + u
+\end{equation}
+
+\item \textbf{The exogeneity assumption}
+\begin{equation}
+E(u \mid x) = E(ux) = Cov(u,x) = 0
+\tag{A2}
+\end{equation}
+ OLS \underline{by construction} imposes the sample analogue:
+\[
+\sum_i \hat{u}_i x_i = 0
+\]
+\textcolor{blue}{Is A2 true? What happens if A2 holds, and what happens if it does not?}
+\end{itemize}
+
+## Exogeneity
+\begin{itemize}
+\item \textbf{$Cov(u, x) = 0$ is true}
+\begin{enumerate}
+\item $x$ is said to be \emph{exogenous} (this is an econometrics definition, different to that used by economists);
+\item the OLS estimator $\hat{\beta}$ is said to be \textbf{unbiased}\footnote{A related property is \emph{consistency}, which is unbiasedness, but only in ``large'' samples.}; and
+\item the effect of $x$ on $y$ (given by the OLS estimate $\hat{\beta}$) is said to be \textbf{causal}.
+\end{enumerate}
+
+
+\end{itemize}
+
+## Endogeneity
+\begin{itemize}
+\item \textbf{$Cov(u, x) = 0$ is \textcolor{red}{not} true}
+\begin{enumerate}
+\item $x$ is said to be \textbf{endogenous} (again, this is an econometrics definition);
+\item the OLS estimator $\hat{\beta}$ is said to be \textbf{biased}; and
+\item the effect of $x$ on $y$ cannot be said to be \textbf{causal}. Rather, it is just a correlation.
+\end{enumerate}
+
+In this lecture we explore three ways in which this can happen.
+\begin{itemize}
+\item Omitted Variables Bias
+\item Measurement Error Bias
+\item Simultaneity Bias
+\end{itemize}
+\end{itemize}
+
+## Omitted Variables Bias (OVB)
+\begin{itemize}
+    \item Suppose the \textbf{true model}(causal model) is
+    \begin{equation}
+        y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e.
+    \end{equation}
+    $e$ is an unobserved error term that captures everything not contained in
+   $\beta_0 + \beta_1 x_1 + \beta_2 x_2$.
+    \item A1/A2 still hold:
+    \begin{align}
+        E(e) &= 0 \tag{A1} \\
+        Cov(e, x_1) &= 0 \tag{A2}\\
+        Cov(e, x_2) &= 0 \tag{A4}
+    \end{align}
+
+\end{itemize}
+
+## Omitted Variables Bias (OVB)
+What are the consequences of estimating the model below when $x_2$ is omitted?
+    \begin{equation}
+        y = \beta_0 + \beta_1 x_1 + u.
+    \end{equation}
+\begin{itemize}
+    \item Because $x_2$ is not in the model, $u$ now contains $x_2$:
+    \begin{equation}
+        u = \beta_2 x_2 + e.
+    \end{equation}
+    \item We know from earlier analysis that
+    \begin{equation}
+       E(\hat{\beta}_1)
+        = \beta_1 + \frac{Cov(u, x_1)}{Var(x_1)},
+    \end{equation}
+    from which we can write down the bias:
+   $$
+        \operatorname{Bias}(\hat{\beta}_1)
+        \equiv E(\hat{\beta}_1) - \beta_1
+        = \frac{Cov(u, x_1)}{Var(x_1)}.
+    $$
+\end{itemize}
+
+
+## Omitted Variables Bias (OVB)
+\begin{itemize}
+    \item However, the error term $u$ has changed. Now
+    \begin{align}
+        \operatorname{Cov}(u, x_1)
+        &= \operatorname{Cov}(\beta_2 x_2 + e, x_1) \\ \notag
+        &= \beta_2 \operatorname{Cov}(x_2, x_1) + \operatorname{Cov}(e, x_1) \\ \notag
+        &= \beta_2 \operatorname{Cov}(x_2, x_1) + 0.
+    \end{align}
+    The last equality uses A2.
+    \item Substituting into (5):
+    \begin{equation}
+        \operatorname{Bias}(\hat{\beta}_1)
+        \equiv E(\hat{\beta}_1) - \beta_1
+        = \beta_2 \frac{\operatorname{Cov}(x_2, x_1)}{\operatorname{Var}(x_1)}
+        = \beta_2 \delta_1,
+    \end{equation}
+    where $\delta_1$ is the ``slope'' parameter in the population model that relates
+    $x_1$ and $x_2$:
+    $$
+        x_2 = \delta_0 + \delta_1 x_1 + \text{error}.
+    $$
+\end{itemize}
+
+
+## Omitted Variables Bias (OVB)
+\textcolor{blue}{$$
+        \operatorname{Bias}(\hat{\beta}_1)
+        \equiv E(\hat{\beta}_1) - \beta_1
+        = \beta_2 \frac{\operatorname{Cov}(x_2, x_1)}{\operatorname{Var}(x_1)}
+        = \beta_2 \delta_1,
+$$}
+If we know \emph{a priori} the signs of $\beta_2$ and $\operatorname{Cov}(x_2, x_1)$,
+we can "sign the bias":
+
+\begin{itemize}
+    \item If both terms have the same sign $(+/+)$ or $(-/-)$, then the OLS
+    estimator $\hat{\beta}_1$ is \textbf{biased upwards}:
+    \[       \operatorname{Bias}(\hat{\beta}_1) > 0.
+    \]
+    \item If both terms have opposite signs $(+/-)$ or $(-/+)$, then the OLS
+    estimator $\hat{\beta}_1$ is \textbf{biased downwards}:
+    \[
+        \operatorname{Bias}(\hat{\beta}_1) < 0.
+    \]
+\end{itemize}
+
+## OVB Example
+\begin{block}{\textbf{How much should tuition fees be?}}
+In the early 2000s, the claim was that graduates, on average, earn more than \pounds 400{,}000 more than non-graduates over their lifetime.  
+This argument was used by the Government at the time to increase tuition fees to \pounds 3{,}200 per year in 2006.  
+After that, fees increased to \pounds 9{,}000 per year following the October 2010 Spending Review (and are now \pounds 9{,}250 per year).
+\end{block}
+
+\vspace{0.4cm}
+
+\begin{itemize}
+  \item \pounds 400{,}000 is only an average and varies by subject, occupation, and other characteristics.
+  \item More generally, what is the return to investment in education (schooling)? 5\% per annum? 10\% per annum?
+  
+\end{itemize}
+
+## OVB Example: The Returns to Education
+\begin{itemize}
+    \item Suppose:
+    \begin{itemize}
+        \item $y$ is log of hourly wage (\texttt{lhrpay});
+        \item $x_1$ is years of schooling (\texttt{educ});
+        \item $x_2$ is unobserved innate ability (\texttt{abil}).
+    \end{itemize}
+    \item Causal model: $\texttt{lhrpay} = \beta_0 + \beta_1 \texttt{educ} + \beta_2 \texttt{abil} + e$
+    \item Estimated model $\texttt{lhrpay} = \beta_0 + \beta_1 \texttt{educ} + u$
+   \end{itemize} 
+Does an OLS regression of $y$ (\texttt{lhrpay}) on $x$ (\texttt{educ}) deliver an unbiased estimate?
+
+## OVB Example: The Returns to Education
+\begin{itemize}
+\item $\operatorname{Bias}(\hat{\beta}_1) = \beta_2 \delta_1 $
+\item What do we expect?
+\begin{itemize}
+\item We expect both variables to have a positive impact on average earnings
+        $(\beta_1 > 0,\; \beta_2 > 0)$;
+        \item We expect $x_1$ and $x_2$ to be positively correlated, as individuals with
+        more innate ability tend to choose/acquire more education $(\delta_1 > 0)$.
+        \item The estimated effect of an extra year of
+    schooling, on average, is too high:
+    \[
+        \operatorname{Bias}(\hat{\beta}_1) = \beta_2 \delta_1 > 0.
+    \]
+\end{itemize}
+\item We obtained the following regression results. What can we say about $\beta_1$?
+    $$ \hat{\texttt{lhrpay}} = 0.584 + 0.083 \texttt{educ}$$
+    \end{itemize}
+    
+## Measurement Error Bias
+Occurs everywhere in microeconometrics (indeed, all empirical economics):
+
+\begin{itemize}
+    \item Want the average tax rate but only observe the marginal rate.
+    \item An individual mis-recalling their years of education many years later.
+    \item Age proxying experience in the classic returns-to-education model.
+\end{itemize}
+
+## Measurement Error Bias
+\begin{itemize}
+    \item We start with the following true model:
+    \begin{equation}
+        y = \alpha + \beta x^{*} + \epsilon.
+    \end{equation}
+    \item Exogeneity Assumption:
+    \begin{equation}
+        \operatorname{Cov}(\varepsilon, x^{*}) = 0.
+        \tag{A2}
+    \end{equation}
+    We write the "$x$" variable as $x^{*}$ to emphasise it is "measured with error":
+    \begin{equation}
+        x = x^{*} + e.
+    \end{equation}
+    \begin{itemize}
+        \item $x^{*}$ is the true variable in (8), known as a \textbf{latent variable}
+        \item $x$ is the variable actually in the data
+        \item $e$ is the \textbf{measurement error} (ME)
+    \end{itemize}
+\end{itemize}
+
+## Measurement Error Bias
+\begin{itemize}
+    \item The key assumptions about $e$ are:
+    \begin{align}
+        \operatorname{Cov}(e, x^{*}) &= 0, \tag{A5} \\
+        \operatorname{Cov}(e, \varepsilon) &= 0, \tag{A6}
+    \end{align}
+    and that, on average, individuals report $x^{*}$ correctly:
+    \[
+        E(e) = 0.
+    \]
+    \item From (9) and (A5) we get:
+    \begin{equation}
+        \operatorname{Var}(x) = \operatorname{Var}(x^{*}) + \operatorname{Var}(e).
+    \end{equation}
+\end{itemize}
+
+
+## Measurement Error Bias
+\begin{itemize}
+    \item The estimated model is:
+    \begin{equation}
+        y = \alpha + \beta x + u.
+    \end{equation}
+Using (5) again, we know that
+    \begin{equation}
+        \operatorname{Bias}(\hat{\beta})
+        \equiv E(\hat{\beta}) - \beta
+        = \frac{\operatorname{Cov}(u, x)}{\operatorname{Var}(x)}.
+    \end{equation}
+    \item Just as before, we need to work out whether $u$ is correlated with $x$.
+    Substituting $x = x^{*} + e$ into the true model (8):
+    \begin{equation}
+        y = \alpha + \beta (x - e) + \varepsilon
+        = \alpha + \beta x + (\varepsilon - \beta e).
+    \end{equation}
+    \item Comparing with (11), the term in brackets is the regression error:
+    \begin{equation}
+        u = \varepsilon - \beta e.
+    \end{equation}
+\end{itemize}
+
+
+## Measurement Error Bias
+\begin{itemize}
+    \item Evaluating the numerator in the bias expression (13):
+\begin{align*}
+\operatorname{Cov}(u, x)
+&= \operatorname{Cov}(\varepsilon - \beta e, x^{*} + e) \\
+&= \operatorname{Cov}(\varepsilon, x^{*})
+  + \operatorname{Cov}(\varepsilon, e)
+  - \beta \operatorname{Cov}(e, x^{*})
+  - \beta \operatorname{Cov}(e, e) \\
+&= 0 + 0 - 0 - \beta \operatorname{Var}(e) \\
+&= - \beta \operatorname{Var}(e) \lessgtr 0.
+\end{align*}
+    The three zero covariances come from (A2), (A5), and (A6) respectively.
+    $\operatorname{Cov}(u, x)$ can be unambiguously signed, negative if $\beta > 0$
+    or positive if $\beta < 0$.
+    \item Substituting into (12) and using (10):
+    \begin{equation}
+        E(\hat{\beta})
+        = \beta \left( 1 - \frac{\operatorname{Var}(e)}{\operatorname{Var}(x)} \right)
+        = \beta \frac{\operatorname{Var}(x^{*})}{\operatorname{Var}(x)}
+        \equiv \beta \lambda,
+        \qquad 0 < \lambda < 1.
+    \end{equation}
+ In words, the bias pulls $\hat{\beta}$ towards zero whether or not $\beta > 0$.
+    This is known as \textbf{attenuation bias}.
+\end{itemize}
+
+## Measurement Error Bias
+
+\begin{itemize}
+    \item Why is $\lambda$ a positive fraction?
+    \[
+        \lambda \equiv
+        \frac{\operatorname{Var}(x^{*})}
+        {\operatorname{Var}(x^{*}) + \operatorname{Var}(e)}.
+    \]
+    \item Suppose 20\% of the variation in $x$ is due to measurement error.
+    Then $\lambda = 0.8$.
+    \item The correlation/covariance between $x$ and $e$ is key:
+    \begin{align*}
+        \operatorname{Cov}(e, x)
+        &= \operatorname{Cov}(e, x^{*} + e) \\
+        &= \operatorname{Cov}(e, x^{*}) + \operatorname{Cov}(e, e) \\
+        &= 0 + \operatorname{Var}(e) > 0.
+    \end{align*}
+    It is always positive and becomes stronger as the measurement error increases.
+\end{itemize}
+
+
+## Measurement Error Bias
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/ME_illustration.png}
+\end{figure}
+
+## Simultaneity Bias
+\begin{itemize}
+    \item This is the idea that $x$ causes $y$ in some economic situations, and at
+    the same time $y$ causes $x$. In other words, the two variables are determined
+    simultaneously.
+    \item The classic example is a market:
+    \begin{align}
+        y_1 &= \alpha_1 y_2 + k_1 + u_1, \qquad \alpha_1 < 0, \\
+        y_2 &= \alpha_2 y_1 + \beta_2 z_2 + k_2 + u_2, \qquad \alpha_2 > 0. 
+    \end{align}
+    where
+    \begin{itemize}
+        \item the two equations represent demand and supply respectively;
+        \item $y_1$ is \textcolor{blue}{quantity} and $y_2$ is \textcolor{blue}{price};
+        \item $y_1$ and $y_2$ are endogenous variables (determined in the model);
+        \item $z_2$ is exogenous (determined outside the model). In a market for crops,
+        $z_2$ might be rainfall $(\beta_2 < 0)$.
+    \end{itemize}
+\end{itemize}
+
+## Simultaneity Bias
+\begin{itemize}
+    \item There are two endogenous variables, two equations, and two exogeneity
+    assumptions.
+    \item Because $z_2$ is exogenous:
+    \begin{align}
+        \operatorname{Cov}(u_1, z_2) &= 0, \tag{A7} \\
+        \operatorname{Cov}(u_2, z_2) &= 0. \tag{A8}
+    \end{align}
+    \item $u_1$ and $u_2$ are the unobserved terms in each equation. We assume
+    (for tractability):
+    \[
+        \operatorname{Cov}(u_1, u_2) = 0.
+    \]
+\end{itemize}
+
+
+## Simultaneity Bias
+\begin{itemize}
+    \item The OLS estimator for $\alpha_1$ is:
+    \[
+        \hat{\alpha}_1
+        = \frac{\widehat{\operatorname{Cov}}(y_1, y_2)}
+        {\widehat{\operatorname{Var}}(y_2)}.
+    \]
+    whose bias is given by the usual formula:
+    \[
+        \operatorname{Bias}(\hat{\alpha}_1)
+        \equiv E(\hat{\alpha}_1) - \alpha_1
+        = \frac{\operatorname{Cov}(u_1, y_2)}
+        {\operatorname{Var}(y_2)}.
+    \]
+    \item After a lot of algebra (see the Background Notes),
+    \[
+        \operatorname{Bias}(\hat{\alpha}_1)
+        = \frac{\alpha_2}{1 - \alpha_1 \alpha_2}
+        \frac{\operatorname{Var}(u_1)}
+        {\operatorname{Var}(y_2)}.
+    \]
+    \item The supply model is upward-sloping, $\alpha_2 > 0$.
+    Typically, $\alpha_1 \alpha_2 < 0$, and so this bias is positive.
+    \item Some intuition is on the next slide \ldots
+    (Wooldridge’s $z_1$ is our $z_2$.)
+\end{itemize}
+
+## Simultaneity Bias
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/Figure16-1_Wooldridge_2012.png}
+\end{figure}
+
+
+## Simultaneity Bias
+\begin{itemize}
+    \item Because $y_2$ is correlated with $u_1$, the OLS estimator suffers from
+    simultaneity bias.
+    \item When $\alpha_1 < 0$ and $\alpha_2 > 0$, the bias is positive.
+    \item Suppose (a) $y_1$ and $y_2$ are logged,
+    (b) $u_1$ explains 80\% of the variation in $y_2$,
+    and (c) $\alpha_1 = -1$, $\alpha_2 = 1$. Then
+    \[
+        \operatorname{Bias}(\hat{\alpha}_1)
+        = \frac{\alpha_2}{1 - \alpha_1 \alpha_2}
+        \frac{\operatorname{Var}(u_1)}{\operatorname{Var}(y_2)}
+        = \frac{1}{1 - 1 \cdot (-1)} \cdot 0.8
+        = 0.4.
+    \]
+    Then
+    \[
+        E(\hat{\alpha}_1)
+        = \operatorname{Bias}(\hat{\alpha}_1) + \alpha_1
+        = 0.4 - 1
+        = -0.6.
+    \]
+    \item OLS estimates the demand curve as more inelastic than it actually is.
+\end{itemize}
+
+## Simultaneity Bias
+\begin{itemize}
+    \item We need an estimator that exploits the exogenous variation in $z_2$,
+    i.e.\ it traces out the demand curve as $z_2$ varies.
+    \item (The OLS estimator does not include $z_2$ in its formula!)
+    \item In the Background Notes, we show that the estimator
+    \[
+        \tilde{\alpha}_1
+        = \frac{\operatorname{Cov}(y_1, z_2)}
+        {\operatorname{Cov}(y_2, z_2)}
+    \]
+    is unbiased:
+    \[
+        E(\tilde{\alpha}_1) = \alpha_1.
+    \]
+    \item This is \textbf{Instrumental Variables}.
+    \item This slide is non-examinable.
+\end{itemize}
+
+
+## Outlook
+
+\begin{itemize}
+    \item There are four main techniques for dealing with endogeneity
+    (discussed above):
+    \begin{itemize}
+        \item \textbf{first differences},
+        \item \textbf{difference-in-differences},
+        \item \textbf{instrumental variables},
+        \item \textbf{regression discontinuity}.
+    \end{itemize}
+    \item But first, we need to discuss the usefulness of \textbf{multiple regression}
+    when modelling dummy variables and categorical variables (Lecture 5).
+    \item And finally, we discuss three of the four techniques (not RD).
+\end{itemize}
