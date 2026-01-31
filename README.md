@@ -34,11 +34,9 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 ## The multiple Regression Model
 
-
 [Lecture code](https://datasquad.github.io/ECON20222/LectureCodes/Regression_Multiple.html)
 
 [Notes - Multiple Regression](https://datasquad.github.io/ECON20222/LectureNotes/MultipleRegression/MultipleRegression.html)
-
 
 ## Panel Data Methods
 
