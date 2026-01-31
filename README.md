@@ -2,7 +2,7 @@ This repository contains material for ECON20222 Quantitative Methods. The unit i
 
 Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yidi Sun, The University of Manchester
 
-# Topic 1 - Introduction
+# Introduction
 
 [Lecture Slides - Lecture 1 - DiD intro](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-1---Data-Introduction-2026 STUDENTS.pdf)
 
@@ -16,13 +16,25 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 [Computer Lab 2](https://datasquad.github.io/ECON20222/ComputerLabs/Comp_Lab_2_2526.html)
 
+# Simple Regression
+
+[Lecture Slides - Simple Regression](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-3---Simple-OLS-Regression-with-a-Dummy.pdf)
+
 [Notes - The Simple Regression Model](https://datasquad.github.io/ECON20222/LectureNotes/Introduction.html)
 
-# Topic 2 - Endogeneity
+# Endogeneity
 
-[Notes](https://datasquad.github.io/ECON20222/LectureNotes/Endogeneity/Endogeneity.html)
+[Lecture Slides - Endogeneity](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-4---Endogeneity.pdf)
 
-# Topic 4 - Panel Data Methods
+[Notes - Endogeneity](https://datasquad.github.io/ECON20222/LectureNotes/Endogeneity/Endogeneity.html)
+
+# The multiple Regression Model
+
+
+[Notes - Multiple Regression](https://datasquad.github.io/ECON20222/LectureNotes/MultipleRegression/MultipleRegression.html)
+
+
+# Panel Data Methods
 
 [Notes](https://datasquad.github.io/ECON20222/LectureNotes/PanelDataMethods/PanelDataMethods.html)
 
