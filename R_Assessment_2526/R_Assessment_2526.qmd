@@ -1,0 +1,592 @@
+---
+title: "ECON20222: R Assessment - Prep Work, 2025/26"
+format: 
+  html:
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE)
+student_view <- 'markup'   # set to 'hide' to not reveal output, 'markup' to show
+solution_echo <- TRUE   # set to FALSE to not show full code, TRUE to show full code
+library(webexercises)
+```
+
+# Instructions
+
+You should work through the code below and complete it.  Keep the completed code
+and all the resulting output.  Next you should answer the questions in the
+online quiz.  Every student will see a slightly different collection of
+questions (as we will randomly draw 10 questions from a pool of questions).
+
+The questions are of four types.
+
+1) Questions that merely ask you to report output from your analysis.
+
+2) Some questions will ask you about R code.  For example, you will see a lot of
+gaps (`XXXX`) in the code and questions may ask you how to complete the code to
+make the code work.  Sometimes the `XXXX` will represent one word and on other occasions it will represent a full line (or two) of code. Other questions may ask you about the output to be produced by a particular bit of code.  
+
+3) The third type of questions will test your understanding of econometric
+issues.  For example:  "What is the meaning of an estimated coefficient?" "Is a
+particular coefficient statistically significant?"
+
+4) The fourth type of question, if asked, will be on general programming issues.
+For example:  what is the meaning of a particular error message, or, how would
+you search for a particular piece of information.
+
+# Preparing your workfile
+
+We add the basic libraries needed for this week's work:
+
+```{r}
+library(tidyverse)    # for almost all data handling tasks
+library(ggplot2)      # to produce nice graphiscs
+library(stargazer)    # to produce nice results tables
+library(AER)          # access to HS robust standard errors
+library(knitr)
+source("stargazer_HC.r")  # includes the robust regression display
+```
+
+# Introduction
+
+The purpose of this exercise is to get an idea about the extend to which different countries are producing electricity from renewable sources (such as wind or solar). 
+
+We are using three datasets in this exercise.
+
+1. Country-Year data on a number of energy indicators
+2. Country level data on the physical size of a country
+3. Country-year data on the degree of urbanisation
+
+You should work through the code below and complete it.  Keep the completed code
+and all the resulting output.  Next you should answer the questions in the
+online quiz.  Every student will see a slightly different collection of
+questions (as we will randomly draw 10 questions from a pool of questions).
+
+The questions are of four types.
+
+1) Questions that merely ask you to report output from your analysis.
+
+2) Some questions will ask you about R code.  For example, you will see a lot of
+gaps (`XXXX`) in the code and questions may ask you how to complete the code to
+make the code work.  Sometimes the `XXXX` will represent one word and on other occasions it will represent a full line (or two) of code. Other questions may ask you about the output to be produced
+by a particular bit of code.  
+
+3) The third type of questions will test your understanding of econometric
+issues.  For example:  "What is the meaning of an estimated coefficient?" "Is a
+particular coefficient statistically significant?"
+
+4) The fourth type of question, if asked, will be on general programming issues.
+For example:  what is the meaning of a particular error message, or, how would
+you search for a particular piece of information.
+
+# Preparing your workfile
+
+We add the basic libraries needed for this week's work:
+
+```{r}
+library(tidyverse)    # for almost all data handling tasks
+library(ggplot2)      # to produce nice graphiscs
+library(stargazer)    # to produce nice results tables
+library(AER)          # access to HS robust standard errors
+source("stargazer_HC.r")  # includes the robust regression display
+```
+
+# Introduction
+
+The data used are data from the Gun restriction work that you would have seen before. Here we use the dataset "US_Gun_example_v3.csv". The data are 1071 state-year observations.
+
+The dataset was created (see the detailed work through in the Group Project page) to replicate the work in: Siegel et al (2019) The Impact of State Firearm Laws on Homicide and Suicide Deaths in the USA, 1991–2016: a Panel Study, J Gen Intern Med 34(10):2021–8.
+
+
+
+# Data Upload - and understanding data structure
+
+
+
+## Energy information
+
+::: {.callout-warning}
+
+#### Task 1: Upload Energy Data
+
+Upload the data, which are saved in the csv. Making sure that the path points to your file.
+
+```{r, eval = FALSE}
+en.data <- XXXX("owid-energy-data.csv")
+names(XXXX)
+```
+
+```{r, echo = solution_echo}
+en.data <- read_csv("owid-energy-data.csv")
+names(en.data)
+```
+
+:::
+
+You should have 23,232 rows and 130 variables. Look at the type of variables and the structure of the variable names.
+
+::: {.callout-warning}
+
+#### Task 2: Understand the general data structure
+
+The following are the type of questions you should be able to answer
+
+* What does one row of the data represent?
+* How many different countries are there?
+* How many different years of data are there?
+* Are there only countries or other entities?
+
+Explore the data so that you can answer these questions.
+
+
+```{r, echo = solution_echo, results=student_view}
+
+# pick one row
+en.data[997,]
+# and you can see that one row represents a country-year, here Antigua and Barbuda
+# in 1994
+
+# to see what different "countries" there are:
+unique(en.data$country)
+# This gives 314 different entries.
+# you will be able to see that not all of them are countries. There are also 
+# continents, and organisations (e.g. OPEC) and sometimes that info from multiple
+# sources. There are also entities that are not universally recognised as countries
+# such as Palestine or Taiwan.
+
+# a better way to get at the number of countries is to check the ISO code
+unique(en.data$iso_code)
+# this gives 221 codes. The UN only has 193 member states. So some of the 
+# codes may also not represent officially recognised countries
+
+# Check the different year entries
+unique(en.data$year)[order(unique(en.data$year))]
+# so the spreadsheet has rows from 1900 to 2025
+
+```
+
+:::
+
+Let's create a table that matches the existing `iso_codes` to country names.
+
+```{r}
+#| echo: TRUE
+#| 
+country.map <- en.data %>% filter(!is.na(iso_code)) %>% 
+                    select(country, iso_code) %>%  
+                    unique() %>% 
+                    arrange(country)
+```
+
+
+
+::: {.callout-warning}
+
+#### Task 3: Restrict dataset
+
+For what follows we will restrict the data to only the observations that have an `iso_code` (`!is.na(iso_code)`). Put this restricted dataset into a new dataframe called `en.data.r`. 
+
+```{r, echo = solution_echo, results=student_view}
+
+en.data.r <- en.data %>%  filter(!is.na(iso_code))
+
+```
+
+:::
+
+If you have done that correctly you should have 17,134 rows of data. From now on we shall be working with `en.data.r`. As you can see from `country.map` the list of entities with `iso_code` contains countries, but also some territories like Greenland (GRL) which are not fully independent countries or are indeed disputed terretories. We will still call this variable `country` for simplicity.
+
+Let's create a Table that shows for how many entities we have population data in every year.
+
+```{r}
+#| echo: TRUE
+
+table1 <- en.data.r %>% filter(!is.na(population)) %>% 
+            group_by(year) %>% 
+            summarise(n = n()) 
+            
+tail(table1)
+
+```
+
+By looking at the last few entries you can see that 2023 seems to be the last year with complete population data.
+
+::: {.callout-warning}
+
+#### Task 4: Create summary table
+
+Create a similar table (and call it `table2`) that lists for how many years there are population data for each country. 
+
+```{r, echo = solution_echo, results=student_view}
+
+table2 <- en.data.r %>% filter(!is.na(population)) %>% 
+            group_by(country) %>% 
+            summarise(n = n()) 
+table2
+```
+
+:::
+
+The dataset is about how different countries generate energy and electricity. What different fuel types are captured in the dataset? A quick look at the variable names reveals that there are for sure "biofuel", "coal", "gas" etc. 
+
+::: {.callout-warning}
+
+#### Task 5: Understand Fuel sources
+
+Try and understand how many different fuel types are captured in the dataset.
+
+```{r, echo = solution_echo, results=student_view}
+
+# there are: "biofuel", "coal", "gas", "hydro", "nuclear", "oil", 
+# "solar", "wind" plus there is a "other_renewable" category
+```
+
+Think about how you could confirm that the sources you identified are indeed all the sources in the dataset. Then implement your test and figure out what summary categories (like "fossil" are available and how they relate to each other)
+
+Understand what the following line of code does. It may (but not necessarily) become useful in the process of verifying your selection.
+
+```{r}
+sel_vars_energy <- names(en.data.r)[grepl("share_energy", names(en.data.r))]
+```
+
+```{r, echo = solution_echo, results=student_view}
+
+# As there is a variable that gives the share of energy and electricity production 
+# we should find that the shares we calculate add to 100
+
+# Pick any country, here Germany and a particular year, here 2023
+
+sel_vars_energy <- names(en.data.r)[grepl("share_energy", names(en.data.r))]
+sel_vars_elec <- names(en.data.r)[grepl("share_elec", names(en.data.r))]
+
+test_energy <- en.data.r %>%  filter(country == "Germany", year == "2023") %>% 
+          select(sel_vars_energy)
+
+test_elec <- en.data.r %>%  filter(country == "Germany", year == "2023") %>% 
+          select(sel_vars_elec)
+
+# If you then add the above categories you will find the shares adding up to 100
+# there are also group categories
+# fossil: coal + gas + oil
+# low_carbon: everything but fossil
+# renewable: low_carbon - nuclear
+# this implies that: 
+# fossil + low_carbon = 100, and
+# fossil + renewable + nuclear = 100
+
+```
+
+:::
+
+## Country characteristics
+
+There are many factors which could influence the use of renewable electricity generation in a certain country. Here we will only look at a couple
+
+1. The population density
+2. The degree of urbanisation
+
+Other obvious factors are such that relate to the climatic conditions which will have an important bearing on whether hydro, solar or wind generation are available options. For this work we will concentrate on the ones listed above.
+
+To investigate the relationship of the above factors with the generation type we need information on 
+
+* population size (which is already included in `en.data`)
+* the size of a country (so we can then clalculate the population density)
+* the percentage of population living in urban areas
+
+Let's start with the import of the size of a country
+
+```{r}
+ls.data <- read.csv("landarea_km_OWID.csv")
+head(ls.data)
+
+```
+
+You can see that here we have one row of information for every country, the land size in square kilometers. Importantly you can also find the same three letter iso country code we also have in the energy dataset. This is super useful as it allows us to easily merge this information into `en.data.r`. 
+
+::: {.callout-warning}
+
+#### Task 6: Merge `ls.data` into `en.data.r`
+
+Delete the `Entity` and `Year` variables from `ls.data`, rename the `Land.area..sq..km.` variable to `ls.skm` and then merge the land size variable into the `en.data.r` dataframe.
+Only keep the observations for which we do have land size data.
+
+```{r, echo = solution_echo, results=student_view}
+
+# rename, also Code to iso_code to make merging easier
+# select the twpo variables needed
+ls.data <- ls.data %>% rename(ls.sqm = Land.area..sq..km.,
+                              iso_code = Code) %>% 
+              select(iso_code, ls.sqm)
+
+en.data.r <- merge(en.data.r, ls.data)
+
+```
+
+
+:::
+
+Your dataframe `en.data.r` should now have 15,735 rows and 131 variables.
+
+::: {.callout-warning}
+
+#### Task 7: Calculate population density and GDP per capita
+
+Now we can calculate the Population density as we have the `population` and the `ls.sqm` information for countries. Calculate a `pop.den` variable which is calculates as `population/ls.sqm` and add this to `en.data.r`.
+
+Also calculate the GDP per capita and save it in a new `gdp.pc` variable, noting that GDP is measured in US dollars.
+
+```{r, echo = solution_echo, results=student_view}
+en.data.r <- en.data.r %>% mutate(pop.den = population/ls.sqm,
+                                  gdp.pc = gdp/population)
+```
+
+You got this right if the mean values (ensuring to exclude NA values) for the new variables in `en.data.r` are `r mean(en.data.r$pop.den, na.rm = TRUE)` (for `pop.den`) and 10,262 (for gdp.pc).
+
+:::
+
+
+We want to import the data on the percentage of population living in urban areas. Here we expect the data to vary by year for every country. The spreadsheet contains data from 1960 to 2024. 
+
+::: {.callout-warning}
+
+#### Task 7: Import, prepare and merge urbanisation data
+
+The data is in "urbanpop_WB.csv". Once imported and manipulated you should have a long dataset (name it `pd.data.long`) with the following structure (and 17,290) rows of data.
+
+```{r, echo = solution_echo}
+# need to skip the first 4 rows
+pd.data <- read.csv("urbanpop_WB.csv", skip = 4)
+
+# Now create a long version of the dataset
+pd.data.long <- pd.data %>% select(!c("Country.Name","Indicator.Name", 
+                                      "Indicator.Code")) %>% 
+                  rename(iso_code = Country.Code) %>% 
+                  pivot_longer(cols = starts_with("X"),
+                    names_to = "year",
+                    names_prefix = "X",
+                    values_to = "Urban.pc")
+
+head(pd.data.long)
+```
+
+Now you should merge the `Urban.pc` variable into `en.data.r` only keeping the rows of data for which we do have data for `Urban.pc`.
+
+```{r, echo = solution_echo, results=student_view}
+en.data.r <- merge(en.data.r, pd.data.long)
+```
+
+:::
+
+In order to establish that you have worked correctly so far, replicate the following summary statistics:
+
+```{r}
+dim(en.data.r)
+summary(en.data.r[c("population","gdp")])
+```
+
+::: {.callout-warning}
+
+#### Task 8: Summary Statistics
+
+Also calculate the same summary statistics for all variables that contain "share_elec" or "share_energy" in the name.
+
+```{r, echo = solution_echo, results=student_view}
+sel_vars_energy <- names(en.data.r)[grepl("share_energy", names(en.data.r))]
+sel_vars_elec <- names(en.data.r)[grepl("share_elec", names(en.data.r))]
+
+summary(en.data.r[sel_vars_energy])
+summary(en.data.r[sel_vars_elec])
+```
+:::
+
+## Some Data Exploration
+
+
+::: {.callout-warning}
+
+#### Task 9: Create 2022 electricity data
+
+For the following exercise create a dataset that only uses the data for 2022 and only includes variables that contain "share_elec" in the name in addition to "country", "iso_code", "Urban.pc", "gdp.pc" and "pop.den".
+
+The following is an incomplete piece of code which you should complete to achieve this.
+
+```{r, eval = FALSE}
+sel_vars_elec <- names(XXXX)[XXXX("share_elec", XXXX(en.data.r))]
+en.data.r.2022.elec <- XXXX %>%  filter(year == 2022) %>% 
+                      select(XXXX)
+```
+
+
+```{r, echo = solution_echo, results=student_view}
+sel_vars_elec <- names(en.data.r)[grepl("share_elec", names(en.data.r))]
+en.data.r.2022.elec <- en.data.r %>%  filter(year == 2022) %>% 
+                      select(country, iso_code, Urban.pc, gdp.pc, pop.den, sel_vars_elec)
+```
+
+:::
+
+Dataframe `en.data.r.2022.elec` should have 191 rows and 17 variables.
+
+::: {.callout-warning}
+
+#### Task 10: Create League Tables
+
+Create the following League Tables
+
+* The 10 countries with the highest `hydro_share_elec` (highest share on Pos 1, 10th highest in Pos 10)
+* The 10 countries with the lowest `gdp.pc` (lowest share on Pos 1, 10th lowest in Pos 10)
+* The 10 countries with the highest `solar_share_elec` (highest share on Pos 1, 10th highest in Pos 10)
+* The 10 countries with the highest `wind_share_elec` (highest share on Pos 1, 10th highest in Pos 10)
+
+
+```{r, echo = solution_echo, results=student_view}
+
+# highest `hydro_share_elec"
+LT_hydro <- en.data.r.2022.elec %>%  
+              select(country, iso_code, hydro_share_elec) %>% 
+              arrange(desc(hydro_share_elec)) %>% 
+              head(10) %>%  print()
+
+# highest `hydro_share_elec"
+LT_fossil <- en.data.r.2022.elec %>%  
+              select(country, iso_code, gdp.pc) %>% 
+              arrange(gdp.pc) %>% 
+              head(10) %>%  print()
+
+# highest `hydro_share_elec"
+LT_solar <- en.data.r.2022.elec %>%  
+              select(country, iso_code, solar_share_elec) %>% 
+              arrange(desc(solar_share_elec)) %>% 
+              head(10) %>%  print()
+
+# highest `hydro_share_elec"
+LT_wind <- en.data.r.2022.elec %>%  
+              select(country, iso_code, wind_share_elec) %>% 
+              arrange(desc(wind_share_elec)) %>% 
+              head(10) %>%  print()
+
+```
+If you have done this correctly you should for instance find that the 10th lowest `gdp.pc` is Afghanistan with 1313.58.
+
+:::
+
+::: {.callout-warning}
+
+#### Task 11: Hypothesis tests
+
+In the following we will perform some hypothesis tests using the 2022 dataset. Use the `t.test` function to test the following hypotheses (where $\mu_{type}$ represents the mean share of the indicated type of electricity generation):
+
+* Test A: $H_0: \mu_{wind} = \mu_{solar}; H_A: \mu_{wind} \neq \mu_{solar}$
+* Test B: $H_0: \mu_{wind} = \mu_{solar}; H_A: \mu_{wind} > \mu_{solar}$
+* Test C: $H_0: \mu_{hydro} = \mu_{wind}; H_A: \mu_{hydro} \neq \mu_{wind}$
+* Test D: $H_0: \mu_{fossil} = \mu_{low.carbon}; H_A: \mu_{fossil} \neq \mu_{low.carbon}$
+
+Do make sure you note down the test statistic and the p-value.
+
+```{r, echo = solution_echo, results=student_view}
+t.test(en.data.r.2022.elec$wind_share_elec,en.data.r.2022.elec$solar_share_elec,
+       alternative = "two.sided")
+
+t.test(en.data.r.2022.elec$wind_share_elec,en.data.r.2022.elec$solar_share_elec,
+       alternative = "greater")
+
+t.test(en.data.r.2022.elec$hydro_share_elec,en.data.r.2022.elec$wind_share_elec,
+       alternative = "two.sided")
+
+t.test(en.data.r.2022.elec$fossil_share_elec,en.data.r.2022.elec$low_carbon_share_elec,
+       alternative = "two.sided")
+
+```
+:::
+
+## Regression models
+
+Let us estimate some regression models, still using the `en.data.r.2022.elec` dataframe.
+
+::: {.callout-warning}
+
+#### Task 12: Regression models
+
+Estimate the following regression models, where $s_{type}$ represents the share of electricity generation of the specified type:
+
+* Model A: $s_{fossil} = \alpha_A + \beta_A~pop.den + \gamma_A ~ Urban.pc + \epsilon$
+* Model B: $s_{wind} = \alpha_B + \beta_B~pop.den + \gamma_B ~ Urban.pc + \epsilon$
+* Model C: $s_{solar} = \alpha_C + \beta_C~pop.den + \gamma_C ~ Urban.pc + \delta_C~gdp.pc + \epsilon$
+
+For each of these models ensure that you have the regression output available. You should use the stargazer_HC function to produce this output so that you have the robust standard errors which you should be using.
+
+```{r, echo = solution_echo, results=student_view}
+lm.A <- lm(fossil_share_elec ~ pop.den + Urban.pc, data = en.data.r.2022.elec)
+
+lm.B <- lm(wind_share_elec ~ pop.den + Urban.pc, data = en.data.r.2022.elec)
+
+lm.C <- lm(solar_share_elec ~ pop.den + Urban.pc + gdp.pc, data = en.data.r.2022.elec)
+
+stargazer_HC(lm.A,lm.B,lm.C)
+```
+
+:::
+
+
+## Plotting
+
+Here we are producing some plots. 
+
+::: {.callout-warning}
+
+#### Task 13: Scatter plot
+
+Use the data in `en.data.r.2022` to create the following scatter plots
+
+* Plot A: `gdp.pc` on the horizontal axis and `low_carbon_share_elec` on the vertical axis 
+* Plot B: `Urban.pc` on the horizontal axis and `fossil_share_elec` on the vertical axis 
+
+
+```{r, echo = solution_echo, results=student_view, output = TRUE}
+
+plot.A <- ggplot(en.data.r.2022.elec, aes(x=gdp.pc, y=low_carbon_share_elec)) + 
+  geom_point() +
+  labs(title = "gdp.pc v low carbon share in electricity production")
+plot.A
+
+plot.B <- ggplot(en.data.r.2022.elec, aes(x=Urban.pc, y=fossil_share_elec)) + 
+  geom_point() + 
+  labs(title = "Urban.pc v fossil share in electricity production")
+plot.B
+```
+
+:::
+
+
+::: {.callout-warning}
+
+#### Task 14: Line plot
+
+Use the data in `en.data.r` to create the following time-series plots for countries "Germany" (DEU), "China" (CHN) and the "United States" (USA).
+
+* Plot C: Time-series plot for `solar_share_elec`. Different countries should show in differently colored lines. 
+* Plot D: Time-series plot for `wind_share_elec`. Different countries should show in differently colored lines.
+
+```{r, echo = solution_echo, results=student_view, output = TRUE}
+temp <- en.data.r %>% filter(iso_code %in% c("DEU","CHN", "USA"))
+
+plot.C <- ggplot(temp, aes(x=year, y=solar_share_elec, colour = iso_code)) + 
+  geom_line() + 
+  labs(title = "Solar share in electricity production")
+plot.C
+
+plot.D <- ggplot(temp, aes(x=year, y=wind_share_elec, colour = iso_code)) + 
+  geom_line() + 
+  labs(title = "Wind share in electricity production")
+plot.D
+```
+
+:::
+
+## Preperation for answering the test
+
+You should have the results of your analysis at hand when you answer the test. It is very advisable to also have your code available in case you need to adjust or supplement your code, or just to access the results of your work.
