@@ -1,0 +1,414 @@
+---
+title: "Panel Data"
+subtitle: "ECON20222 - Lecture 6"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+classoption: "aspectratio=3218"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE)
+```
+
+```{r}
+library(tidyverse)    # for almost all data handling tasks
+library(ggplot2)      # to produce nice graphics
+library(stargazer)    # to produce nice results tables
+library(haven)        # to import stata file
+library(AER)          # access to HS robust standard errors
+library(plm)
+source("../LectureCodes/stargazer_HC.r")  # includes the robust regression display
+
+data_USoc <- read_dta("../data/20222_USoc_extract.dta")
+data_USoc <- as.data.frame(data_USoc) 
+
+data_USoc$region <- as_factor(data_USoc$region)
+data_USoc$male <- as_factor(data_USoc$male)
+data_USoc$degree <- as_factor(data_USoc$degree)
+data_USoc$race <- as_factor(data_USoc$race)
+
+data_USoc <- data_USoc %>%
+              mutate(hrpay = paygu/(jbhrs*4)/(cpi/100)) %>%
+              mutate(lnhrpay = log(hrpay))
+
+data_USoc <- data_USoc %>%
+              mutate(lnurate=log(urate)) 
+
+
+data_USoc <- data_USoc %>%  
+  filter(wave != 2) %>% 
+  filter(!is.na(lnhrpay))
+
+data_USoc <- data_USoc %>% 
+                group_by(pidp) %>% 
+                mutate(n_wave = n()) 
+
+pdata_USoc <- pdata.frame(data_USoc, index = c("pidp","wave")) # defines the panel dimensions
+
+Dlnhrpay <- pdata_USoc$lnhrpay-lag(pdata_USoc$lnhrpay,k=2)
+Dlnurate <- pdata_USoc$lnurate-lag(pdata_USoc$lnurate,k=2)
+
+pdata_USoc$Dlnhrpay <- Dlnhrpay   # add the new series to the dataframe
+pdata_USoc$Dlnurate <- Dlnurate
+
+temp <- pdata_USoc   # create a temporary dataframe
+
+temp <- temp %>%  filter(n_wave == 2) %>%   # only keep individuals with two waves
+                  group_by(pidp) %>%        # group data by individual
+                  mutate(move = ifelse(length(unique(region))==1,"no move","move")) %>% 
+                  select(pidp,wave,move)    # only keep these 3 variables
+
+# the move variable will take the value "no move" if both regions are identical  
+# and "move" if there are two different regions  
+
+temp$move <- as_factor(temp$move)  # convert to factor variable
+
+# the following merges the new variable into the pdata_USoc dataframe
+pdata_USoc <- merge(pdata_USoc,temp,all.x = TRUE) 
+
+
+```
+
+
+## Dealing with endogeneity
+
+There are 4 main techniques for dealing with endogeneity:
+
+- The First Differenced estimator (FD);
+- Differences-in-differences (DiD), as per your projects;
+- Instrumental Variables (IV) and
+- Regression Discontinuity (RD) [not in the syllabus]
+- We will also mention RCTs (see Demo Class 1)
+
+This lecture introduces the First Differenced estimator. 
+
+The key requirement is **Panel Data**. We explain using the simplest case, where $T=2$.
+
+## Two-period panel data
+
+Comprise $N$ individuals (or other micro unit) observed exactly $T=2$ times.
+
+\begin{tabular}{ccccccc|cc}
+$i$ & $t$ & $y_{i t}$ & 1 & $d_{t}^{1}$ & $d_{t}^{2}$ & $x_{i t}$ & $a_{i}$ & $u_{i t}$ \\
+\hline \hline 1 & 1 & $y_{11}$ & 1 & 1 & 0 & $x_{11}$ & $a_{1}$ & $u_{11}$ \\
+1 & 2 & $y_{12}$ & 1 & 0 & 1 & $x_{12}$ & $a_{1}$ & $u_{12}$ \\
+\hline 2 & 1 & $y_{21}$ & 1 & 1 & 0 & $x_{21}$ & $a_{2}$ & $u_{21}$ \\
+2 & 2 & $y_{22}$ & 1 & 0 & 1 & $x_{22}$ & $a_{2}$ & $u_{22}$ \\
+\hline$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+\hline$N$ & 1 & $y_{N 1}$ & 1 & 1 & 0 & $x_{N 1}$ & $a_{N}$ & $u_{N 1}$ \\
+$N$ & 2 & $y_{N 2}$ & 1 & 0 & 1 & $x_{N 2}$ & $a_{N}$ & $u_{N 2}$ \\
+\hline \hline
+\end{tabular}
+
+## Two-period panel data
+
+Variables in the data:
+
+- $y_{i t}$ and $x_{i t}$; both vary over both $i=1,...,N$ and $t=1,2$.
+- $d_{t}^{1}$ is a period 1 time dummy; it only varies over $t$.
+- $d_{t}^{2}$ is a period 2 time dummy; it only varies over $t$.
+- 1 is the constant.
+
+Variables not observed:
+
+- $a_{i}$ does not vary over $t$. It is a so-called fixed effect, or unobserved heterogeneity;
+- $u_{i t}$ is an idiosyncratic error. It is assumed to be uncorrelated with everything (like most error terms). 
+
+In particular:
+
+$$
+\operatorname{Cov}\left(x_{i 1}, u_{i 1}\right)=\operatorname{Cov}\left(x_{i 2}, u_{i 2}\right)=0 \tag{AFD1}
+$$
+
+## Two-period panel data
+
+- The omitted variable $a_{i}$ is correlated with $x_{i t}$. Eg ability is correlated with education. If not, the OVB formula says OLS is unbiased.
+- The crucial assumption is that $a_{i}$ is constant over time.
+
+The sample version of the model is specified as having 2 errors, one fixed over time, the other time-varying:
+
+$$
+y_{i t}=\beta_{0}+\delta_{0} d_{t}^{2}+\beta_{1} x_{i t}+a_{i}+u_{i t} \quad t=1,2 
+$$
+- This is a so-called **fixed effects** model.
+- Because of the dummy-variable trap, one of two time dummies must be dropped, here $d_{t}^{1}$. (Recall one cannot have a constant, male dummy and a female dummy in the same regression.)
+
+
+
+## Differencing out $a_{i}$
+We could estimate by OLS, treating $a_{i}+u_{i t}$ as a single composite error. This estimator is called Pooled OLS (POLS).
+
+But $\operatorname{Cov}\left(x_{i t}, a_{i}\right) \neq 0$. From the OVB framework, Pooled OLS is biased. Often called heterogeneity bias.
+
+With panel data, we can difference-out the unobserved fixed effect $a_{i}$ :
+$$
+\begin{gathered}
+y_{i 1}=\beta_{0}+\beta_{1} x_{i 1}+a_{i}+u_{i 1} \quad(t=1) \\
+y_{i 2}=\beta_{0}+\delta_{0}+\beta_{1} x_{i 2}+a_{i}+u_{i 2} \quad(t=2)
+\end{gathered}
+$$
+Subtracting,
+
+$$
+\Delta y_{i}=\delta_{0}+\beta_{1} \Delta x_{i}+\Delta u_{i} .
+$$
+
+
+## ... continued
+
+$$
+\Delta y_{i}=\delta_{0}+\beta_{1} \Delta x_{i}+\Delta u_{i} .
+$$
+where:
+
+- $\Delta y_{i} \equiv y_{i 2}-y_{i 1}$ is the difference of $y_{i}$.
+- $\Delta x_{i} \equiv x_{i 2}-x_{i 1}$. (In a multiple regression all the regressors are differenced.)
+- $\beta_{0}$ and $\beta_{0}+\delta_{0}$ are "macro" effects in that they affect all individuals identically, in the same time period. But only $\delta_{0}$ is identified. $\beta_{0}$ drops out because
+
+$$
+\Delta 1=0=\Delta d_{t}^{1}+\Delta d_{t}^{2}
+$$
+- $\delta_{0}$ is the parameter on $\Delta d_{t}^{2}$, which is the new regression constant.
+
+Does $\Delta u_{i} \equiv u_{i 2}-u_{i 1}$ still has classical properties?
+
+To see what is happening, look at the schematic data above, and subtract the first row from the second for each $i \ldots$
+
+## Data Structure
+
+$$
+\Delta y_{i}=\delta_{0}+\beta_{1} \Delta x_{i}+\Delta u_{i} .
+$$
+
+
+\begin{tabular}{lllllll|lllll}
+ & $t$ & $y_{i t}$ & 1 & $d_{t}^{1}$ & $d_{t}^{2}$ & $x_{i t}$ & $\Delta y_{i t}$ & $\Delta 1$ & $\Delta d_{t}^{1}$ & $\Delta d_{t}^{2}$ & $\Delta x_{i t}$ \\ \hline\hline
+ 1 & 1 & $y_{11}$ & 1 & 1 & 0 & $x_{11}$ & - & . & - & - & . \\
+ 1 & 2 & $y_{12}$ & 1 & 0 & 1 & $x_{12}$ & $\Delta y_{1}$ & 0 & -1 & 1 & $\Delta x_{1}$ \\ \hline
+ 2 & 1 & $y_{21}$ & 1 & 1 & 0 & $x_{21}$ & . & - & - & . . & . \\
+ 2 & 2 & $y_{22}$ & 1 & 0 & 1 & $x_{22}$ & $\Delta y_{2}$ & 0 & -1 & 1 & $\Delta x_{2}$ \\ \hline
+ \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\ \hline
+ N & 1 & $y_{N 1}$ & 1 & 1 & 0 & $x_{N 1}$ & - & . & - & - & - \\
+ $N$ & 2 & $y_{N 2}$ & 1 & 0 & 1 & $x_{N 2}$ & $\Delta y_{N}$ & 0 & -1 & 1 & $\Delta x_{N}$ \\ \hline \hline
+\end{tabular}
+
+The change in $y_{i t}$ between periods 1 and 2 is regressed on the change in the regressor(s) and a constant, using $N$ obs.
+
+## First-difference estimator (FD)
+
+- The variables are not defined for period 1 and so the dataset comprises just $N$ obs. Depending on software, the investigator needs to be careful about organisation of the data to compute the correct change. (See code file)
+- OLS on the differenced specification is called the first-difference estimator (FD).
+- In this example, it is a Simple Regression. In general, FD is a multiple regression where all variables are differenced.
+- The important issue is whether the same assumptions for OLS are satisfied? If yes, FD is unbiased. 
+
+The assumptions are:
+
+1. The RHS variable is exogenous (uncorrelated with the error);
+2. The RHS variable cannot be constant.
+
+## Exogeneity
+
+Is $\Delta x_{i}$ uncorrelated with $\Delta u_{i}$ ?
+
+$$
+\begin{aligned}
+\operatorname{Cov}\left(\Delta x_{i}, \Delta u_{i}\right) & =\operatorname{Cov}\left[\left(x_{i 2}-x_{i 1}\right),\left(u_{i 2}-u_{i 1}\right)\right]= \\
+\operatorname{Cov}\left(x_{i 2}, u_{i 2}\right) & +\operatorname{Cov}\left(x_{i 1}, u_{i 1}\right)-\operatorname{Cov}\left(x_{i 1}, u_{i 2}\right)-\operatorname{Cov}\left(x_{i 2}, u_{i 1}\right)
+\end{aligned}
+$$
+
+* All 4 covariances need to be zero. We have already assumed the first pair are zero (AFD1). If AFD1 is true, there is no reason why the second pair ("across" $t=1,2$ ) should not be zero either.
+* To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$.
+
+## ... continued
+
+Variation in $\Delta x_{i}$
+
+* Each $\Delta x_{i}$ must have some variation across $i$. Age, gender, and education are good examples of $\Delta x_{i}$ being constant. Iow, some issues (education, discrimination etc) cannot be investigated using FD.
+* Even if $\Delta x_{i}$ is not constant, it might not vary much, leading to large standard errors.
+* Measurement error gets worse with differencing. We know from Lecture 4 that this means FD gets more biased.
+
+## ... continued
+
+Variation in $\Delta x_{i}$
+
+- See what happens with male dummy $m$, age $a$ and education $e$ :
+
+\begin{tabular}{ccccccc|ccccc}
+$i$ & $t$ & $y_{i t}$ & $d_{t}^{2}$ & $m$ & $a$ & $e$ & $\Delta y_{i t}$ & $\Delta d_{t}^{2}$ & $\Delta m$ & $\Delta a$ & $\Delta e ?$ \\
+\hline \hline 1 & 1 & $y_{11}$ & 0 & 1 & 18 & 11 &. &. &. &. & \\
+1 & 2 & $y_{12}$ & 1 & 1 & 24 & 11 & $\Delta y_{1}$ & 1 & 0 & 6 & \\
+\hline 2 & 1 & $y_{21}$ & 0 & 0 & 28 & 13 &. &. &. &. & \\
+2 & 2 & $y_{22}$ & 1 & 0 & 34 & 13 & $\Delta y_{2}$ & 1 & 0 & 6 & \\
+\hline$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & \\
+\hline$N$ & 1 & $y_{N 1}$ & 0 & 1 & 51 & 16 &. &. &. &. & \\
+$N$ & 2 & $y_{N 2}$ & 1 & 1 & 57 & 16 & $\Delta y_{N}$ & 1 & 0 & 6 & \\
+\hline \hline
+\end{tabular}
+
+## The Wage Curve
+
+It has become a stylised fact that the elasticity of real wages with respect to the unemployment rate is -0.10 . Danny Blanchflower and Andrew Oswald have written extensively on this issue, generating much supporting evidence.
+
+In what follows, I use Understanding Society Waves 1 and 3.
+
+- There are 12 regions in the UK.
+- Each wave covers 3 years, so there are 5 years. The unemployment rate varies by year and region ( 60 distinct values minus NI/2013).
+- The next slides tabulate log average hourly pay and the unemployment rate, by region.
+- Finally, we compare POLS and FD estimates.
+
+## Data in waves
+
+```{r}
+table(pdata_USoc$n_wave,pdata_USoc$wave, dnn = c("n_waves","waves"))
+```
+
+## Some Summary Statistics
+
+
+```{r}
+stargazer(pdata_USoc[,c("lnhrpay","urate","year","Dlnhrpay","Dlnurate")],type = "text")
+```
+
+```{r}
+# More code
+pdata_USoc <- pdata_USoc %>% 
+              group_by(region,year) %>% 
+              mutate(mean_lnhrpay = mean(lnhrpay),mean_urate = mean(urate)) 
+
+POLS0 <- lm(lnhrpay~lnurate, data = pdata_USoc)
+pdata_USoc$pred_POLS0 <- POLS0$fitted.values
+POLS0a <- plm(lnhrpay~lnurate, data = pdata_USoc, model = "pooling")
+
+POLS1 <- lm(lnhrpay~lnurate+wave, data = pdata_USoc)
+
+POLS1a <- plm(lnhrpay~lnurate+wave, data = pdata_USoc, model = "pooling")
+
+POLS2 <- lm(lnhrpay~lnurate+wave, data = pdata_USoc, subset = (n_wave ==2))
+
+POLS2a <- plm(lnhrpay~lnurate+wave, data = pdata_USoc, subset = (n_wave ==2), model = "pooling")
+
+FD1a <- plm(lnhrpay~lnurate, data = pdata_USoc, subset = (n_wave ==2), model = "fd")
+
+```
+
+
+## Statistics by region
+
+```{r}
+pdata_USoc %>% group_by(region) %>% 
+              summarise(n = n(), mean_lnhrpay = mean(lnhrpay),
+                        mean_urate = mean(urate))
+
+```
+
+## Comments on the data
+
+- 13,078 individuals are observed twice, $9,666+4,112$ only once.
+- There are 39,934 individual/waves in total.
+- The 13,778 individuals observed once do not contribute to the FD estimator. This leaves 13,078 who do contribute ( 26,156 observations)
+- Some unemployment rates are twice others.
+- London has the highest pay and second highest unemployment rate
+- Unemployment changes because of regional (macro) variations over time (2009-2013) and because some individuals move region.
+
+## Estimate Pooled OLS
+
+```{r, eval = FALSE, echo = TRUE}
+POLS0 <- lm(lnhrpay~lnurate, data = pdata_USoc)
+
+# or using the plm function
+POLS0a <- plm(lnhrpay~lnurate, data = pdata_USoc, model = "pooling")
+
+pdata_USoc$pred_POLS0 <- POLS0$fitted.values
+```
+
+## Predicted values - Pooled OLS
+
+```{r, fig.height = 3, fig.width = 5}
+ggplot(pdata_USoc, aes(x=lnurate,y=pred_POLS0)) +
+  geom_point(aes(colour = "red")) +
+  geom_line(aes(colour = "red")) +
+  geom_point(aes(y = mean_lnhrpay,colour = "blue")) +
+  ggtitle("Predicted values - Pooled OLS") +
+  ylab("Log Hourly Wage") +
+  xlab("Log Unemployment Rate") +
+  scale_colour_manual(name="Data/Model", values = c(red = "red", blue = "blue"),
+                      labels=c("Data", "POLS"))
+```
+
+## Different Models
+
+\scriptsize
+```{r}
+stargazer_HC(POLS0a,POLS1a,POLS2a,FD1a,omit.stat = "f")
+```
+\normalsize
+
+## Comments on the estimation}
+
+ Using POLS, col(3), the wage-curve elasticity is exactly as Blanchflower and Oswald found (-0.1):
+
+$$
+\frac{\% \Delta \widehat{y}_{i}}{\% \Delta x_{i}}=-0.096(0.029)
+$$
+
+The correct way to interpret the POLS elasticity is the effect of, say, a $10 \%$ increase in the unemployment rate (say from $8 \%$ to $8.8 \%$ ) on real hourly pay, namely
+
+$$
+\% \Delta \widehat{y}_{i}=-0.096 \% \Delta x_{i}=-0.096 * 0.10=-0.0096
+$$
+
+that is, a drop of 0.0096 log-points ( 1 percent).
+
+The FD estimate 0.042 is half the size, changes sign, and with a larger standard error (0.060), it is insignificant. It is interpreted in exactly the same way. The difference is that we have now controlled for any time-invariant heterogeneity $a_{i}$.
+
+You must **not** interpet this as $\frac{\% \Delta\left(\Delta \widehat{y}_{i}\right)}{\% \Delta\left(\Delta x_{i}\right)}=0.042$.
+
+
+## Comments on the estimation
+
+- We can interpret $a_{i}$ as some unobserved time-invariant variable that means that some individuals are attracted to higher paying regions (such as London).
+- Because education is omitted in this kind of analysis, $a_{i}$ could be education and ability/motivation.
+- Comparing (3) and (4), and using the OVB formula (Lecture 5), we can work out the sign of $\operatorname{Corr}\left(x_{i t}, a_{i}\right)$ :
+
+
+\begin{align*}
+& \log y_{i t}=-0.005 d_{t}^{2}-0.096 x_{r t}+\mathrm{const}  \tag{POLS}\\
+& \log y_{i t}=-0.011 d_{t}^{2}+0.042 x_{r t}+a_{i} \tag{FD}
+\end{align*}
+
+
+where
+
+$$
+a_{i}=\delta_{0}+\delta_{1} x_{r t}+\text { error } .
+$$
+
+## ... continued
+
+Using $\widetilde{\beta}_{1}-\widehat{\beta}_{1}=\widehat{\delta}_{1}\left(\beta_{2}=1\right), \widehat{\delta}_{1}=-0.138$, and so
+
+$$
+\widehat{a}_{i}=\widehat{\delta}_{0}-0.138 x_{r t}
+$$
+
+- So, in high (log) unemployment rate regions, $a_{i}$ is lower (measured in the same units as the dep variable). This makes good sense.
+- There is lots of variation in $\Delta x_{i}$ (Dlnurate). See the summary of D variables.
+- Is measurement error an issue? Unambiguously No. The interviewers know exactly which region households are located. We have "matched" the official ONS unemployment rates to that region variable.
+- Finally, FD estimation can be done on more than just $T=2$ waves. One then ends up with a panel of differenced data.
+
+## Concluding comments
+
+- Heterogeneity bias comes about because of $\operatorname{Corr}(x, a) \neq 0$.
+- With panel data, is the unobserved heterogeneity time-invariant? Then the problem is written $\operatorname{Corr}\left(x_{i t}, a_{i}\right) \neq 0$.
+- If so, the $a_{i}$ can be differenced away, leaving $\Delta y$ regressed on $\Delta x \mathrm{~s}$ using OLS.
+- The estimator is called FD.
+- The idea is best explained with $T=2$, but extends to $T>2$.
+- There are other panel data estimators that are based on the same set-up, notably so-called fixed effects (FE). 
+- The price paid for these estimators is that there may be zero or little variation in $\Delta x$.
+- We next deal with endogeneity by extending the FD estimator to the so-called difference-in-difference estimator. It is motivated by the set-up in this lecture...

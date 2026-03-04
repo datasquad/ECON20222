@@ -1734,7 +1734,7 @@ the <code>n_wave</code> and <code>waves</code> variables.</p>
 <p>Naturally the 13078 respondents which have two observations
 (<code>n_wave == 2)</code> are represented in waves 1 and 3. Then we
 have (<code>n_wave == 1</code>) 9666 respondents which are represented
-in wave 1 and the 4112 which are represented in wave 3.</p>
+in wave 1 only and 4112 which are represented in wave 3 only.</p>
 <p>For the respondents for which we have 2 waves of observations we can
 actually calculate a difference, or change in variables. This will
 become important in a later model estimation (although for that we could
@@ -1748,7 +1748,7 @@ variables explicitly, here for <code>lnhrpay</code> and
 
 Dlnhrpay &lt;- pdata_USoc$lnhrpay-lag(pdata_USoc$lnhrpay,k=2)
 Dlnurate &lt;- pdata_USoc$lnurate-lag(pdata_USoc$lnurate,k=2)
-#Dregion &lt;- ifelse(pdata_USoc$region==lag(pdata_USoc$region,k=2),&quot;no move&quot;,&quot;move&quot;)
+
 pdata_USoc$Dlnhrpay &lt;- Dlnhrpay   # add the new series to the dataframe
 pdata_USoc$Dlnurate &lt;- Dlnurate</code></pre>
 <p>For a later purpose we will also identify all individuals who moved
@@ -1761,8 +1761,8 @@ temp &lt;- temp %&gt;%  filter(n_wave == 2) %&gt;%   # only keep individuals wit
                   mutate(move = ifelse(length(unique(region))==1,&quot;no move&quot;,&quot;move&quot;)) %&gt;% 
                   select(pidp,wave,move)    # only keep these 3 variables
 
-# the move variable will take the value 1 if both regions are identical (no move) 
-# and 2 if there are two different regions (move) 
+# the move variable will take the value &quot;no move&quot; if both regions are identical  
+# and &quot;move&quot; if there are two different regions  
 
 temp$move &lt;- as_factor(temp$move)  # convert to factor variable
 
@@ -1814,6 +1814,9 @@ saved in the data frame.</p>
 <pre class="r"><code>pdata_USoc &lt;- pdata_USoc %&gt;% 
               group_by(region,year) %&gt;% 
               mutate(mean_lnhrpay = mean(lnhrpay),mean_urate = mean(urate)) </code></pre>
+<p>This will retain the number of observations but will now have added
+the relevant region-year means of <code>lnhrpay</code> and
+<code>urate</code> to each observation.</p>
 </div>
 <div id="estimating-models" class="section level1">
 <h1>Estimating Models</h1>
@@ -1845,8 +1848,8 @@ stargazer_HC(POLS0)</code></pre>
 ## Note:                         *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 ##                     Robust standard errors in parenthesis</code></pre>
 <p>Let’s add the predicted model values to the data frame. As our
-explanatory variable only has 24 different values we will only get 24
-different predicted values.</p>
+explanatory variable only has 24 different values (12 regions and two
+years) we will only get 24 different predicted values.</p>
 <pre class="r"><code>pdata_USoc$pred_POLS0 &lt;- POLS0$fitted.values</code></pre>
 <p>Here we basically used all observations available, whether they were
 from wave 1 or 3. We <strong>pooled</strong> the observations and hence
@@ -1876,7 +1879,8 @@ stargazer_HC(POLS0a)</code></pre>
 ## ==================================================
 ## Note:                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 ##              Robust standard errors in parenthesis</code></pre>
-<p>Now we plot the predicted values and compare them against the</p>
+<p>Now we plot the predicted values and compare them against the
+region-year’s average values (<code>mean_lnhrpay</code>).</p>
 <pre class="r"><code># pdf(&quot;Lecture6plot_Pooled.pdf&quot;,width = 5.5, height = 4) # uncomment to save as pdf
 ggplot(pdata_USoc, aes(x=lnurate,y=pred_POLS0)) +
   geom_point(aes(colour = &quot;red&quot;)) +
@@ -1919,10 +1923,8 @@ stargazer_HC(POLS1)</code></pre>
 ## Note:                         *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 ##                     Robust standard errors in parenthesis</code></pre>
 <p>The first wave is the base category of <code>wave</code> and hence is
-not included. So far we have used the standard <code>lm</code> function
-to estimate this model.</p>
-<p>Alternatively this could be estimated using the <code>plm</code>
-package</p>
+not included. Alternatively this could be estimated using the
+<code>plm</code> package</p>
 <pre class="r"><code>POLS1a &lt;- plm(lnhrpay~lnurate+wave, data = pdata_USoc, model = &quot;pooling&quot;)
 stargazer_HC(POLS1a)</code></pre>
 <pre><code>## 
@@ -2054,8 +2056,10 @@ stargazer_HC(FD1a)</code></pre>
 ## ==================================================
 ## Note:                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01
 ##              Robust standard errors in parenthesis</code></pre>
-<p>We can show a scatter plot of the available difference observations
-and the regression line estimated by <code>FD1a</code>.</p>
+<p>Note the number of observations which corresponds to the number of
+individuals for which we had observations from both waves. We can show a
+scatter plot of the available difference observations and the regression
+line estimated by <code>FD1a</code>.</p>
 <pre class="r"><code># pdf(&quot;Lecture6plot_FD_R.pdf&quot;,width = 5.5, height = 4) # uncomment to save as pdf
 ggplot(pdata_USoc, aes(x=Dlnurate,y=Dlnhrpay,color=move)) +
   geom_point() +

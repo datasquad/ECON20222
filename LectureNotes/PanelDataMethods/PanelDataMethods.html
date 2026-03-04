@@ -2426,9 +2426,13 @@ margin: 1em 0;
   <li><a href="#exogeneity" id="toc-exogeneity" class="nav-link" data-scroll-target="#exogeneity">Exogeneity</a></li>
   <li><a href="#variation-in-delta-x_i" id="toc-variation-in-delta-x_i" class="nav-link" data-scroll-target="#variation-in-delta-x_i">Variation in <span class="math inline">\(\Delta x_i\)</span></a></li>
   </ul></li>
-  <li><a href="#fixed-effects-regressions" id="toc-fixed-effects-regressions" class="nav-link" data-scroll-target="#fixed-effects-regressions">Fixed-effects regressions</a></li>
+  <li><a href="#fixed-effects-estimator-fe" id="toc-fixed-effects-estimator-fe" class="nav-link" data-scroll-target="#fixed-effects-estimator-fe">Fixed-effects estimator (FE)</a></li>
   <li><a href="#multi-period-panels" id="toc-multi-period-panels" class="nav-link" data-scroll-target="#multi-period-panels">Multi-period panels</a></li>
-  <li><a href="#twins-double-the-fun" id="toc-twins-double-the-fun" class="nav-link" data-scroll-target="#twins-double-the-fun">Twins Double the Fun</a></li>
+  <li><a href="#twins-double-the-fun" id="toc-twins-double-the-fun" class="nav-link" data-scroll-target="#twins-double-the-fun">Twins Double the Fun</a>
+  <ul class="collapse">
+  <li><a href="#twin-reports-from-twinsburg" id="toc-twin-reports-from-twinsburg" class="nav-link" data-scroll-target="#twin-reports-from-twinsburg">Twin Reports from Twinsburg</a></li>
+  </ul></li>
+  <li><a href="#bad-controls" id="toc-bad-controls" class="nav-link" data-scroll-target="#bad-controls">Bad controls</a></li>
   <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading">Reading</a></li>
   </ul>
 </nav>
@@ -2591,8 +2595,8 @@ Cov(x_{i1},u_{i1})=Cov(x_{i2},u_{i2})=0 ~~~(AFD1)
 <p><span id="eq-woods"><span class="math display">\[
 y_{it} = \beta_0 + \delta_0 d^2_t + \beta_1 x_{it} + \beta_2 a_{i} + u_{it}.
 \tag{1}\]</span></span></p>
-<p>Note that we included a dummy variable for the 2nd period, $d^2_t $. Because of the dummy-variable trap, one of two time dummies must be dropped, here <span class="math inline">\(d^1_t\)</span>. (Recall one cannot have a constant, male dummy <strong>and</strong> a female dummy in the same regression and the same is true for time dummies. If there are two periods only one time dummy can be included).</p>
-<p>The crucial problem occurs when realising that <span class="math inline">\(a_i\)</span> is unobservable and therefore will have to be omitted. If the omitted variable <span class="math inline">\(a_i\)</span> is correlated with <span class="math inline">\(x_{it}\)</span> then we are basically dealing with the case of an omitted variable which causes an Omitted Variable Bias if <span class="math inline">\(a_i\)</span> is correlated with <span class="math inline">\(X_{it}\)</span>.</p>
+<p>Note that we included a dummy variable for the 2nd period, <span class="math inline">\(d^2_t\)</span>. Because of the dummy-variable trap, one of two time dummies must be dropped, here <span class="math inline">\(d^1_t\)</span>. (Recall one cannot have a constant, male dummy <strong>and</strong> a female dummy in the same regression and the same is true for time dummies. If there are two periods only one time dummy can be included).</p>
+<p>The crucial problem occurs when realising that <span class="math inline">\(a_i\)</span> is unobservable and therefore will have to be omitted. If the omitted variable <span class="math inline">\(a_i\)</span> is correlated with <span class="math inline">\(x_{it}\)</span> then we are basically dealing with the case of an omitted variable which causes an Omitted Variable Bias if <span class="math inline">\(a_i\)</span> is correlated with <span class="math inline">\(x_{it}\)</span>.</p>
 <p>Here, ability is correlated with education. If <span class="math inline">\(a_i\)</span> were <strong>not</strong> correlated with <span class="math inline">\(x_{it}\)</span>, the OVB formula says that OLS is unbiased and we wouldn’t have a problem in the first place. The way that panel data can help is through the crucial assumption that <span class="math inline">\(a_i\)</span> is constant over time. This is an untestable assumption as <span class="math inline">\(a_i\)</span> is not observed.</p>
 <p>The above equation is also called a <strong>fixed effects</strong> model.</p>
 </section>
@@ -2613,10 +2617,10 @@ y_{i2} = \beta_0 + \delta_0 + \beta_1 x_{i2}  + a_i + u_{i2} \quad (t=2)
 <p>Subtracting the <span class="math inline">\(t=1\)</span> equation from the <span class="math inline">\(t=2\)</span> equation gives</p>
 <p><span id="eq-mee"><span class="math display">\[
 \begin{equation}
-  \Delta y_{i} = \delta_0  + \beta_1 \Delta x_{i} + \Delta u_{i}.
+  \Delta y_{i} = \beta_1 \Delta x_{i} + \Delta u_{i}.
 \end{equation}
 \tag{2}\]</span></span></p>
-<p>Importantly, <span class="math inline">\(\beta_1\)</span>, the coefficient to <span class="math inline">\(\Delta x_{i}\)</span>, is exactly the same coefficient as the coefficient to <span class="math inline">\(x_{it}\)</span> in the original regression. Importantly, the fixed effect <span class="math inline">\(a_i\)</span> has been differenced out because it is (assumed to be) the same in both periods. This means that this term will not end up in an error term where it could cause trouble through any correlation with an explanatory variable.</p>
+<p><span class="math inline">\(\beta_1\)</span>, the coefficient to <span class="math inline">\(\Delta x_{i}\)</span>, is exactly the same coefficient as the coefficient to <span class="math inline">\(x_{it}\)</span> in the original regression. Importantly, the fixed effect <span class="math inline">\(a_i\)</span> has been differenced out because it is (assumed to be) the same in both periods. This means that this term will not end up in an error term where it could cause trouble through any correlation with an explanatory variable.</p>
 <p>To see what is happening, look at the schematic data above, and subtract the first row from the second for each <span class="math inline">\(i\)</span>:</p>
 <table class="caption-top table">
 <colgroup>
@@ -2796,8 +2800,8 @@ Cov(x_{i2},u_{i1}) \\
 <li><span class="math inline">\(y_{it}\)</span> is log earnings (<code>lhrpay</code>) of individual <span class="math inline">\(i\)</span> in period <span class="math inline">\(t\)</span>.</li>
 <li><span class="math inline">\(x_{it}\)</span> is a variable encoding how many hours individual <span class="math inline">\(i\)</span> spent on learning new skills in period <span class="math inline">\(t\)</span> Which of the following potentially unobserved heterogeneity will be removed/taken care of by applying a FD estimation in a context where you have a panel dataset for many individuals <span class="math inline">\(i\)</span> and two time periods for each individual.</li>
 </ul>
-<div id="radio_IDQWLNNSIU" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_IDQWLNNSIU" value="answer"> <span>different general ability by individual <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_IDQWLNNSIU" value> <span>different levels of economic growth in individual <span class="math inline">\(i\)</span>&#39;s area</span></label><label><input type="radio" autocomplete="off" name="radio_IDQWLNNSIU" value="answer"> <span>different personalities of individuals <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_IDQWLNNSIU" value> <span>different life circumstances for individuals <span class="math inline">\(i\)</span> at different <span class="math inline">\(t\)</span></span></label>
+<div id="radio_TZQSRIHOUW" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_TZQSRIHOUW" value="answer"> <span>different general ability by individual <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_TZQSRIHOUW" value> <span>different levels of economic growth in individual <span class="math inline">\(i\)</span>&#39;s area</span></label><label><input type="radio" autocomplete="off" name="radio_TZQSRIHOUW" value="answer"> <span>different personalities of individuals <span class="math inline">\(i\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_TZQSRIHOUW" value> <span>different life circumstances for individuals <span class="math inline">\(i\)</span> at different <span class="math inline">\(t\)</span></span></label>
 </div>
 <div class="webex-solution">
 <button>
@@ -2963,8 +2967,8 @@ Can you help me understand the answer
 </div>
 <div class="callout-body-container callout-body">
 <p>What values should be in the <span class="math inline">\(\Delta e\)</span> column?</p>
-<div id="radio_YYDBEOSZSF" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_YYDBEOSZSF" value="answer"> <span>0</span></label><label><input type="radio" autocomplete="off" name="radio_YYDBEOSZSF" value> <span>1</span></label><label><input type="radio" autocomplete="off" name="radio_YYDBEOSZSF" value> <span>2</span></label><label><input type="radio" autocomplete="off" name="radio_YYDBEOSZSF" value> <span>-1</span></label><label><input type="radio" autocomplete="off" name="radio_YYDBEOSZSF" value> <span>various values</span></label>
+<div id="radio_XCJPTTQSQK" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_XCJPTTQSQK" value="answer"> <span>0</span></label><label><input type="radio" autocomplete="off" name="radio_XCJPTTQSQK" value> <span>1</span></label><label><input type="radio" autocomplete="off" name="radio_XCJPTTQSQK" value> <span>2</span></label><label><input type="radio" autocomplete="off" name="radio_XCJPTTQSQK" value> <span>-1</span></label><label><input type="radio" autocomplete="off" name="radio_XCJPTTQSQK" value> <span>various values</span></label>
 </div>
 <div class="webex-solution">
 <button>
@@ -2991,8 +2995,8 @@ Can you help me understand the answer
 <li><span class="math inline">\(y_{it}\)</span> is log earnings (<code>lhrpay</code>)</li>
 </ul>
 <p>You want to investigate the impact of a number of variables on <span class="math inline">\(y\)</span>. Which of the following are variables, whose relation to <span class="math inline">\(y\)</span> <strong>cannot</strong> be investigated by a first difference estimation?</p>
-<div id="radio_MVPPZGKEET" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_MVPPZGKEET" value="answer"> <span>gender</span></label><label><input type="radio" autocomplete="off" name="radio_MVPPZGKEET" value="answer"> <span>age</span></label><label><input type="radio" autocomplete="off" name="radio_MVPPZGKEET" value> <span>level of training</span></label><label><input type="radio" autocomplete="off" name="radio_MVPPZGKEET" value> <span>distance between home and workplace</span></label>
+<div id="radio_OCVGEXALIV" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_OCVGEXALIV" value="answer"> <span>gender</span></label><label><input type="radio" autocomplete="off" name="radio_OCVGEXALIV" value="answer"> <span>age</span></label><label><input type="radio" autocomplete="off" name="radio_OCVGEXALIV" value> <span>level of training</span></label><label><input type="radio" autocomplete="off" name="radio_OCVGEXALIV" value> <span>distance between home and workplace</span></label>
 </div>
 <div class="webex-solution">
 <button>
@@ -3037,11 +3041,11 @@ Can you help me understand the answer
 <p>There is a lot of variation between John and Xu, namely that John has a much higher average value of <span class="math inline">\(x\)</span>, however, after calculating the difference there all we see is that they both have the same change <span class="math inline">\(\Delta x\)</span>. So all the information we are using is the change “within” an individual. The “between” variation has been removed.</p>
 </section>
 </section>
-<section id="fixed-effects-regressions" class="level1">
-<h1>Fixed-effects regressions</h1>
-<p>As we just discussed, differencing has removed the variation between individuals from the model. The effect size <span class="math inline">\(\beta_1\)</span> will be calculated using “within” variation only. This is why we do need that the values of <span class="math inline">\(x_i\)</span> actually change through time. Otherwise there would be no such variation.</p>
+<section id="fixed-effects-estimator-fe" class="level1">
+<h1>Fixed-effects estimator (FE)</h1>
+<p>As we just discussed, differencing has removed the variation between individuals from the model. The effect size <span class="math inline">\(\beta_1\)</span> will be calculated using “within” variation only. This is why we do need that the values of <span class="math inline">\(x_i\)</span> actually change through time and does so differently between individuals, otherwise there would be no such variation.</p>
 <p>There is an alternative way to achieve the same.</p>
-<p>We could include a dummy variable for each individual (or for each minus 1) to avoid the dummy variable trap. We also say that we include a <strong>fixed-effect</strong> for individuals.</p>
+<p>We could include a dummy variable for each individual (or for each minus 1 to avoid the dummy variable trap). We also say that we include a <strong>fixed-effect</strong> for individuals.</p>
 </section>
 <section id="multi-period-panels" class="level1">
 <h1>Multi-period panels</h1>
@@ -3258,10 +3262,12 @@ y_{it} = \beta_0 + \delta_2 d^2_t + \delta_3 d^3_t + \beta_1 x_{it} + a_i + u_{i
 <section id="twins-double-the-fun" class="level1">
 <h1>Twins Double the Fun</h1>
 <p>Twinsburg, Ohio, near Cleveland, was founded as Millsville in the early nineteenth century. Prosperous Millsville businessmen Moses and Aaron Wilcox were identical twins whom few could distinguish. Moses and Aaron were generous to Millsville in their success, a fact recognized when Millsville was renamed Twinsburg in the early nineteenth century. Since 1976, Twinsburg has embraced its zygotic heritage in the form of a summer festival celebrating twins. Millsville’s annual Twins Days attract not only twins reveling in their similarities but also researchers looking for well-controlled comparisons.</p>
-<p>Twin siblings indeed have much in common: most grow up in the same family at the same time, while identical twins even share genes. Twins might therefore be said to have the same ability as well. Perhaps the fact that one twin gets more schooling than his or her twin sibling is due mostly to the sort of serendipitous or random forces. The notion that one twin provides a good control for the other motivates a pair of studies by Ashenfelter and Krueger (1994) as well as Ashenfelter and Rouse (1998). The key idea behind this work, as in many other studies using twins, is that if ability is common to a pair of twin siblings, we can remove it from the equation by subtracting one twin’s data from the other’s and working only with the differences between them.</p>
+<p>Twin siblings indeed have much in common: most grow up in the same family at the same time, while identical twins even share genes. Twins might therefore be said to have the same ability as well. Perhaps the fact that one twin gets more schooling than his or her twin sibling is due mostly to the sort of serendipitous or random forces (below <span class="math inline">\(s\)</span> represents the years of schooling). The notion that one twin provides a good control for the other motivates a pair of studies by Ashenfelter and Krueger (1994) as well as Ashenfelter and Rouse (1998). The key idea behind this work, as in many other studies using twins, is that if ability is common to a pair of twin siblings, we can remove it from the equation by subtracting one twin’s data from the other’s and working only with the differences between them.</p>
 <p>The long regression that motivates a twins analysis of the returns to schooling can be written as</p>
-<p>$$ y_{fi} = _0 + s<em>{fi} + ’</em>f* + a_f + u{fi} i=1,2</p>
-<p>$$</p>
+<p><span class="math display">\[
+\log y_{fi} = \beta_0 + \beta_1 s_{fi} + \mathbf{x}&#39;_f
+\mathbf{b} + a_f + u_{fi} \qquad i=1,2
+\]</span></p>
 <p>Here, subscript <span class="math inline">\(f\)</span> stands for family, while subscript <span class="math inline">\(i = 1,2\)</span> indexes twin siblings, say, Ronald (<span class="math inline">\(i=1\)</span>) and Donald (<span class="math inline">\(i=2\)</span>). When Ronald and Donald have the same ability, we can simplify by writing <span class="math inline">\(a_{fi} = a_f\)</span> and restating the above model seperately for both twins (<span class="math inline">\(i=1\)</span> and <span class="math inline">\(i=2\)</span>).</p>
 <p><span class="math display">\[
 \begin{align*}
@@ -3270,14 +3276,14 @@ y_{it} = \beta_0 + \delta_2 d^2_t + \delta_3 d^3_t + \beta_1 x_{it} + a_i + u_{i
 \end{align*}
 \]</span></p>
 <p>Subtracting the equation for Donald from that for Ronald gives</p>
-<p><span class="math display">\[
+<p><span id="eq-fds"><span class="math display">\[
 \begin{equation}
   \Delta \log y_{f} = \delta_0  + \beta_1 \Delta s_{f} + \Delta u_{f}.
 \end{equation}
-\]</span></p>
+\tag{3}\]</span></span></p>
 <p>an equation from which ability disappears (<span class="math inline">\(\Delta \log y_{f} = \log y_{f2} - \log y_{f1}\)</span> and <span class="math inline">\(\Delta s_{f}= s_{f2}-s_{f1}\)</span>). From this we learn that when ability is constant within twin pairs, a short regression of the difference in twins’ earnings on the difference in their schooling recovers the long regression coefficient, <span class="math inline">\(\beta_1\)</span>.</p>
-<p>Regression estimates constructed without differencing in the twins sample generate a schooling return of about 11%, remarkably similar to Mincer’s estimate for the return to education. This can be seen in the first column of Table 6.2 (<span class="citation" data-cites="fig_twins">@fig_twins</span>). The model that produces the estimates in column (1) includes age, age squared, a dummy for women, and a dummy for whites. White twins earn less than black twins, an unusual result in the realm of earnings comparisons by race, though the gap here is not significantly different from zero.</p>
-<p>The differenced equation (6.5) generates a schooling return of about 6%, a result shown in column (2) of Table 6.2. This is substantially below the short regression estimate in column (1). This decline may reflect ability bias in the short model. Yet, once again, more subtle forces may also be at work.</p>
+<p>Regression estimates constructed without differencing in the twins sample generate a schooling return of about 11%, remarkably similar to Mincer’s estimate for the return to education. This can be seen in the first column of Table 6.2 (<a href="#fig-twins" class="quarto-xref">Figure 1</a>). The model that produces the estimates in column (1) includes age, age squared, a dummy for women, and a dummy for whites. White twins earn less than black twins, an unusual result in the realm of earnings comparisons by race, though the gap here is not significantly different from zero.</p>
+<p>The differenced @#eq-fds generates a schooling return of about 6%, a result shown in column (2) of Table 6.2. This is substantially below the short regression estimate in column (1). This decline may reflect ability bias in the short model. Yet, once again, more subtle forces may also be at work.</p>
 <div id="fig-twins" class="quarto-float quarto-figure quarto-figure-center anchored" alt="ALT">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-twins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3288,20 +3294,83 @@ Figure 1: Copy of Table 6.2 in Mastering Metrics
 </figcaption>
 </figure>
 </div>
-<p>Twins are similar in many ways, including—alas—their schooling. Of 340 twin pairs interviewed for the Twinsburg schooling studies, about half report identical educational attainment. Schooling differences, <span class="math inline">\(\Delta s_{f}\)</span>, vary much less than schooling levels, <span class="math inline">\(s_{if}\)</span>. If most twins really have the same schooling, then a fair number of the nonzero differences in reported schooling may reflect mistaken reports by at least one of them. Erroneous reports, called , tend to reduce estimates of <span class="math inline">\(\beta_1\)</span> in equation (6.5), a fact that may account for the decline in the estimated returns to schooling after differencing. A few people reporting their schooling incorrectly sounds unimportant, yet the consequences of such measurement error can be major.</p>
-<p>To see why mistakes matter, imagine that twins from the same family always have the same schooling. In this scenario, the only reason <span class="math inline">\(\Delta s_{f}\)</span> isn’t zero for everyone is because schooling is sometimes misreported. Suppose such erroneous reports are due to random forgetfulness or inattention rather than something systematic. The coefficient from a regression of earnings differences on schooling differences that are no more than random mistakes should be zero since random mistakes are unrelated to wages. In an intermediate case, where some but not all of the variation in observed schooling is due to misreporting, the coefficient in equation (6.5) is smaller than it would be if schooling were reported correctly. The bias generated by this sort of measurement error in regressors is called . The mathematical formula for attenuation bias is derived in the chapter appendix. [MJA insert: see Section~<span class="math inline">\(\ref{sub:ME}\)</span> above.]</p>
-<p>Misreported schooling attenuates the levels regression estimates shown in column (1) of Table 6.2, but less so than the differenced estimates in column (2). This difference in the extent of attenuation bias is also illustrated by the hypothetical scenario where all twins share the same schooling but schooling levels differ across families. When twins in the same family really have the same schooling, all variation in within-family differences in reported schooling comes from mistakes. By contrast, most of the cross-family variation in reported schooling reflects real differences in education. Real variation in schooling is related to earnings, a fact that moderates attenuation bias in estimates of the model for levels, equation (6.4). This reflects a general point about the consequences of covariates for models with mismeasured regressors—additional controls make attenuation bias worse—a point detailed in the chapter appendix.</p>
-<p>Measurement error raises an important challenge for the Twinsburg analysis, since measurement error alone may explain the pattern of results seen in columns (1) and (2) of Table 6.2. Moving from the levels to the differenced regression accentuates attenuation bias, probably more than a little. The decline in schooling coefficients across columns may therefore have little to do with ability bias. Fortunately, seasoned masters Ashenfelter, Krueger, and Rouse anticipated the attenuation problem. They asked each twin to report not only their own schooling but also that of their sibling. As a result, the Twinsburg data sets contain two measures of schooling for each twin, one self-report and one sibling report. The sibling reports provide leverage to reduce, and perhaps even eliminate, attenuation bias.</p>
-<p>The key tool in this case, as with many of the other problems we’ve encountered, is IV. [MJA insert: We pick this up again in Section~<span class="math inline">\(\ref{sub:IV}\)</span>.]</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Optional readings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The papers that discuss this research are:</p>
+<p>Orley Ashenfelter and Alan B. Krueger, “Estimates of the Economic Returns to Schooling from a New Sample of Twins”, American Economic Review, vol. 84, no. 5, December 1994, pages 1157–1173, and Orley Ashenfelter and Cecilia Rouse, “Income, Schooling, and Ability: Evidence from a New Sample of Identical Twins”, Quarterly Journal of Economics, vol. 113, no. 1, February 1998, pages 253–284.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>FE for twins
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Estimates of this differenced model can also be obtained by adding a dummy for each family to an undifferenced model fit in a sample that includes both twins. This is very much like what was discussed for the FE model above. With only two observations per family, models estimated after differencing across twins within families to produce a single observation per family generate estimates of the returns to schooling identical to those generated by “dummying out” each family in a pooled sample that includes both twins.</p>
+</div>
+</div>
+<section id="twin-reports-from-twinsburg" class="level2">
+<h2 class="anchored" data-anchor-id="twin-reports-from-twinsburg">Twin Reports from Twinsburg</h2>
+<p>Twins are similar in many ways, including - usually - their schooling. Of 340 twin pairs interviewed for the Twinsburg schooling studies, about half report identical educational attainment. Schooling differences, <span class="math inline">\(\Delta s_{f}\)</span>, vary much less than schooling levels, <span class="math inline">\(s_{if}\)</span>. If most twins really have the same schooling, then a fair number of the nonzero differences in reported schooling may reflect mistaken reports by at least one of them. Erroneous reports, called <strong>measurement error</strong>, tend to reduce estimates of <span class="math inline">\(\beta_1\)</span> in #eq-fds, a fact that may account for the decline in the estimated returns to schooling after differencing. A few people reporting their schooling incorrectly sounds unimportant, yet the consequences of such measurement error can be major.</p>
+<p>To see why mistakes matter, imagine that twins from the same family always have the same schooling. In this scenario, the only reason <span class="math inline">\(\Delta s_{f}\)</span> isn’t zero for everyone is because schooling is sometimes misreported. Suppose such erroneous reports are due to random forgetfulness or inattention rather than something systematic. The coefficient from a regression of earnings differences on schooling differences that are no more than random mistakes should be zero since random mistakes are unrelated to wages. In an intermediate case, where some but not all of the variation in observed schooling is due to misreporting, the coefficient in equation #eq-fds is smaller than it would be if schooling were reported correctly. The bias generated by this sort of measurement error in regressors is called <strong>attenuation bias</strong>. The mathematical formula for attenuation bias was derived in the Endogeneity chapter.</p>
+<p>Misreported schooling attenuates the levels regression estimates shown in column (1) of Table 6.2, but less so than the differenced estimates in column (2). This difference in the extent of attenuation bias is also illustrated by the hypothetical scenario where all twins share the same schooling but schooling levels differ across families. When twins in the same family really have the same schooling, all variation in within-family differences in reported schooling comes from mistakes. By contrast, most of the cross-family variation in reported schooling reflects real differences in education. Real variation in schooling is related to earnings, a fact that moderates attenuation bias in estimates of the model for levels.</p>
+<p>Measurement error raises an important challenge for the Twinsburg analysis, since measurement error alone may explain the pattern of results seen in columns (1) and (2) of Table 6.2. Moving from the levels to the differenced regression accentuates attenuation bias, probably more than a little. The decline in schooling coefficients across columns may therefore have little to do with ability bias. The authors of the articles Ashenfelter, Krueger, and Rouse anticipated the attenuation problem. They asked each twin to report not only their own schooling but also that of their sibling. As a result, the Twinsburg data sets contain two measures of schooling for each twin, one self-report and one sibling report. The sibling reports provide leverage to reduce, and perhaps even eliminate, attenuation bias.</p>
+<p>The key tool in this case, as with many of the other problems we’ve encountered, is IV. This will be discussed in a later chapter.</p>
+</section>
+</section>
+<section id="bad-controls" class="level1">
+<h1>Bad controls</h1>
+<p>This section could also have come in the multiple regression chapter. But it is perhaps more apt in a section where we have now actively introduced a method that attempts to eliminate an omitted variables bias (OVB). You may wonder whether it isn’t better to avoid the bias in the first instance rather than combating it with clever methodological tricks. And you would have learned that we talk of OVB as we failed to include variables in to the model that are relevant for explaining variation in the outcome variable.</p>
+<p>The example of explaining wage variation with schooling does provide an excellent platform to explain why some variables are not good variables to explain although, on first sight, they may explain variation in the outcome variable (This mirrors the explanition Angrist and Pischke (2015, chapter 6). Let’s replicate <a href="#eq-woods" class="quarto-xref">Equation 1</a> but without the time dimension, and also use £s£ rather than <span class="math inline">\(x\)</span> for schooling.</p>
+<p><span class="math display">\[
+y_{i} = \beta_0  + \beta_1 s_{i} + \beta_2 a_{i} + u_{i}.
+\]</span> {#ed-woods2}</p>
+<p>Being well aware that jobs in different industries pay very different salaries (finance - high salaries, construction - low salaries), your fellow student Fred proposes that you should really include dummy variables representing the different industries employee <span class="math inline">\(i\)</span> works in as an explanatory variables as surely that will explain why some people earn more than others.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Practise Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Including industry dummies into <strong>?@eq-woods2</strong> in order to estimate the effect of schooling on wages is a bad idea for the following reason.</p>
+<p>What values should be in the <span class="math inline">\(\Delta e\)</span> column?</p>
+<div id="radio_WPDBFMJZYW" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_WPDBFMJZYW" value> <span>industry dummies will be negatovely correlated with wages as industries with larger employment have lower wages</span></label><label><input type="radio" autocomplete="off" name="radio_WPDBFMJZYW" value> <span>industry dummies are actually unlikely to explain variation in wages as all industries employ people on a a wide range of salaries</span></label><label><input type="radio" autocomplete="off" name="radio_WPDBFMJZYW" value> <span>the industry dummy will influence the amount of schooling and therefore should not be included</span></label><label><input type="radio" autocomplete="off" name="radio_WPDBFMJZYW" value="answer"> <span>the industry dummy is itself an outcome of schooling and therefore should not be included as an explanatory variable</span></label><label><input type="radio" autocomplete="off" name="radio_WPDBFMJZYW" value> <span>the industry dummy is unlikely to be correlated with schooling and therefore there is no need to include it</span></label>
+</div>
+<div class="webex-solution">
+<button>
+Can you help me understand the answer
+</button>
+<p>The effect of schooling on wages will partly work through the industry someone is employed in. TO stick with the construction and finance industry example above. Some student get extra schooling, e.g. university, as they want to land a job in the finance industry as that is where they can earn significant salaries.</p>
+<p>If you were to include industry dummies you let some of the effect of schooling be attributed by industry dummies. But really, it was the effect of schooling that made someone get a job in finance and hence earn a high salary. If you are interested in the effect of schooling on wages, you should not include industry dummies.</p>
+</div>
+</div>
+</div>
+<p>This example should illustrate that variables that are also an outcome of the intervention (here schooling) should not be included as explanatory variables into a model.</p>
 </section>
 <section id="reading" class="level1">
 <h1>Reading</h1>
-<p>The material for the three biases comes from Wooldridge (2025). See the subsections on Omitted variable bias, Properties of OLS under Measurement Error, and the section Simultaneity Bias in OLS.</p>
-<p>Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press.</p>
+<p>Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press. Chapter 6.</p>
 <p>Ashenfelter, O. and A. Krueger (1994) Estimates of the Economic Return to Schooling from a New Sample of Twins, The American economic review, 84(5), 1157 - 1173.</p>
 <p>Ashenfelter, O. and C. Rouse, (1998) Income, Schooling, and Ability: Evidence from a New Sample of Identical Twins, The Quarterly journal of economics, 113(1), 253 - 284.</p>
-<p>Cunningham, S. (2021) <a href="https://mixtape.scunning.com/index.html">Causal Inference: The MixTape</a></p>
-<p>Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage.</p>
+<p>Cunningham, S. (2021) <a href="https://mixtape.scunning.com/index.html">Causal Inference: The MixTape</a>, Chapter 8.</p>
+<p>Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage. Chapters 13 and 14.</p>
 </section>
 
 </main>

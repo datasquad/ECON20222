@@ -80,20 +80,11 @@ $$
 y_{it} = \beta_0 + \delta_0 d^2_t + \beta_1 x_{it} + \beta_2 a_{i} + u_{it}.
 $$ {#eq-woods}
 
-Note that we included a dummy variable for the 2nd period, \$d\^2_t \$.
-Because of the dummy-variable trap, one of two time dummies must be
-dropped, here $d^1_t$. (Recall one cannot have a constant, male dummy
-**and** a female dummy in the same regression and the same is true for time dummies. If there are two periods only one time dummy can be included).
+Note that we included a dummy variable for the 2nd period, $d^2_t$. Because of the dummy-variable trap, one of two time dummies must be dropped, here $d^1_t$. (Recall one cannot have a constant, male dummy **and** a female dummy in the same regression and the same is true for time dummies. If there are two periods only one time dummy can be included).
 
-The crucial problem occurs when realising that $a_i$ is unobservable and therefore will have to be omitted. If the omitted variable $a_i$ is correlated
-with $x_{it}$ then we are basically dealing with the case of an omitted variable which causes an Omitted
-Variable Bias if $a_i$ is correlated with $X_{it}$.
+The crucial problem occurs when realising that $a_i$ is unobservable and therefore will have to be omitted. If the omitted variable $a_i$ is correlated with $x_{it}$ then we are basically dealing with the case of an omitted variable which causes an Omitted Variable Bias if $a_i$ is correlated with $x_{it}$.
 
-Here, ability is correlated with education. If $a_i$ were **not**
-correlated with $x_{it}$, the OVB formula says that OLS is unbiased and we
-wouldn't have a problem in the first place. The way that panel data can
-help is through the crucial assumption that $a_i$ is constant over time.
-This is an untestable assumption as $a_i$ is not observed.
+Here, ability is correlated with education. If $a_i$ were **not** correlated with $x_{it}$, the OVB formula says that OLS is unbiased and we wouldn't have a problem in the first place. The way that panel data can help is through the crucial assumption that $a_i$ is constant over time. This is an untestable assumption as $a_i$ is not observed.
 
 The above equation is also called a **fixed effects** model.
 
@@ -104,14 +95,9 @@ $\beta_1$.
 
 ## Differencing out $a_i$
 
-We could estimate @eq-woods by OLS, treating $a_i + u_{it}$ as a single
-**composite error**. This estimator is called **Pooled OLS** (POLS) as it uses all data pooled across both time periods, hence $2N$ observations. However, we have already assumed that $Cov(x_{it},a_i)\neq 0$ which
-means that Pooled OLS is biased (and inconsistent). This is often called
-**heterogeneity bias** which is just a different name for OVB in this circumstance.
+We could estimate @eq-woods by OLS, treating $a_i + u_{it}$ as a single **composite error**. This estimator is called **Pooled OLS** (POLS) as it uses all data pooled across both time periods, hence $2N$ observations. However, we have already assumed that $Cov(x_{it},a_i)\neq 0$ which means that Pooled OLS is biased (and inconsistent). This is often called **heterogeneity bias** which is just a different name for OVB in this circumstance.
 
-**However**, with panel data, we can difference-out the unobserved fixed
-effect $a_i$. Let's write @eq-woods for both time periods $t=1$ and
-$t=2$.
+**However**, with panel data, we can difference-out the unobserved fixed effect $a_i$. Let's write @eq-woods for both time periods $t=1$ and $t=2$.
 
 $$
 \begin{gather*}
@@ -128,7 +114,7 @@ $$
 \end{equation}
 $$ {#eq-mee}
 
-Importantly, $\beta_1$, the coefficient to $\Delta x_{i}$, is exactly the same coefficient as the coefficient to $x_{it}$ in the original regression. Importantly, the fixed effect $a_i$ has been differenced out because it is (assumed to be) the same in both periods. This means that this term will not end up in an error term where it could cause trouble through any correlation with an explanatory variable.
+$\beta_1$, the coefficient to $\Delta x_{i}$, is exactly the same coefficient as the coefficient to $x_{it}$ in the original regression. Importantly, the fixed effect $a_i$ has been differenced out because it is (assumed to be) the same in both periods. This means that this term will not end up in an error term where it could cause trouble through any correlation with an explanatory variable.
 
 To see what is happening, look at the schematic data above, and subtract
 the first row from the second for each $i$:
@@ -143,11 +129,7 @@ the first row from the second for each $i$:
 | $N$ | 1 | $y_{N1}$ | 1 | 1 | 0 | $x_{N1}$ | . | . | . | . | . |
 | $N$ | 2 | $y_{N2}$ | 1 | 0 | 1 | $x_{N2}$ | $\Delta y_{N}$ | 0 | --1 | 1 | $\Delta x_{N}$ |
 
-Expressing @eq-mee in words, the change in $y_{it}$ between periods 1
-and 2 is regressed on the change in the regressor(s) and a constant,
-using $N$ obs. Note that the variables are not defined for period 1 and
-so the dataset comprises just $N$ obs, whereas regressing @eq-woods
-could be estimated on $2N$ observations.
+Expressing @eq-mee in words, the change in $y_{it}$ between periods 1 and 2 is regressed on the change in the regressor(s) and a constant, using $N$ obs. Note that the variables are not defined for period 1 and so the dataset comprises just $N$ obs, whereas regressing @eq-woods could be estimated on $2N$ observations.
 
 Just to be clear about the variables that are being used in @eq-mee:
 
@@ -161,21 +143,16 @@ Just to be clear about the variables that are being used in @eq-mee:
 -   $\delta_0$ is the parameter on $\Delta d^2_t$, which is the new
     regression constant.
 
-When OLS is used on this transformed model, it is labelled the
-**first-difference estimator** (FD). In this example, it is a Simple
-Regression. In general, FD is a multiple regression where **all**
-variables are differenced.
+When OLS is used on this transformed model, it is labelled the **first-difference estimator** (FD). In this example, it is a Simple Regression. In general, FD is a multiple regression where **all** variables are differenced.
 
-The important issue is whether the assumptions for OLS are satisfied? If
-yes, FD is unbiased. Recall that the assumptions are:
+The important issue is whether the assumptions for OLS are satisfied? If yes, FD is unbiased. Recall that the assumptions are:
 
 -   The RHS variable is exogenous (uncorrelated with the error);
 -   The RHS variable cannot be constant.
 
 ## Exogeneity
 
-The first assumption asks whether $\Delta x_{i}$ is uncorrelated with
-$\Delta u_{i}$?
+The first assumption asks whether $\Delta x_{i}$ is uncorrelated with $\Delta u_{i}$?
 
 $$
 \begin{align*}
@@ -189,17 +166,9 @@ Cov(x_{i2},u_{i1}) \\
 \end{align*}
 $$
 
-All 4 covariances need to be zero. We have already assumed the first
-pair are zero (AFD1). If AFD1 is true, there is no reason why the second
-pair ("across" $t=1,2$) should not be zero either.
+All 4 covariances need to be zero. We have already assumed the first pair are zero (AFD1). If AFD1 is true, there is no reason why the second pair ("across" $t=1,2$) should not be zero either.
 
-To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$
-and $\Delta u$. But this is an assumption. One needs to
-assume that there is no unobserved variation in the error terms that is
-correlated to the $x$ variable. What has been gained through the
-first-difference setup is that any such variation in the error term that
-is constant through time by $i$ has been removed. We do not have to
-worry any longer about such unobserved variation.
+To summarise, if $x$ and $u$ are uncorrelated, then so are $\Delta x$ and $\Delta u$. But this is an assumption. One needs to assume that there is no unobserved variation in the error terms that is correlated to the $x$ variable. What has been gained through the first-difference setup is that any such variation in the error term that is constant through time by $i$ has been removed. We do not have to worry any longer about such unobserved variation.
 
 ::: callout-note
 ### Practise Question
@@ -278,25 +247,18 @@ Certainly for the data shown in the table the years of education do not change a
 `r unhide()`
 :::
 
-This is important, because some issues (education, discrimination etc)
-cannot be investigated using this approach (panel data and the FD
-estimator).
+This is important, because some issues (education, discrimination etc) cannot be investigated using this approach (panel data and the FD estimator).
 
-But even if $\Delta x_{i}$ is not constant, it might not vary much,
-leading to large standard errors.
+But even if $\Delta x_{i}$ is not constant, it might not vary much, leading to large standard errors.
 
 ::: callout-note
 ### Practise Question
 
-Consider the setup where you have a panel dataset for many individuals
-$i$ and two time periods for each individual. All respondents are at
-least 30 years old.
+Consider the setup where you have a panel dataset for many individuals $i$ and two time periods for each individual. All respondents are at least 30 years old.
 
 -   $y_{it}$ is log earnings (`lhrpay`)
 
-You want to investigate the impact of a number of variables on $y$.
-Which of the following are variables, whose relation to $y$ **cannot**
-be investigated by a first difference estimation?
+You want to investigate the impact of a number of variables on $y$. Which of the following are variables, whose relation to $y$ **cannot** be investigated by a first difference estimation?
 
 ```{r}
 #| echo: false
@@ -311,15 +273,10 @@ opts_p <- c(
 
 `r longmcq(opts_p)`
 
-`r hide("Can you help me understand the answer")` The key to understand
-here is that the variable needs to have variation across all $i$
-**after** differencing. Neither age nor gender have such variation.
-Everyones gender will remain unchanged and everyone will be one year
-older if observations are apart by a year. `r unhide()`
+`r hide("Can you help me understand the answer")` The key to understand here is that the variable needs to have variation across all $i$ **after** differencing. Neither age nor gender have such variation. Everyones gender will remain unchanged and everyone will be one year older if observations are apart by a year. `r unhide()`
 :::
 
-Measurement error gets worse with differencing. We know from the
-Endogenity section that means that the FD estimator gets more biased.
+Measurement error gets worse with differencing. We know from the Endogenity section that means that the FD estimator gets more biased.
 
 What this type of estimation basically does is to eliminate the variation in the explanatory variable $x_{it}$ between the different observations $i$. This is obvious if you were to think about the following three individuals.
 
@@ -333,11 +290,11 @@ There is a lot of variation between John and Xu, namely that John has a much hig
 
 # Fixed-effects estimator (FE)
 
-As we just discussed, differencing has removed the variation between individuals from the model. The effect size $\beta_1$ will be calculated using "within" variation only. This is why we do need that the values of $x_i$ actually change through time. Otherwise there would be no such variation.
+As we just discussed, differencing has removed the variation between individuals from the model. The effect size $\beta_1$ will be calculated using "within" variation only. This is why we do need that the values of $x_i$ actually change through time and does so differently between individuals, otherwise there would be no such variation.
 
 There is an alternative way to achieve the same.
 
-We could include a dummy variable for each individual (or for each minus 1) to avoid the dummy variable trap. We also say that we include a **fixed-effect** for individuals.
+We could include a dummy variable for each individual (or for each minus 1 to avoid the dummy variable trap). We also say that we include a **fixed-effect** for individuals.
 
 # Multi-period panels
 
@@ -379,41 +336,18 @@ using POLS, pooling over the differenced observations we have for $t=2,3$. As yo
 
 # Twins Double the Fun
 
-Twinsburg, Ohio, near Cleveland, was founded as Millsville in the early
-nineteenth century. Prosperous Millsville businessmen Moses and Aaron
-Wilcox were identical twins whom few could distinguish. Moses and Aaron
-were generous to Millsville in their success, a fact recognized when
-Millsville was renamed Twinsburg in the early nineteenth century. Since
-1976, Twinsburg has embraced its zygotic heritage in the form of a
-summer festival celebrating twins. Millsville's annual Twins Days
-attract not only twins reveling in their similarities but also
-researchers looking for well-controlled comparisons.
+Twinsburg, Ohio, near Cleveland, was founded as Millsville in the early nineteenth century. Prosperous Millsville businessmen Moses and Aaron Wilcox were identical twins whom few could distinguish. Moses and Aaron were generous to Millsville in their success, a fact recognized when Millsville was renamed Twinsburg in the early nineteenth century. Since 1976, Twinsburg has embraced its zygotic heritage in the form of a summer festival celebrating twins. Millsville's annual Twins Days attract not only twins reveling in their similarities but also researchers looking for well-controlled comparisons.
 
-Twin siblings indeed have much in common: most grow up in the same
-family at the same time, while identical twins even share genes. Twins
-might therefore be said to have the same ability as well. Perhaps the
-fact that one twin gets more schooling than his or her twin sibling is
-due mostly to the sort of serendipitous or random forces. The notion
-that one twin provides a good control for the other motivates a pair of
-studies by Ashenfelter and Krueger (1994) as well as Ashenfelter and
-Rouse (1998). The key idea behind this work, as in many other studies
-using twins, is that if ability is common to a pair of twin siblings, we
-can remove it from the equation by subtracting one twin's data from the
-other's and working only with the differences between them.
+Twin siblings indeed have much in common: most grow up in the same family at the same time, while identical twins even share genes. Twins might therefore be said to have the same ability as well. Perhaps the fact that one twin gets more schooling than his or her twin sibling is due mostly to the sort of serendipitous or random forces (below $s$ represents the years of schooling). The notion that one twin provides a good control for the other motivates a pair of studies by Ashenfelter and Krueger (1994) as well as Ashenfelter and Rouse (1998). The key idea behind this work, as in many other studies using twins, is that if ability is common to a pair of twin siblings, we can remove it from the equation by subtracting one twin's data from the other's and working only with the differences between them.
 
-The long regression that motivates a twins analysis of the returns to
-schooling can be written as
+The long regression that motivates a twins analysis of the returns to schooling can be written as
 
-\$\$ \log y\_{fi} = \beta\_0 + \beta*1 s*{fi} + \mathbf{x}'*f*
-\mathbf{b} + a_f + u{fi} \qquad i=1,2
+$$
+\log y_{fi} = \beta_0 + \beta_1 s_{fi} + \mathbf{x}'_f
+\mathbf{b} + a_f + u_{fi} \qquad i=1,2
+$$
 
-\$\$
-
-Here, subscript $f$ stands for family, while subscript $i = 1,2$ indexes
-twin siblings, say, Ronald ($i=1$) and Donald ($i=2$). When Ronald and
-Donald have the same ability, we can simplify by writing $a_{fi} = a_f$
-and restating the above model seperately for both twins ($i=1$ and
-$i=2$).
+Here, subscript $f$ stands for family, while subscript $i = 1,2$ indexes twin siblings, say, Ronald ($i=1$) and Donald ($i=2$). When Ronald and Donald have the same ability, we can simplify by writing $a_{fi} = a_f$ and restating the above model seperately for both twins ($i=1$ and $i=2$).
 
 $$
 \begin{align*}
@@ -428,139 +362,103 @@ $$
 \begin{equation}
   \Delta \log y_{f} = \delta_0  + \beta_1 \Delta s_{f} + \Delta u_{f}.
 \end{equation}
-$$
+$$ {#eq-fds}
 
-an equation from which ability disappears
-($\Delta \log y_{f} = \log y_{f2} - \log y_{f1}$ and
-$\Delta s_{f}= s_{f2}-s_{f1}$). From this we learn that when ability is
-constant within twin pairs, a short regression of the difference in
-twins' earnings on the difference in their schooling recovers the long
-regression coefficient, $\beta_1$.
+an equation from which ability disappears ($\Delta \log y_{f} = \log y_{f2} - \log y_{f1}$ and $\Delta s_{f}= s_{f2}-s_{f1}$). From this we learn that when ability is constant within twin pairs, a short regression of the difference in twins' earnings on the difference in their schooling recovers the long regression coefficient, $\beta_1$.
 
-Regression estimates constructed without differencing in the twins
-sample generate a schooling return of about 11%, remarkably similar to
-Mincer's estimate for the return to education. This can be seen in the
-first column of Table 6.2 (@fig_twins). The model that produces the
-estimates in column (1) includes age, age squared, a dummy for women,
-and a dummy for whites. White twins earn less than black twins, an
-unusual result in the realm of earnings comparisons by race, though the
-gap here is not significantly different from zero.
+Regression estimates constructed without differencing in the twins sample generate a schooling return of about 11%, remarkably similar to Mincer's estimate for the return to education. This can be seen in the first column of Table 6.2 (@fig-twins). The model that produces the estimates in column (1) includes age, age squared, a dummy for women,
+and a dummy for whites. White twins earn less than black twins, an unusual result in the realm of earnings comparisons by race, though the gap here is not significantly different from zero.
 
-The differenced equation (6.5) generates a schooling return of about 6%,
-a result shown in column (2) of Table 6.2. This is substantially below
-the short regression estimate in column (1). This decline may reflect
-ability bias in the short model. Yet, once again, more subtle forces may
-also be at work.
+The differenced @#eq-fds generates a schooling return of about 6%, a result shown in column (2) of Table 6.2. This is substantially below the short regression estimate in column (1). This decline may reflect ability bias in the short model. Yet, once again, more subtle forces may also be at work.
 
 ![Copy of Table 6.2 in Mastering
 Metrics](../../images/MMtbl62.png){#fig-twins fig-alt="ALT"}
 
-\begin{footnotesize}
+::: {.callout-note}
 
-Footnote~6.  Orley Ashenfelter and Alan B. Krueger, ``Estimates of the
-Economic Returns to Schooling from a New Sample of Twins'', American
-Economic Review, vol. 84, no. 5, December 1994, pages 1157--1173, and
-Orley Ashenfelter and Cecilia Rouse, ``Income, Schooling, and Ability:
-Evidence from a New Sample of Identical Twins'', Quarterly Journal of
+#### Optional readings
+
+The papers that discuss this research are:
+
+Orley Ashenfelter and Alan B. Krueger, "Estimates of the Economic Returns to Schooling from a New Sample of Twins", American Economic Review, vol. 84, no. 5, December 1994, pages 1157--1173, and Orley Ashenfelter and Cecilia Rouse, "Income, Schooling, and Ability: Evidence from a New Sample of Identical Twins", Quarterly Journal of
 Economics, vol. 113, no. 1, February 1998, pages 253--284.
 
-Footnote~7. Estimates of this differenced model can also be obtained by adding a
-dummy for each family to an undifferenced model fit in a sample that
-includes both twins.  Family dummies are like selectivity-group dummies
-in equation (2.2) in Chapter 2 and state dummies in equation (5.5) in
-Section 5.2.  With only two observations per family, models estimated
-after differencing across twins within families to produce a single
-observation per family generate estimates of the returns to schooling
-identical to those generated by ``dummying out'' each family in a pooled
-sample that includes both twins.
+:::
 
-MJA also notes that he has added a constant $\delta_0$ that isnt in MM
-(6.5). This is because one \ul{always} needs a constant unless the sample
-means are zero, which need not be the case here.
 
-\end{footnotesize}
+::: {.callout-note}
 
-\subsubsection*{Twin Reports from Twinsburg}
+#### FE for twins
 
-Twins are similar in many ways, including---alas---their schooling. Of
-340 twin pairs interviewed for the Twinsburg schooling studies, about
-half report identical educational attainment. Schooling differences,
-$\Delta s_{f}$, vary much less than schooling levels, $s_{if}$. If most
-twins really have the same schooling, then a fair number of the nonzero
-differences in reported schooling may reflect mistaken reports by at
-least one of them. Erroneous reports, called \textbf{measurement
-error}, tend to reduce estimates of $\beta_1$ in equation (6.5), a fact
-that may account for the decline in the estimated returns to schooling
-after differencing. A few people reporting their schooling incorrectly
-sounds unimportant, yet the consequences of such measurement error can
-be major.
+Estimates of this differenced model can also be obtained by adding a dummy for each family to an undifferenced model fit in a sample that includes both twins. This is very much like what was discussed for the FE model above. With only two observations per family, models estimated after differencing across twins within families to produce a single observation per family generate estimates of the returns to schooling identical to those generated by "dummying out" each family in a pooled sample that includes both twins.
 
-To see why mistakes matter, imagine that twins from the same family
-always have the same schooling. In this scenario, the only reason
-$\Delta s_{f}$ isn't zero for everyone is because schooling is sometimes
-misreported. Suppose such erroneous reports are due to random
-forgetfulness or inattention rather than something systematic. The
-coefficient from a regression of earnings differences on schooling
-differences that are no more than random mistakes should be zero since
-random mistakes are unrelated to wages. In an intermediate case, where
-some but not all of the variation in observed schooling is due to
-misreporting, the coefficient in equation (6.5) is smaller than it would
-be if schooling were reported correctly. The bias generated by this sort
-of measurement error in regressors is called \textbf{attenuation
-bias}. The mathematical formula for attenuation bias is derived in the
-chapter appendix. \[MJA insert: see Section\~\ref{sub:ME} above.\]
+:::
 
-Misreported schooling attenuates the levels regression estimates shown
-in column (1) of Table 6.2, but less so than the differenced estimates
-in column (2). This difference in the extent of attenuation bias is also
-illustrated by the hypothetical scenario where all twins share the same
-schooling but schooling levels differ across families. When twins in the
-same family really have the same schooling, all variation in
-within-family differences in reported schooling comes from mistakes. By
-contrast, most of the cross-family variation in reported schooling
-reflects real differences in education. Real variation in schooling is
-related to earnings, a fact that moderates attenuation bias in estimates
-of the model for levels, equation (6.4). This reflects a general point
-about the consequences of covariates for models with mismeasured
-regressors---additional controls make attenuation bias worse---a point
-detailed in the chapter appendix.
+## Twin Reports from Twinsburg
 
-Measurement error raises an important challenge for the Twinsburg
-analysis, since measurement error alone may explain the pattern of
-results seen in columns (1) and (2) of Table 6.2. Moving from the levels
-to the differenced regression accentuates attenuation bias, probably
-more than a little. The decline in schooling coefficients across columns
-may therefore have little to do with ability bias. Fortunately, seasoned
-masters Ashenfelter, Krueger, and Rouse anticipated the attenuation
-problem. They asked each twin to report not only their own schooling but
-also that of their sibling. As a result, the Twinsburg data sets contain
-two measures of schooling for each twin, one self-report and one sibling
-report. The sibling reports provide leverage to reduce, and perhaps even
-eliminate, attenuation bias.
+Twins are similar in many ways, including - usually - their schooling. Of 340 twin pairs interviewed for the Twinsburg schooling studies, about half report identical educational attainment. Schooling differences, $\Delta s_{f}$, vary much less than schooling levels, $s_{if}$. If most twins really have the same schooling, then a fair number of the nonzero differences in reported schooling may reflect mistaken reports by at least one of them. Erroneous reports, called **measurement error**, tend to reduce estimates of $\beta_1$ in #eq-fds, a fact that may account for the decline in the estimated returns to schooling after differencing. A few people reporting their schooling incorrectly sounds unimportant, yet the consequences of such measurement error can be major.
 
-The key tool in this case, as with many of the other problems we've
-encountered, is IV. \[MJA insert: We pick this up again in
-Section\~\ref{sub:IV}.\]
+To see why mistakes matter, imagine that twins from the same family always have the same schooling. In this scenario, the only reason $\Delta s_{f}$ isn't zero for everyone is because schooling is sometimes misreported. Suppose such erroneous reports are due to random forgetfulness or inattention rather than something systematic. The coefficient from a regression of earnings differences on schooling differences that are no more than random mistakes should be zero since random mistakes are unrelated to wages. In an intermediate case, where some but not all of the variation in observed schooling is due to misreporting, the coefficient in equation #eq-fds is smaller than it would be if schooling were reported correctly. The bias generated by this sort of measurement error in regressors is called **attenuation
+bias**. The mathematical formula for attenuation bias was derived in the Endogeneity chapter.
+
+Misreported schooling attenuates the levels regression estimates shown in column (1) of Table 6.2, but less so than the differenced estimates in column (2). This difference in the extent of attenuation bias is also illustrated by the hypothetical scenario where all twins share the same schooling but schooling levels differ across families. When twins in the same family really have the same schooling, all variation in within-family differences in reported schooling comes from mistakes. By contrast, most of the cross-family variation in reported schooling reflects real differences in education. Real variation in schooling is related to earnings, a fact that moderates attenuation bias in estimates of the model for levels. 
+
+Measurement error raises an important challenge for the Twinsburg analysis, since measurement error alone may explain the pattern of results seen in columns (1) and (2) of Table 6.2. Moving from the levels to the differenced regression accentuates attenuation bias, probably more than a little. The decline in schooling coefficients across columns may therefore have little to do with ability bias. The authors of the articles Ashenfelter, Krueger, and Rouse anticipated the attenuation problem. They asked each twin to report not only their own schooling but also that of their sibling. As a result, the Twinsburg data sets contain two measures of schooling for each twin, one self-report and one sibling report. The sibling reports provide leverage to reduce, and perhaps even eliminate, attenuation bias.
+
+The key tool in this case, as with many of the other problems we've encountered, is IV. This will be discussed in a later chapter.
+
+# Bad controls
+
+This section could also have come in the multiple regression chapter. But it is perhaps more apt in a section where we have now actively introduced a method that attempts to eliminate an omitted variables bias (OVB). You may wonder whether it isn't better to avoid the bias in the first instance rather than combating it with clever methodological tricks. And you would have learned that we talk of OVB as we failed to include variables in to the model that are relevant for explaining variation in the outcome variable.
+
+The example of explaining wage variation with schooling does provide an excellent platform to explain why some variables are not good variables to explain although, on first sight, they may explain variation in the outcome variable (This mirrors the explanition Angrist and Pischke (2015, chapter 6). Let's replicate @eq-woods but without the time dimension, and also use £s£ rather than $x$ for schooling. 
+
+$$
+y_{i} = \beta_0  + \beta_1 s_{i} + \beta_2 a_{i} + u_{i}.
+$$ {#ed-woods2}
+
+Being well aware that jobs in different industries pay very different salaries (finance - high salaries, construction - low salaries), your fellow student Fred proposes that you should really include dummy variables representing the different industries employee $i$ works in as an explanatory variables as surely that will explain why some people earn more than others.
+
+::: callout-note
+### Practise Question
+
+Including industry dummies into @eq-woods2 in order to estimate the effect of schooling on wages is a bad idea for the following reason.
+
+What values should be in the $\Delta e$ column?
+
+```{r}
+#| echo: false
+opts_p <- c(
+   "industry dummies will be negatovely correlated with wages as industries with larger employment have lower wages",
+   "industry dummies are actually unlikely to explain variation in wages as all industries employ people on a a wide range of salaries",
+   "the industry dummy will influence the amount of schooling and therefore should not be included",
+   answer = "the industry dummy is itself an outcome of schooling and therefore should not be included as an explanatory variable",
+   "the industry dummy is unlikely to be correlated with schooling and therefore there is no need to include it"
+)
+
+```
+
+`r longmcq(opts_p)`
+
+`r hide("Can you help me understand the answer")` 
+The effect of schooling on wages will partly work through the industry someone is employed in. TO stick with the construction and finance industry example above. Some student get extra schooling, e.g. university, as they want to land a job in the finance industry as that is where they can earn significant salaries. 
+
+If you were to include industry dummies you let some of the effect of schooling be attributed by industry dummies. But really, it was the effect of schooling that made someone get a job in finance and hence earn a high salary. If you are interested in the effect of schooling on wages, you should not include industry dummies.
+`r unhide()`
+:::
+
+This example should illustrate that variables that are also an outcome of the intervention (here schooling) should not be included as explanatory variables into a model. 
+
 
 # Reading
 
-The material for the three biases comes from Wooldridge (2025). See the
-subsections on Omitted variable bias, Properties of OLS under
-Measurement Error, and the section Simultaneity Bias in OLS.
 
-Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton
-University Press.
+Angrist, J.D. and J.-S. Pischke (2015) Mastering Metrics. Princeton University Press. Chapter 6.
 
-Ashenfelter, O. and A. Krueger (1994) Estimates of the Economic Return
-to Schooling from a New Sample of Twins, The American economic review,
-84(5), 1157 - 1173.
+Ashenfelter, O. and A. Krueger (1994) Estimates of the Economic Return to Schooling from a New Sample of Twins, The American economic review, 84(5), 1157 - 1173.
 
-Ashenfelter, O. and C. Rouse, (1998) Income, Schooling, and Ability:
-Evidence from a New Sample of Identical Twins, The Quarterly journal of
-economics, 113(1), 253 - 284.
+Ashenfelter, O. and C. Rouse, (1998) Income, Schooling, and Ability: Evidence from a New Sample of Identical Twins, The Quarterly journal of economics, 113(1), 253 - 284.
 
-Cunningham, S. (2021) [Causal Inference: The
-MixTape](https://mixtape.scunning.com/index.html)
+Cunningham, S. (2021) [Causal Inference: The MixTape](https://mixtape.scunning.com/index.html), Chapter 8.
 
-Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach,
-Cengage.
+Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage. Chapters 13 and 14.

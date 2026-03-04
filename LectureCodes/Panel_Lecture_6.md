@@ -142,7 +142,7 @@ table(pdata_USoc$n_wave,pdata_USoc$wave, dnn = c("n_waves","waves"))
 ##       2 13078 13078
 ```
 
-Naturally the 13078 respondents which have two observations (`n_wave == 2)` are represented in waves 1 and 3. Then we have (`n_wave == 1`) 9666 respondents which are represented in wave 1 and the 4112 which are represented in wave 3.
+Naturally the 13078 respondents which have two observations (`n_wave == 2)` are represented in waves 1 and 3. Then we have (`n_wave == 1`) 9666 respondents which are represented in wave 1 only and 4112 which are represented in wave 3 only.
 
 For the respondents for which we have 2 waves of observations we can actually calculate a difference, or change in variables. This will become important in a later model estimation (although for that we could let R do the work in the background) and hence we will calculate these variables explicitly, here for `lnhrpay` and `lnurate`.
 
@@ -155,7 +155,7 @@ For the respondents for which we have 2 waves of observations we can actually ca
 
 Dlnhrpay <- pdata_USoc$lnhrpay-lag(pdata_USoc$lnhrpay,k=2)
 Dlnurate <- pdata_USoc$lnurate-lag(pdata_USoc$lnurate,k=2)
-#Dregion <- ifelse(pdata_USoc$region==lag(pdata_USoc$region,k=2),"no move","move")
+
 pdata_USoc$Dlnhrpay <- Dlnhrpay   # add the new series to the dataframe
 pdata_USoc$Dlnurate <- Dlnurate
 ```
@@ -171,8 +171,8 @@ temp <- temp %>%  filter(n_wave == 2) %>%   # only keep individuals with two wav
                   mutate(move = ifelse(length(unique(region))==1,"no move","move")) %>% 
                   select(pidp,wave,move)    # only keep these 3 variables
 
-# the move variable will take the value 1 if both regions are identical (no move) 
-# and 2 if there are two different regions (move) 
+# the move variable will take the value "no move" if both regions are identical  
+# and "move" if there are two different regions  
 
 temp$move <- as_factor(temp$move)  # convert to factor variable
 
@@ -240,6 +240,7 @@ pdata_USoc <- pdata_USoc %>%
               mutate(mean_lnhrpay = mean(lnhrpay),mean_urate = mean(urate)) 
 ```
 
+This will retain the number of observations but will now have added the relevant region-year means of `lnhrpay` and `urate` to each observation.
 
 # Estimating Models
 
@@ -277,7 +278,7 @@ stargazer_HC(POLS0)
 ##                     Robust standard errors in parenthesis
 ```
 
-Let's add the predicted model values to the data frame. As our explanatory variable only has 24 different values we will only get 24 different predicted values.
+Let's add the predicted model values to the data frame. As our explanatory variable only has 24 different values (12 regions and two years) we will only get 24 different predicted values.
 
 
 ``` r
@@ -315,7 +316,7 @@ stargazer_HC(POLS0a)
 ##              Robust standard errors in parenthesis
 ```
 
-Now we plot the predicted values and compare them against the 
+Now we plot the predicted values and compare them against the region-year's average values (`mean_lnhrpay`).
 
 
 ``` r
@@ -372,9 +373,7 @@ stargazer_HC(POLS1)
 ##                     Robust standard errors in parenthesis
 ```
 
-The first wave is the base category of `wave` and hence is not included. So far we have used the standard `lm` function to estimate this model.
-
-Alternatively this could be estimated using the `plm` package
+The first wave is the base category of `wave` and hence is not included. Alternatively this could be estimated using the `plm` package
 
 
 ``` r
@@ -532,7 +531,7 @@ stargazer_HC(FD1a)
 ##              Robust standard errors in parenthesis
 ```
 
-We can show a scatter plot of the available difference observations and the regression line estimated by `FD1a`.
+Note the number of observations which corresponds to the number of individuals for which we had observations from both waves. We can show a scatter plot of the available difference observations and the regression line estimated by `FD1a`.
 
 
 ``` r
