@@ -2470,26 +2470,14 @@ margin: 1em 0;
 
 <section id="instructions" class="level1">
 <h1>Instructions</h1>
-<p>You should work through the code below and complete it. Keep the completed code and all the resulting output. Next you should answer the questions in the online quiz. Every student will see a slightly different collection of questions (as we will randomly draw 10 questions from a pool of questions).</p>
+<p>You should work through the code below and complete it. Keep the completed code and all the resulting output. Only once you completed this work you are in a position to answer the questions in the online quiz. Every student will see a slightly different collection of questions (as we will randomly draw 10 questions from a pool of questions).</p>
 <p>The questions are of four types.</p>
 <ol type="1">
 <li><p>Questions that merely ask you to report output from your analysis.</p></li>
-<li><p>Some questions will ask you about R code. For example, you will see a lot of gaps (<code>XXXX</code>) in the code and questions may ask you how to complete the code to make the code work. Sometimes the <code>XXXX</code> will represent one word and on other occasions it will represent a full line (or two) of code. Other questions may ask you about the output to be produced by a particular bit of code.</p></li>
+<li><p>Some questions will ask you about R code. For example, you will see a lot of gaps (<code>XXXX</code>) in the code and questions may ask you how to complete the code to make the code work. Sometimes the <code>XXXX</code> will represent one word and on other occasions it will represent a full line (or several) of code. Other questions may ask you about the output to be produced by a particular bit of code.</p></li>
 <li><p>The third type of questions will test your understanding of econometric issues. For example: “What is the meaning of an estimated coefficient?” “Is a particular coefficient statistically significant?”</p></li>
 <li><p>The fourth type of question, if asked, will be on general programming issues. For example: what is the meaning of a particular error message, or, how would you search for a particular piece of information.</p></li>
 </ol>
-</section>
-<section id="preparing-your-workfile" class="level1">
-<h1>Preparing your workfile</h1>
-<p>We add the basic libraries needed for this week’s work:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># for almost all data handling tasks</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># to produce nice graphiscs</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)    <span class="co"># to produce nice results tables</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)          <span class="co"># access to HS robust standard errors</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;stargazer_HC.r&quot;</span>)  <span class="co"># includes the robust regression display</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
@@ -2509,24 +2497,20 @@ margin: 1em 0;
 <li><p>The fourth type of question, if asked, will be on general programming issues. For example: what is the meaning of a particular error message, or, how would you search for a particular piece of information.</p></li>
 </ol>
 </section>
-<section id="preparing-your-workfile-1" class="level1">
+<section id="preparing-your-workfile" class="level1">
 <h1>Preparing your workfile</h1>
 <p>We add the basic libraries needed for this week’s work:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># for almost all data handling tasks</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># to produce nice graphiscs</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)    <span class="co"># to produce nice results tables</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)          <span class="co"># access to HS robust standard errors</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;stargazer_HC.r&quot;</span>)  <span class="co"># includes the robust regression display</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># for almost all data handling tasks</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># to produce nice graphiscs</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)    <span class="co"># to produce nice results tables</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)          <span class="co"># access to HS robust standard errors</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;stargazer_HC.r&quot;</span>)  <span class="co"># includes the robust regression display</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="introduction-1" class="level1">
-<h1>Introduction</h1>
-<p>The data used are data from the Gun restriction work that you would have seen before. Here we use the dataset “US_Gun_example_v3.csv”. The data are 1071 state-year observations.</p>
-<p>The dataset was created (see the detailed work through in the Group Project page) to replicate the work in: Siegel et al (2019) The Impact of State Firearm Laws on Homicide and Suicide Deaths in the USA, 1991–2016: a Panel Study, J Gen Intern Med 34(10):2021–8.</p>
 </section>
 <section id="data-upload---and-understanding-data-structure" class="level1">
 <h1>Data Upload - and understanding data structure</h1>
+<p>Let’s import the various datasets</p>
 <section id="energy-information" class="level2">
 <h2 class="anchored" data-anchor-id="energy-information">Energy information</h2>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -2541,12 +2525,12 @@ margin: 1em 0;
 <div class="callout-body-container callout-body">
 <p>Upload the data, which are saved in the csv. Making sure that the path points to your file.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>en.data <span class="ot">&lt;-</span> <span class="fu">XXXX</span>(<span class="st">&quot;owid-energy-data.csv&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(XXXX)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>en.data <span class="ot">&lt;-</span> <span class="fu">XXXX</span>(<span class="st">&quot;owid-energy-data.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(XXXX)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>en.data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;owid-energy-data.csv&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(en.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>en.data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;owid-energy-data.csv&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(en.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] &quot;country&quot;                                     
   [2] &quot;year&quot;                                        
@@ -2702,8 +2686,8 @@ margin: 1em 0;
 </ul>
 <p>Explore the data so that you can answer these questions.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pick one row</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>en.data[<span class="dv">997</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pick one row</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>en.data[<span class="dv">997</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 130
   country              year iso_code population   gdp biofuel_cons_change_pct
@@ -2717,11 +2701,11 @@ margin: 1em 0;
 #   coal_cons_change_twh &lt;dbl&gt;, coal_cons_per_capita &lt;dbl&gt;,
 #   coal_consumption &lt;dbl&gt;, coal_elec_per_capita &lt;dbl&gt;, …</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and you can see that one row represents a country-year, here Antigua and Barbuda</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in 1994</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to see what different &quot;countries&quot; there are:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and you can see that one row represents a country-year, here Antigua and Barbuda</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in 1994</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># to see what different &quot;countries&quot; there are:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] &quot;ASEAN (Ember)&quot;                        
   [2] &quot;Afghanistan&quot;                          
@@ -3038,14 +3022,14 @@ margin: 1em 0;
 [313] &quot;Zambia&quot;                               
 [314] &quot;Zimbabwe&quot;                             </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This gives 314 different entries.</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># you will be able to see that not all of them are countries. There are also </span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># continents, and organisations (e.g. OPEC) and sometimes that info from multiple</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sources. There are also entities that are not universally recognised as countries</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># such as Palestine or Taiwan.</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># a better way to get at the number of countries is to check the ISO code</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>iso_code)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This gives 314 different entries.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># you will be able to see that not all of them are countries. There are also </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># continents, and organisations (e.g. OPEC) and sometimes that info from multiple</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sources. There are also entities that are not universally recognised as countries</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># such as Palestine or Taiwan.</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># a better way to get at the number of countries is to check the ISO code</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>iso_code)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] NA    &quot;AFG&quot; &quot;ALB&quot; &quot;DZA&quot; &quot;ASM&quot; &quot;AGO&quot; &quot;ATA&quot; &quot;ATG&quot; &quot;ARG&quot; &quot;ARM&quot; &quot;ABW&quot; &quot;AUS&quot;
  [13] &quot;AUT&quot; &quot;AZE&quot; &quot;BHS&quot; &quot;BHR&quot; &quot;BGD&quot; &quot;BRB&quot; &quot;BLR&quot; &quot;BEL&quot; &quot;BLZ&quot; &quot;BEN&quot; &quot;BMU&quot; &quot;BTN&quot;
@@ -3067,11 +3051,11 @@ margin: 1em 0;
 [205] &quot;TCA&quot; &quot;TUV&quot; &quot;UGA&quot; &quot;UKR&quot; &quot;ARE&quot; &quot;GBR&quot; &quot;USA&quot; &quot;VIR&quot; &quot;URY&quot; &quot;UZB&quot; &quot;VUT&quot; &quot;VEN&quot;
 [217] &quot;VNM&quot; &quot;ESH&quot; &quot;YEM&quot; &quot;ZMB&quot; &quot;ZWE&quot;</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this gives 221 codes. The UN only has 193 member states. So some of the </span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># codes may also not represent officially recognised countries</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the different year entries</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>year)[<span class="fu">order</span>(<span class="fu">unique</span>(en.data<span class="sc">$</span>year))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this gives 221 codes. The UN only has 193 member states. So some of the </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># codes may also not represent officially recognised countries</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the different year entries</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(en.data<span class="sc">$</span>year)[<span class="fu">order</span>(<span class="fu">unique</span>(en.data<span class="sc">$</span>year))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] 1900 1901 1902 1903 1904 1905 1906 1907 1908 1909 1910 1911 1912 1913 1914
  [16] 1915 1916 1917 1918 1919 1920 1921 1922 1923 1924 1925 1926 1927 1928 1929
@@ -3083,16 +3067,16 @@ margin: 1em 0;
 [106] 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019
 [121] 2020 2021 2022 2023 2024 2025</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># so the spreadsheet has rows from 1900 to 2025</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># so the spreadsheet has rows from 1900 to 2025</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>Let’s create a table that matches the existing <code>iso_codes</code> to country names.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>country.map <span class="ot">&lt;-</span> en.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso_code)) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">select</span>(country, iso_code) <span class="sc">%&gt;%</span>  </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">arrange</span>(country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>country.map <span class="ot">&lt;-</span> en.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso_code)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">select</span>(country, iso_code) <span class="sc">%&gt;%</span>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">arrange</span>(country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -3104,20 +3088,20 @@ margin: 1em 0;
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>For what follows we will restrict the data to only the observations that have an <code>iso_code</code> (<code>!is.na(iso_code)</code>). Put this restricted dataset into a new dataframe called <code>en.data.r</code>.</p>
+<p>For what follows we will restrict the data to only the observations that have an <code>iso_code</code> (<code>!is.na(iso_code)</code>). Create such a restricted dataset and save it into a new dataframe called <code>en.data.r</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> en.data <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso_code))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> en.data <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso_code))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>If you have done that correctly you should have 17,134 rows of data. From now on we shall be working with <code>en.data.r</code>. As you can see from <code>country.map</code> the list of entities with <code>iso_code</code> contains countries, but also some territories like Greenland (GRL) which are not fully independent countries or are indeed disputed terretories. We will still call this variable <code>country</code> for simplicity.</p>
 <p>Let’s create a Table that shows for how many entities we have population data in every year.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(table1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(table1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
    year     n
@@ -3143,10 +3127,10 @@ margin: 1em 0;
 <div class="callout-body-container callout-body">
 <p>Create a similar table (and call it <code>table2</code>) that lists for how many years there are population data for each country.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>table2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(population)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>table2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 219 × 2
    country                 n
@@ -3179,37 +3163,37 @@ margin: 1em 0;
 <div class="callout-body-container callout-body">
 <p>Try and understand how many different fuel types are captured in the dataset.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># there are: &quot;biofuel&quot;, &quot;coal&quot;, &quot;gas&quot;, &quot;hydro&quot;, &quot;nuclear&quot;, &quot;oil&quot;, </span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;solar&quot;, &quot;wind&quot; plus there is a &quot;other_renewable&quot; category</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># there are: &quot;biofuel&quot;, &quot;coal&quot;, &quot;gas&quot;, &quot;hydro&quot;, &quot;nuclear&quot;, &quot;oil&quot;, </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;solar&quot;, &quot;wind&quot; plus there is a &quot;other_renewable&quot; category</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Think about how you could confirm that the sources you identified are indeed all the sources in the dataset. Then implement your test and figure out what summary categories (like “fossil” are available and how they relate to each other)</p>
 <p>Understand what the following line of code does. It may (but not necessarily) become useful in the process of verifying your selection.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># As there is a variable that gives the share of energy and electricity production </span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we should find that the shares we calculate add to 100</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick any country, here Germany and a particular year, here 2023</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>test_energy <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Germany&quot;</span>, year <span class="sc">==</span> <span class="st">&quot;2023&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">select</span>(sel_vars_energy)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>test_elec <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Germany&quot;</span>, year <span class="sc">==</span> <span class="st">&quot;2023&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>          <span class="fu">select</span>(sel_vars_elec)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># If you then add the above categories you will find the shares adding up to 100</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co"># there are also group categories</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil: coal + gas + oil</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co"># low_carbon: everything but fossil</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># renewable: low_carbon - nuclear</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co"># this implies that: </span></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil + low_carbon = 100, and</span></span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil + renewable + nuclear = 100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># As there is a variable that gives the share of energy and electricity production </span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we should find that the shares we calculate add to 100</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick any country, here Germany and a particular year, here 2023</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>test_energy <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Germany&quot;</span>, year <span class="sc">==</span> <span class="st">&quot;2023&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">select</span>(sel_vars_energy)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>test_elec <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Germany&quot;</span>, year <span class="sc">==</span> <span class="st">&quot;2023&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>          <span class="fu">select</span>(sel_vars_elec)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># If you then add the above categories you will find the shares adding up to 100</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># there are also group categories</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil: coal + gas + oil</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># low_carbon: everything but fossil</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co"># renewable: low_carbon - nuclear</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co"># this implies that: </span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil + low_carbon = 100, and</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co"># fossil + renewable + nuclear = 100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -3221,7 +3205,7 @@ margin: 1em 0;
 <li>The population density</li>
 <li>The degree of urbanisation</li>
 </ol>
-<p>Other obvious factors are such that relate to the climatic conditions which will have an important bearing on whether hydro, solar or wind generation are available options. For this work we will concentrate on the ones listed above.</p>
+<p>Other obvious factors are those that relate to the climatic conditions which will have an important bearing on whether hydro, solar or wind generation are available options. For this work we will concentrate on the ones listed above.</p>
 <p>To investigate the relationship of the above factors with the generation type we need information on</p>
 <ul>
 <li>population size (which is already included in <code>en.data</code>)</li>
@@ -3230,8 +3214,8 @@ margin: 1em 0;
 </ul>
 <p>Let’s start with the import of the size of a country</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ls.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;landarea_km_OWID.csv&quot;</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ls.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ls.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;landarea_km_OWID.csv&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ls.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Entity Code Year Land.area..sq..km.
 1         Afghanistan  AFG 2023             652230
@@ -3255,13 +3239,13 @@ margin: 1em 0;
 <div class="callout-body-container callout-body">
 <p>Delete the <code>Entity</code> and <code>Year</code> variables from <code>ls.data</code>, rename the <code>Land.area..sq..km.</code> variable to <code>ls.skm</code> and then merge the land size variable into the <code>en.data.r</code> dataframe. Only keep the observations for which we do have land size data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rename, also Code to iso_code to make merging easier</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># select the twpo variables needed</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>ls.data <span class="ot">&lt;-</span> ls.data <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">ls.sqm =</span> Land.area..sq..km.,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">iso_code =</span> Code) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(iso_code, ls.sqm)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> <span class="fu">merge</span>(en.data.r, ls.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rename, also Code to iso_code to make merging easier</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># select the twpo variables needed</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>ls.data <span class="ot">&lt;-</span> ls.data <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">ls.sqm =</span> Land.area..sq..km.,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">iso_code =</span> Code) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(iso_code, ls.sqm)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> <span class="fu">merge</span>(en.data.r, ls.data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -3276,13 +3260,13 @@ margin: 1em 0;
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Now we can calculate the Population density as we have the <code>population</code> and the <code>ls.sqm</code> information for countries. Calculate a <code>pop.den</code> variable which is calculates as <code>population/ls.sqm</code> and add this to <code>en.data.r</code>.</p>
+<p>Now we can calculate the Population density as we have the <code>population</code> and the <code>ls.sqm</code> information for countries. Calculate a <code>pop.den</code> variable which is calculated as <code>population/ls.sqm</code> and add this to <code>en.data.r</code>.</p>
 <p>Also calculate the GDP per capita and save it in a new <code>gdp.pc</code> variable, noting that GDP is measured in US dollars.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pop.den =</span> population<span class="sc">/</span>ls.sqm,</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">gdp.pc =</span> gdp<span class="sc">/</span>population)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">pop.den =</span> population<span class="sc">/</span>ls.sqm,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">gdp.pc =</span> gdp<span class="sc">/</span>population)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>You got this right if the mean values (ensuring to exclude NA values) for the new variables in <code>en.data.r</code> are 114.8585132 (for <code>pop.den</code>) and 10,262 (for gdp.pc).</p>
+<p>You got this right if the mean values (ensuring to exclude NA values) for the new variables in <code>en.data.r</code> are 114.8585132 (for <code>pop.den</code>) and 10,262 (for <code>gdp.pc</code>).</p>
 </div>
 </div>
 <p>We want to import the data on the percentage of population living in urban areas. Here we expect the data to vary by year for every country. The spreadsheet contains data from 1960 to 2024.</p>
@@ -3296,21 +3280,21 @@ margin: 1em 0;
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The data is in “urbanpop_WB.csv”. Once imported and manipulated you should have a long dataset (name it <code>pd.data.long</code>) with the following structure (and 17,290) rows of data.</p>
+<p>The data is in “urbanpop_WB.csv”. Import this and manipulate it such that you have a long dataset (name it <code>pd.data.long</code>) with the following structure (and 17,290 rows of data).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to skip the first 4 rows</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pd.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;urbanpop_WB.csv&quot;</span>, <span class="at">skip =</span> <span class="dv">4</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Now create a long version of the dataset</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>pd.data.long <span class="ot">&lt;-</span> pd.data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">&quot;Country.Name&quot;</span>,<span class="st">&quot;Indicator.Name&quot;</span>, </span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Indicator.Code&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">iso_code =</span> Country.Code) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">names_prefix =</span> <span class="st">&quot;X&quot;</span>,</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values_to =</span> <span class="st">&quot;Urban.pc&quot;</span>)</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pd.data.long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to skip the first 4 rows</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pd.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;urbanpop_WB.csv&quot;</span>, <span class="at">skip =</span> <span class="dv">4</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Now create a long version of the dataset</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>pd.data.long <span class="ot">&lt;-</span> pd.data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">&quot;Country.Name&quot;</span>,<span class="st">&quot;Indicator.Name&quot;</span>, </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Indicator.Code&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">iso_code =</span> Country.Code) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">names_prefix =</span> <span class="st">&quot;X&quot;</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values_to =</span> <span class="st">&quot;Urban.pc&quot;</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pd.data.long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   iso_code year  Urban.pc
@@ -3325,17 +3309,17 @@ margin: 1em 0;
 </div>
 <p>Now you should merge the <code>Urban.pc</code> variable into <code>en.data.r</code> only keeping the rows of data for which we do have data for <code>Urban.pc</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> <span class="fu">merge</span>(en.data.r, pd.data.long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>en.data.r <span class="ot">&lt;-</span> <span class="fu">merge</span>(en.data.r, pd.data.long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>In order to establish that you have worked correctly so far, replicate the following summary statistics:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(en.data.r)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(en.data.r)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10240   134</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[<span class="fu">c</span>(<span class="st">&quot;population&quot;</span>,<span class="st">&quot;gdp&quot;</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[<span class="fu">c</span>(<span class="st">&quot;population&quot;</span>,<span class="st">&quot;gdp&quot;</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   population             gdp           
  Min.   :7.387e+03   Min.   :1.642e+08  
@@ -3359,10 +3343,10 @@ margin: 1em 0;
 <div class="callout-body-container callout-body">
 <p>Also calculate the same summary statistics for all variables that contain “share_elec” or “share_energy” in the name.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[sel_vars_energy])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sel_vars_energy <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_energy&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[sel_vars_energy])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> biofuel_share_energy coal_share_energy electricity_share_energy
  Min.   :0.0000       Min.   : 0.000    Min.   : 1.04           
@@ -3405,7 +3389,7 @@ margin: 1em 0;
  Max.   :26.0853  
  NA&#39;s   :5901     </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[sel_vars_elec])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(en.data.r[sel_vars_elec])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> biofuel_share_elec coal_share_elec  fossil_share_elec gas_share_elec   
  Min.   : 0.0000    Min.   :  0.00   Min.   :  0.00    Min.   :  0.000  
@@ -3456,21 +3440,21 @@ margin: 1em 0;
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>For the following exercise create a dataset that only uses the data for 2022 and only includes variables that contain “share_elec” in the name in addition to “country”, “iso_code”, “Urban.pc”, “gdp.pc” and “pop.den”.</p>
+<p>For the following exercise create a dataset that only uses the data for 2022 and only includes variables that contain “share_elec” in the name in addition to <code>country</code>, <code>iso_code</code>, <code>Urban.pc</code>, <code>gdp.pc</code> and <code>pop.den</code>.</p>
 <p>The following is an incomplete piece of code which you should complete to achieve this.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(XXXX)[<span class="fu">XXXX</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">XXXX</span>(en.data.r))]</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>en.data.r.<span class="fl">2022.</span>elec <span class="ot">&lt;-</span> XXXX <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">select</span>(XXXX)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(XXXX)[<span class="fu">XXXX</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">XXXX</span>(en.data.r))]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>en.data.r.<span class="fl">2022.</span>elec <span class="ot">&lt;-</span> XXXX <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">select</span>(XXXX)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>en.data.r.<span class="fl">2022.</span>elec <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">select</span>(country, iso_code, Urban.pc, gdp.pc, pop.den, sel_vars_elec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sel_vars_elec <span class="ot">&lt;-</span> <span class="fu">names</span>(en.data.r)[<span class="fu">grepl</span>(<span class="st">&quot;share_elec&quot;</span>, <span class="fu">names</span>(en.data.r))]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>en.data.r.<span class="fl">2022.</span>elec <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">select</span>(country, iso_code, Urban.pc, gdp.pc, pop.den, sel_vars_elec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<p>Dataframe <code>en.data.r.2022.elec</code> should have 191 rows and 17 variables.</p>
+<p>Dataframe <code>en.data.r.2022.elec</code> should have 191 rows and 18 variables.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3489,11 +3473,11 @@ margin: 1em 0;
 <li>The 10 countries with the highest <code>wind_share_elec</code> (highest share on Pos 1, 10th highest in Pos 10)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>LT_hydro <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, hydro_share_elec) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(hydro_share_elec)) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>LT_hydro <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, hydro_share_elec) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(hydro_share_elec)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                    country iso_code hydro_share_elec
 1                    Bhutan      BTN        100.00000
@@ -3507,11 +3491,11 @@ margin: 1em 0;
 9                    Malawi      MWI         92.34973
 10             Sierra Leone      SLE         90.00000</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>LT_fossil <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, gdp.pc) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(gdp.pc) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>LT_fossil <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, gdp.pc) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(gdp.pc) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                        country iso_code    gdp.pc
 1                       Burundi      BDI  688.9128
@@ -3525,11 +3509,11 @@ margin: 1em 0;
 9                          Chad      TCD 1306.8327
 10                  Afghanistan      AFG 1313.5778</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>LT_solar <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, solar_share_elec) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(solar_share_elec)) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>LT_solar <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, solar_share_elec) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(solar_share_elec)) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       country iso_code solar_share_elec
 1      Namibia      NAM         37.87879
@@ -3543,11 +3527,11 @@ margin: 1em 0;
 9      Somalia      SOM         16.66667
 10      Jordan      JOR         15.28578</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>LT_wind <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, wind_share_elec) <span class="sc">%&gt;%</span> </span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(wind_share_elec)) <span class="sc">%&gt;%</span> </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>LT_wind <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, wind_share_elec) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(wind_share_elec)) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span>  <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          country iso_code wind_share_elec
 1         Denmark      DNK        54.10862
@@ -3584,8 +3568,8 @@ margin: 1em 0;
 </ul>
 <p>Do make sure you note down the test statistic and the p-value.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>solar_share_elec,</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>solar_share_elec,</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -3599,8 +3583,8 @@ sample estimates:
 mean of x mean of y 
  4.226287  4.395792 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>solar_share_elec,</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;greater&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>solar_share_elec,</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;greater&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -3614,8 +3598,8 @@ sample estimates:
 mean of x mean of y 
  4.226287  4.395792 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>hydro_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>hydro_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>wind_share_elec,</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -3629,8 +3613,8 @@ sample estimates:
 mean of x mean of y 
 26.619238  4.226287 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>fossil_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>low_carbon_share_elec,</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>fossil_share_elec,en.data.r.<span class="fl">2022.</span>elec<span class="sc">$</span>low_carbon_share_elec,</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -3669,13 +3653,13 @@ mean of x mean of y
 </ul>
 <p>For each of these models ensure that you have the regression output available. You should use the stargazer_HC function to produce this output so that you have the robust standard errors which you should be using.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>lm.A <span class="ot">&lt;-</span> <span class="fu">lm</span>(fossil_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>lm.B <span class="ot">&lt;-</span> <span class="fu">lm</span>(wind_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>lm.C <span class="ot">&lt;-</span> <span class="fu">lm</span>(solar_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc <span class="sc">+</span> gdp.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer_HC</span>(lm.A,lm.B,lm.C)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>lm.A <span class="ot">&lt;-</span> <span class="fu">lm</span>(fossil_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>lm.B <span class="ot">&lt;-</span> <span class="fu">lm</span>(wind_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>lm.C <span class="ot">&lt;-</span> <span class="fu">lm</span>(solar_share_elec <span class="sc">~</span> pop.den <span class="sc">+</span> Urban.pc <span class="sc">+</span> gdp.pc, <span class="at">data =</span> en.data.r.<span class="fl">2022.</span>elec)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer_HC</span>(lm.A,lm.B,lm.C)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 =====================================================================================
@@ -3707,6 +3691,7 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
                                                 Robust standard errors in parenthesis</code></pre>
 </div>
 </div>
+<p>If you get this right residual standard error for model (C) should be 6.008.</p>
 </div>
 </div>
 </section>
@@ -3729,10 +3714,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 <li>Plot B: <code>Urban.pc</code> on the horizontal axis and <code>fossil_share_elec</code> on the vertical axis</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plot.A <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>gdp.pc, <span class="at">y=</span>low_carbon_share_elec)) <span class="sc">+</span> </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;gdp.pc v low carbon share in electricity production&quot;</span>)</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>plot.A</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>plot.A <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>gdp.pc, <span class="at">y=</span>low_carbon_share_elec)) <span class="sc">+</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;gdp.pc v low carbon share in electricity production&quot;</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>plot.A</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3740,10 +3725,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>plot.B <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>Urban.pc, <span class="at">y=</span>fossil_share_elec)) <span class="sc">+</span> </span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Urban.pc v fossil share in electricity production&quot;</span>)</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>plot.B</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plot.B <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>Urban.pc, <span class="at">y=</span>fossil_share_elec)) <span class="sc">+</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Urban.pc v fossil share in electricity production&quot;</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>plot.B</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3770,12 +3755,12 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 <li>Plot D: Time-series plot for <code>wind_share_elec</code>. Different countries should show in differently colored lines.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(iso_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DEU&quot;</span>,<span class="st">&quot;CHN&quot;</span>, <span class="st">&quot;USA&quot;</span>))</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>plot.C <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>solar_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Solar share in electricity production&quot;</span>)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>plot.C</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(iso_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DEU&quot;</span>,<span class="st">&quot;CHN&quot;</span>, <span class="st">&quot;USA&quot;</span>))</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>plot.C <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>solar_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Solar share in electricity production&quot;</span>)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>plot.C</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3783,10 +3768,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>plot.D <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>wind_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Wind share in electricity production&quot;</span>)</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>plot.D</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>plot.D <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>wind_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Wind share in electricity production&quot;</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>plot.D</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

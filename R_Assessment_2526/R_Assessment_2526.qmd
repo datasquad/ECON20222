@@ -18,7 +18,7 @@ library(webexercises)
 # Instructions
 
 You should work through the code below and complete it.  Keep the completed code
-and all the resulting output.  Next you should answer the questions in the
+and all the resulting output. Only once you completed this work you are in a position to answer the questions in the
 online quiz.  Every student will see a slightly different collection of
 questions (as we will randomly draw 10 questions from a pool of questions).
 
@@ -28,7 +28,7 @@ The questions are of four types.
 
 2) Some questions will ask you about R code.  For example, you will see a lot of
 gaps (`XXXX`) in the code and questions may ask you how to complete the code to
-make the code work.  Sometimes the `XXXX` will represent one word and on other occasions it will represent a full line (or two) of code. Other questions may ask you about the output to be produced by a particular bit of code.  
+make the code work.  Sometimes the `XXXX` will represent one word and on other occasions it will represent a full line (or several) of code. Other questions may ask you about the output to be produced by a particular bit of code.  
 
 3) The third type of questions will test your understanding of econometric
 issues.  For example:  "What is the meaning of an estimated coefficient?" "Is a
@@ -38,18 +38,6 @@ particular coefficient statistically significant?"
 For example:  what is the meaning of a particular error message, or, how would
 you search for a particular piece of information.
 
-# Preparing your workfile
-
-We add the basic libraries needed for this week's work:
-
-```{r}
-library(tidyverse)    # for almost all data handling tasks
-library(ggplot2)      # to produce nice graphiscs
-library(stargazer)    # to produce nice results tables
-library(AER)          # access to HS robust standard errors
-library(knitr)
-source("stargazer_HC.r")  # includes the robust regression display
-```
 
 # Introduction
 
@@ -95,17 +83,9 @@ library(AER)          # access to HS robust standard errors
 source("stargazer_HC.r")  # includes the robust regression display
 ```
 
-# Introduction
-
-The data used are data from the Gun restriction work that you would have seen before. Here we use the dataset "US_Gun_example_v3.csv". The data are 1071 state-year observations.
-
-The dataset was created (see the detailed work through in the Group Project page) to replicate the work in: Siegel et al (2019) The Impact of State Firearm Laws on Homicide and Suicide Deaths in the USA, 1991–2016: a Panel Study, J Gen Intern Med 34(10):2021–8.
-
-
-
 # Data Upload - and understanding data structure
 
-
+Let's import the various datasets
 
 ## Energy information
 
@@ -188,7 +168,7 @@ country.map <- en.data %>% filter(!is.na(iso_code)) %>%
 
 #### Task 3: Restrict dataset
 
-For what follows we will restrict the data to only the observations that have an `iso_code` (`!is.na(iso_code)`). Put this restricted dataset into a new dataframe called `en.data.r`. 
+For what follows we will restrict the data to only the observations that have an `iso_code` (`!is.na(iso_code)`). Create such a restricted dataset and save it into a new dataframe called `en.data.r`. 
 
 ```{r, echo = solution_echo, results=student_view}
 
@@ -289,7 +269,7 @@ There are many factors which could influence the use of renewable electricity ge
 1. The population density
 2. The degree of urbanisation
 
-Other obvious factors are such that relate to the climatic conditions which will have an important bearing on whether hydro, solar or wind generation are available options. For this work we will concentrate on the ones listed above.
+Other obvious factors are those that relate to the climatic conditions which will have an important bearing on whether hydro, solar or wind generation are available options. For this work we will concentrate on the ones listed above.
 
 To investigate the relationship of the above factors with the generation type we need information on 
 
@@ -335,7 +315,7 @@ Your dataframe `en.data.r` should now have 15,735 rows and 131 variables.
 
 #### Task 7: Calculate population density and GDP per capita
 
-Now we can calculate the Population density as we have the `population` and the `ls.sqm` information for countries. Calculate a `pop.den` variable which is calculates as `population/ls.sqm` and add this to `en.data.r`.
+Now we can calculate the Population density as we have the `population` and the `ls.sqm` information for countries. Calculate a `pop.den` variable which is calculated as `population/ls.sqm` and add this to `en.data.r`.
 
 Also calculate the GDP per capita and save it in a new `gdp.pc` variable, noting that GDP is measured in US dollars.
 
@@ -344,7 +324,7 @@ en.data.r <- en.data.r %>% mutate(pop.den = population/ls.sqm,
                                   gdp.pc = gdp/population)
 ```
 
-You got this right if the mean values (ensuring to exclude NA values) for the new variables in `en.data.r` are `r mean(en.data.r$pop.den, na.rm = TRUE)` (for `pop.den`) and 10,262 (for gdp.pc).
+You got this right if the mean values (ensuring to exclude NA values) for the new variables in `en.data.r` are `r mean(en.data.r$pop.den, na.rm = TRUE)` (for `pop.den`) and 10,262 (for `gdp.pc`).
 
 :::
 
@@ -355,7 +335,7 @@ We want to import the data on the percentage of population living in urban areas
 
 #### Task 7: Import, prepare and merge urbanisation data
 
-The data is in "urbanpop_WB.csv". Once imported and manipulated you should have a long dataset (name it `pd.data.long`) with the following structure (and 17,290) rows of data.
+The data is in "urbanpop_WB.csv". Import this and manipulate it such that you have a long dataset (name it `pd.data.long`) with the following structure (and 17,290 rows of data).
 
 ```{r, echo = solution_echo}
 # need to skip the first 4 rows
@@ -410,7 +390,7 @@ summary(en.data.r[sel_vars_elec])
 
 #### Task 9: Create 2022 electricity data
 
-For the following exercise create a dataset that only uses the data for 2022 and only includes variables that contain "share_elec" in the name in addition to "country", "iso_code", "Urban.pc", "gdp.pc" and "pop.den".
+For the following exercise create a dataset that only uses the data for 2022 and only includes variables that contain "share_elec" in the name in addition to `country`, `iso_code`, `Urban.pc`, `gdp.pc` and `pop.den`.
 
 The following is an incomplete piece of code which you should complete to achieve this.
 
@@ -429,7 +409,7 @@ en.data.r.2022.elec <- en.data.r %>%  filter(year == 2022) %>%
 
 :::
 
-Dataframe `en.data.r.2022.elec` should have 191 rows and 17 variables.
+Dataframe `en.data.r.2022.elec` should have 191 rows and 18 variables.
 
 ::: {.callout-warning}
 
@@ -528,6 +508,8 @@ lm.C <- lm(solar_share_elec ~ pop.den + Urban.pc + gdp.pc, data = en.data.r.2022
 
 stargazer_HC(lm.A,lm.B,lm.C)
 ```
+
+If you get this right residual standard error for model (C) should be 6.008.
 
 :::
 
