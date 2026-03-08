@@ -1,0 +1,325 @@
+---
+title: "Policy Analysis and the Difference-in-Difference (DiD) estimator"
+format: 
+  html:
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(webexercises)
+```
+
+```{r, echo = FALSE, results='asis'}
+# Uncomment to change widget colours:
+#style_widgets(incorrect = "goldenrod", correct = "purple", highlight = "firebrick")
+```
+
+These notes are larely based on notes initially written by my colleague Martyn Andrews.
+
+
+## Introduction and Set-up
+
+Evaluating microeconomic policies is one of the most important uses of microeconometrics.  Typical examples of policy evaluations are:
+
+* The effects of class-sizes on school achievement.
+* The effects of job-training programs on subsequent labour market outcomes.
+* The effects of the Education Maintenance Allowance on subsequent participation in education.
+* The effects of tobacco taxes and smoking bans on smoking and cigarette consumption.
+* The effect of teh introduction of a sugar tax on fizzy drinks consumption.
+* The effects of policies aiming to encourage lone parents into the labour market.
+* The effects of gun-control laws on deaths by firearms in the US.
+* The effects of introducing of a minimum wage on employment of low paid workers in the UK. And in certain states in the US.
+
+Typically there is a **treatment** $w$ and a **response** $y$. If $w$ is a dummy (eg a training program) then it looks as if a standard regression of $y$ on $w$ plus controls might deliver what the policy-maker is after.  To preview where we are headed, the answer is "yes" if we have access to panel data.  Otherwise, if we have pooled cross-sections, our regression model needs tweaking a tad.
+
+### Policy analysis with two-period panel data
+
+We start with panel data and use the set-up and results in the Panel-Data Section.
+
+Define $w_{it}$ as a dummy variable for whether and when an individual undertook the program/received the treatment.  $D^2_{t}$ is the period-two dummy.  We further assume that the treatment only occurs in $t=2$, if at all, so that $w_{i1}=0$ for everyone.  The table below illustrates the data.
+
+
+| $i$    | $t$    | $y_{it}$ | $w_{it}$ | $D^2_t$  | ($T_{i}$) | $\mathbf{x}_{it}$ | $\Delta y_{i}$ | $\Delta w_{i}$  | $\Delta D^2_t$  | $\Delta \mathbf{x}_{i}$ |
+|--------|--------|----------|----------|----------|-----------|-------------|----------------|-----------------|-----------------|-------------------|
+| 1      | 1      | $y_{11}$ | 0        | 0        | (0)       | $\mathbf{x}_{11}$ | .              | .               | .               | .                 |
+| 1      | 2      | $y_{12}$ | 0        | 1        | (0)       | $\mathbf{x}_{12}$ | $\Delta y_{1}$ | 0               | 1               | $\Delta \mathbf{x}_{1}$ |
+| 2      | 1      | $y_{21}$ | 0        | 0        | (1)       | $\mathbf{x}_{21}$ | .              | .               | .               | .                 |
+| 2      | 2      | $y_{22}$ | 1        | 1        | (1)       | $\mathbf{x}_{22}$ | $\Delta y_{2}$ | 1               | 1               | $\Delta \mathbf{x}_{2}$ |
+| ... | ... | ...   | ...   | ...   | ...    | ...      | ...         | ...          | ...          | ...            |
+| $N$    | 1      | $y_{N1}$ | 0        | 0        | (1)       | $\mathbf{x}_{N1}$ | .              | .               | .               | .                 |
+| $N$    | 2      | $y_{N2}$ | 1        | 1        | (1)       | $\mathbf{x}_{N2}$ | $\Delta y_{N}$ | 1               | 1               | $\Delta \mathbf{x}_{N}$ |
+
+
+To the left we have the data in levels, sorted by $i$ and then $t$.  The model to be estimated, written without covariates, is:
+
+\begin{equation*}
+y_{it} = \beta_0 + \delta D^2_t + \tau w_{it} + a_i + u_{it}.
+\end{equation*}
+
+where $\tau$ is the coefficient that describes the impact $w_{it}$ has on the outcome variable. If $w_{it}$ is a policy variable as it was introduced above, then $\tau$ represents a policy affect. As always, one might also include some $x_{it}$s. As explained in the Panel Data Section, with panel data we are able to control for unobserved, time-invariant, heterogeneity $a_i$.  To do this, we difference the above equation:
+
+$$\Delta y_{i} = \delta + \tau \Delta w_{i} + \Delta u_{i}.$$ {#eq-did1}
+
+In the right-hand part of the table, the data have been first-differenced.  There are no data in $t=1$ and so we have a
+cross-section of first-differences.  Also note that, in $t=2$,
+
+\begin{equation*}
+\Delta w_{i} = w_{i2}.D^2_{2}=w_{i2}.
+\end{equation*} 
+
+Effectively we are regressing $\Delta y_{i}$ on $w_{i2}$ and a constant. With $w_{i2}$ being a dummy variable this implies:
+
+\begin{eqnarray*}
+\hat{\tau}  &=& \overline{\Delta y}_{T} - \overline{\Delta y}_{C}\\
+\hat{\delta}  &=& \overline{\Delta y}_{C}
+\end{eqnarray*}
+
+where $T$ denotes the **treated** group and $C$ denotes the **control** group. And 
+
+* $\overline{\Delta y}_{T}$ is the sample average of the change in $y$ for the treated group; and
+* $\overline{\Delta y}_{C}$ is the same for the control group.
+
+The key result is that using OLS on @eq-did1 gives $\hat{\tau}$, which is the **difference-in-differences** (DiD) estimator.  The name comnes from $\hat{\tau}$ calculating the difference between two differences.
+
+As noted, the DiD estimator has the important advantage of being able to control for unobserved heterogeneity $a_i$.  We can also add
+(differenced) controls for any time-varying variables/covariates that might be correlated with program designation.
+
+If program participation takes place in both periods, @eq-did1 no longer applies, but the interpretation is the same.  Regress $\Delta y_{i}$ on $\Delta w_{i}$, $\Delta\text{covariates}$ and a constant. It is important, however, that DiD does not require panel data; there is a version that uses pooled cross-sections (see below).
+
+
+### Policy analysis with pooled cross-sections
+
+When we have pooled cross-sections, the data look like the following, where we have $N_1$ observations in period 1 and $N_2$ in period 2.
+
+| $i$     | $t$    | $y_{it}$      | $w_{it}$ | $D^2_t$  | $T_{i}$ | $\mathbf{x}_{it}$      |
+|---------|--------|---------------|----------|----------|----------|------------------|
+| 1       | 1      | $y_{11}$      | 0        | 0        | 0        | $\mathbf{x}_{11}$      |
+| 2       | 1      | $y_{21}$      | 0        | 0        | 1        | $\mathbf{x}_{21}$      |
+| ...  | ... | ...        | ...   | ...   | ...   | ...           |
+| $N_1$   | 1      | $y_{N_1,1}$   | 0        | 0        | 1        | $\mathbf{x}_{N_1,1}$   |
+| $N_1+1$ | 2      | $y_{N_1+1,2}$ | 0        | 1        | 0        | $\mathbf{x}_{N_1+1,2}$ |
+| $N_1+2$ | 2      | $y_{N_1+2,2}$ | 0        | 1        | 0        | $\mathbf{x}_{N_1+2,2}$ |
+| ...  | ... | ...        | ...   | ...   | ...   | ...           |
+| $N=N_1+N_2$     | 2      | $y_{N,2}$     | 1        | 1        | 1        | $\mathbf{x}_{N,2}$     |
+
+
+The important point is that the individuals $i$ are different in the two cross-sections.  The variable $T_{it}$ records whether the individual $i$ is elegible for treatment.  An example of an individual at time $t=1$ when no treatment has happened yet, is someone who would be eligible for the minimum wage, but before the policy was introduced.
+
+::: {.callout-note}
+
+#### Different policy variables
+
+How are the variable $w_{it}$ in the Panel setup and $T_i$ in the cross-section setup related. In the panel we have observations for each individual at multiple times. In the cross section this is not the case. Variables like $y_{it}$ still need indexing for observation $i$ and time$t$, but we will now focus on whether an individual is elegible for the training/policy program. Therefore the treatment variable $T$ looses its time variable as we now look at elegibility rather than whether an individual at a time $t$ was receiving treatment.
+
+Individuals with $T_i=1$ belong to the treatment group, whether you are in period $t=1$ or $2$. $T_i=0$ indicates individuals in the control group.
+
+:::
+
+We discussed before that in the setup of a two-period panel the estimator the policy effect was estimated as follows:
+
+\begin{equation*}
+\hat{\tau}  = \overline{\Delta y}_{T} - \overline{\Delta y}_{C}
+\end{equation*}
+
+Let's deconstruct this estimator
+
+\begin{eqnarray*}
+\overline{\Delta y}_{T} - \overline{\Delta y}_{C} &=&(\bar{y}_{2,T} - \bar{y}_{1,T}) - (\bar{y}_{2,C} - \bar{y}_{1,C}) \\
+&=& \bar{y}_{2,T} - \bar{y}_{1,T} - \bar{y}_{2,C} + \bar{y}_{1,C}\\
+&=& (\bar{y}_{2,T} - \bar{y}_{2,C}) - (\bar{y}_{1,T} - \bar{y}_{1,C})
+\end{eqnarray*}
+
+The averages like $\bar{y}_{2,T}$, averaging the outcome for everyone in the treatment group, can be calculated in a panel setup but equally in a pooled cross-sectional setup. The panel characteristic is not needed. This establishes the important point that the DiD estimator can be obtained using pooled cross-sections (as well as panel data).  
+
+### Selection bias and the search for counterfactuals
+
+We can learn a lot from this deconstruction. Let's first look at 
+
+\begin{equation*}
+\overline{\Delta y}_{T} - \overline{\Delta y}_{C} = (\bar{y}_{2,T} - \bar{y}_{2,C}) - (\bar{y}_{1,T} - \bar{y}_{1,C}) 
+\end{equation*}
+
+Let's imagine that treatment was allocated randomly to individuals, as it is in randomised conrolled trieals (RCTs). They are popular in the medical sciences and increasingly are applied in economics as well. If allocation to the treatment ($T$) and control ($C$) group are random, then $(\bar{y}_{1,T} - \bar{y}_{1,C})$ will be very close to 0 and will just represents sampling differences. Recall in period $t=1$ treatment has not yet happened.
+
+This is why, when evaluating a RCT you only need to compare the outcomes for the $T$ and $C$ group after treatment has happened $(\bar{y}_{2,T} - \bar{y}_{2,C})$.
+
+::: {.callout-note}
+
+#### Basic income RCT in Finland
+
+An example of a RCT is economics is an experiment in Finland in which a randomly chosen group of unemployed received a basic income (an unconditional payment that was not removed after finding work - unlike typical unemployment benefits). The findings are that receiving the basic income improves the well-being of the receipients but does not result in the recipients working more (which was an important purpose of paying a basic income).
+
+**Reading**: Verho, J., Hamalainen, K. and Kanninen, O. (2022) [Removing Welfare Traps: Employment
+Responses in the Finnish Basic Income Experiment, American Economic Journal: Economic Policy, 14, 501–22.](https://www.aeaweb.org/articles?id=10.1257/pol.20200143)
+
+:::
+
+Without random assignmen of the treatment, we need to acknowledge that there may be systematic differences in outcome between the $T$ and $C$ group. Such a difference is also called selection bias. In other words,  $(\bar{y}_{1,T} - \bar{y}_{1,C})$ will not be 0.
+
+::: {.callout-important}
+
+#### Example for selection bias
+
+Let's engage in a little thought experiment. As lecturers of econometrics we believe that the students will benefit from talking to us in drop-in sessions. These are typically two hours every week that we are being paid for (by students' tuition fees mainly) to be available to chat with students about the questions they have. Of course we argue that student outcomes (knowledge of econometrics, perhaps measured by final exam performance, at time $t=2$; let $t=1$ be the beginning of the semester) will improve for treated students (those that were in our offcie for at least one office hour in the semester).
+
+In order to establish this you may be tempted to compare the exam performance (measured at time $t=2$) of those who were treated and those who were not: $(\bar{y}_{2,T} - \bar{y}_{2,C})$. Are you confident that this difference will tell you whether talking to your professor in drop-ins improves your econometrics knowledge?
+
+`r mcq(c("Yes, I am confident", "not sure", answer = "No, it does not"))`
+
+To shed light on this. Calculating the above difference would be informative of the effect of coming to drop-in sessions if $(\bar{y}_{1,T} - \bar{y}_{1,C}) \approx 0$, meaning that basically the econometrics knowledge of students at the beginning of the semester was the same. As we do not have exams at the beginning of the semester (aren't you lucky!) this is a little difficult to conceptualise. Let's think more generically about whether a student is a "good" or a "not so good" students (you who is reading this in good time and not only the night before the exam ... you are clearly a good student).
+
+If the students who do come to drop-in sessions ($T$) and those who do not ($C$) where equally good students then indeed $(\bar{y}_{1,T} - \bar{y}_{1,C}) \approx 0$. What do you think is true?
+
+* A: $(\bar{y}_{1,T} - \bar{y}_{1,C}) \approx 0$, students who come to drop-in sessions and students who don't are equally good students
+* B: $(\bar{y}_{1,T} - \bar{y}_{1,C}) > 0$, students who come to drop-in sessions are on average better students than those who do not come
+* C: $(\bar{y}_{1,T} - \bar{y}_{1,C}) < 0$, students who come to drop-in sessions are on less good students than those who do not come
+
+`r mcq(c("A", answer = "B", "C"))`
+
+
+`r hide("Why is this so?")`
+
+It is not immediately obvious that this is true. You may think that students who struggle more would have a bigger need to talk to the professor. But experience tells us that on average better students come to office hours. Coming to office hours, asking questions, confronting what you don't know are great study habits and are the sign of a great student. 
+
+`r unhide()`
+
+What then is the implication for the estimator of the effect of using drop-in sessions if we were to ignore this difference?
+
+
+```{r}
+opts_p <- c(
+   "Despite this difference we would still get a good estimate of the effect of attending office hours.",
+   answer = "We would overestimate the effect of attending drop-in sessions.",
+   "We would underestimate the effect of attending drop-in sessions"
+)
+```
+
+`r longmcq(opts_p)`
+
+`r hide("Why is this the answer?")`
+
+Recall that the real effect is calculated from 
+
+\begin{equation*}
+(\bar{y}_{2,T} - \bar{y}_{2,C}) - (\bar{y}_{1,T} - \bar{y}_{1,C}) 
+\end{equation*}
+
+If we ignore the second term (which we decided was positive) then the effect we estimate is too large. Your professor would give himself a big pat on the back thinking that his explanations he shares with students in drop-in sessions are so amazing that they are the only reason why the students who attended drop-in sessions do better than others. In fact the students who attended his drop-in would have performed better without his words of wisdom. Good students selected themselves into attending drop-in sessions, selection bias is at work.
+
+`r unhide()`
+
+:::
+
+It is the existence of selection bias that makes it necessary to use data from before the policy introduction. Let's return to the definition of the effects estimator but with the differences re-arranged to show the changes in the treatment and the control group across time:
+
+\begin{equation*}
+\overline{\Delta y}_{T} - \overline{\Delta y}_{C} = (\bar{y}_{2,T} - \bar{y}_{1,T}) - (\bar{y}_{2,C} - \bar{y}_{1,C})
+\end{equation*}
+
+This formulation highlights another important aspect of the Difference-in-Difference method, the choice of the **counterfactual**. The first difference $(\bar{y}_{2,T} - \bar{y}_{1,T})$ does show how the outcome variable changed from before to after the treatment in the treatment group. But we need to recognise that the treatment may not be the only thing that happened in between $t=1$ and $t=2$. This makes it obvious that we cannot just attribute this change to the treatment.
+
+Here is the thing: **There is no causal inference without making assumptions!** Apologies for shouting, but this is how important it is. And worse, **these are usually assumptions that are untestable!** Well, this is why they are assumptions. 
+
+In practice what we need is a **counterfactual**, a view on what the outcome variable would have been if the objects in the treatment group ($T$) had not received treatment. 
+
+If we had a RCT this would be super easy. We would just assume that the outcomes would have been similar to the control group ($C$) outcomes, after all, by randomisation, the treatment was the only thing different between the groups. But if we do not have random treatment assignment the story is more difficult. We somehow have to predict how the treatment group would have done. And there are a lot of ways to do that and we will really only deal with two of them. 
+
+1. If you you believe that all the variables that determine the selection bias (i.e. all the reasons why some people - or units in general - are more likely to get training and at the same time cause to create a bias in outcome variables) are observable variables (say gender, age etc) then you can control for these in a multiple regression model. This is sometimes called **selection on observables**What this model in effect does, it predicts the outcome, without treatment, using the regression model. This is basically a multiple regression model that includes the treatment variable and relevant covariates. The **assumptions are that, after controlling for the covariates, the treatment variable is exogenous and that the linear form in which the covariates relate to the outcome variable is correct.**
+2. Very similar to method 1 is a method called **matching**. It still **assumes that all the factors that make the treatment potentially endogenous, are observable**. The difference is now that these factors do not have to be linearly related to the outcome variable. The matching algorithm allows for nonlinear relationships to be used when predicting the counterfactual outcome. We will not discuss any more detail here.
+3. The next method to mention, and the topic of this Section is called **Difference-in-Differences (DiD)**. The crucial **assumption being made here is that, the change in outcome (from before to after the treatment period) for the treated units would have been the same as the change in outcome over the same period for the non-treated (control) units**.
+
+This assumption is the assumption we have to make (and believe in) such that the previously discussed 
+
+$$\overline{\Delta y}_{T} - \overline{\Delta y}_{C} = (\bar{y}_{2,T} - \bar{y}_{1,T}) - (\bar{y}_{2,C} - \bar{y}_{1,C})$$ {#eq-didest}
+
+delivers an unbiased estimate of the effect of the treatment. The change in the treatment group $(\bar{y}_{2,T} - \bar{y}_{1,T})$ is being corrected by (or compared with) the change in the control group $(\bar{y}_{2,C} - \bar{y}_{1,C})$. This is as we are assuming/predicting that the treatment group would have changed (in absence of treatment) as the control group.
+
+
+## DiD in a regression
+
+Above we introduced a DiD estimator as basically consisting of four averages. This results from the setup with two groups ($T$ and $C$) and only two time periods (above $t=1,2$). The DiD method is, however much more flexible. And in addition, even for the simple example, the regression method would deliver a standard error that can be used for statistical inference.
+
+Let's introduce the basic regression model into which we also include covariates/controls.
+
+$$y = \beta_0 + \delta D + \beta_1 T + \tau D.T + \text{controls} + u$$ {#eq-didreg1}
+
+where $D$ is a time dummy for after the treatment occurs (With just $t=1,2$, we replace $D^2$ by $D$). $T$ is a dummy for all units that are being treated. The variable $D.T$ is the product of 2 dummy variables; it is a so-called **interaction**-term.
+
+::: {.callout-note}
+
+#### Where have all the subscripts gone?
+
+We are conceptually still working in a 2x2 framework, two groups ($T$ or $C$) and two periods (pre and post treatment). So each observation belongs to one of the following four groups:
+
+|time | Treatment | Control |
+|:------|------|-------|
+|pre ($t=1$) | $T = 1, D = 0$ | $T = 0, D = 0$ |
+|post ($t=2$)| $T = 1, D = 1$ | $T = 0, D = 1$ |
+
+Indices $i$ and $t$ will be reintroduced later when they are necessary to identify the observations clearly. But for now it is the values of $D$ and $T$ that do the job allowing us to lighten the notation.
+
+:::
+
+Now interpret the parameters of @eq-didreg1 **without** the control variables. As always, we switch the 2 dummies on/off:
+
+\begin{align*}
+E (y | D=0, T=0) &= \beta_0                    + E (u | D=0, T=0) \\
+E (y | D=0, T=1) &= \beta_0          + \beta_1 + E (u | D=0, T=1) \\
+E (y | D=1, T=0) &= \beta_0 + \delta           + E (u | D=1, T=0) \\
+E (y | D=1, T=1) &= \beta_0 + \delta + \beta_1 + \tau +  E (u | D=1, T=1).
+\end{align*}
+
+Next assuming exogeneity (The error term being uncorrelated to $D$ and $T$)
+
+$$E (u | D=0, T=0)=E (u | D=0, T=1)=E (u | D=1, T=0)=E (u | D=1, T=1)=0.$$
+
+Then
+
+\begin{align*}
+E (y | D=0, T=0) &= \beta_0                     \\
+E (y | D=0, T=1) &= \beta_0          + \beta_1  \\
+E (y | D=1, T=0) &= \beta_0 + \delta            \\
+E (y | D=1, T=1) &= \beta_0 + \delta + \beta_1 + \tau.
+\end{align*}
+
+Now solve for the 4 parameters:
+
+\begin{align*}
+\beta_0 &= E (y | D=0, T=0) \\
+\beta_1 &= E (y | D=0, T=1) - E (y | D=0, T=0) \\
+\delta  &= E (y | D=1, T=0) - E (y | D=0, T=0)
+\end{align*}
+
+and
+
+$$\tau =  [E (y | D=1, T=1) - E (y | D=0, T=1)] - [E (y | D=1, T=0) - E (y | D=0, T=0)].$$
+
+$\tau$ is the DiD estimator in the population. The sample analogue is given in @eq-didest.
+
+$\delta$ and $\beta_1$ are "single" differences, or population differentials:
+
+* $\delta$ is the effect of time, a so-called **macro effect**, but only for the control group.
+* $\beta_1$ is a treatment effect, but only **before** the policy was introduced. It represents the selection bias.
+
+When estimated by OLS, $\hat{\beta}_0$, $\hat{\beta}_1$, $\hat{\delta}$, and $\hat{\tau}$ will replicate exactly the corresponding sample means.  
+
+\begin{align*}
+\hat{beta}_0 &= \bar{y}_{1,C} \\
+\hat{beta}_1 = \bar{y}_{2,C}-\bar{y}_{1,C} \\
+\hat{delta}  = \bar{y}_{1,T}-\bar{y}_{1,C}
+\end{align*}
+
+and finally
+
+\begin{align*}
+\tauhat    &= (\bar{y}_{2,T}-\bar{y}_{2,C})-(\bar{y}_{1,T}-\bar{y}_{1,C}) \\
+           &= (\bar{y}_{2,T}-\bar{y}_{1,T})-(\bar{y}_{2,C}-\bar{y}_{1,C}).
+\end{align*}
+
+So why do we bother using a regression model when sample means are easily computed?  First, additional $x$'s can be added to the regression to control for observable differences between the treatment and control groups over the two periods.  Second, a standard error on $\hat{\tau}$ is automatically estimated (see below). Third, the regression form can be extended in various directions (again, see below).
+
+
