@@ -411,11 +411,11 @@ The key tool in this case, as with many of the other problems we've encountered,
 
 This section could also have come in the multiple regression chapter. But it is perhaps more apt in a section where we have now actively introduced a method that attempts to eliminate an omitted variables bias (OVB). You may wonder whether it isn't better to avoid the bias in the first instance rather than combating it with clever methodological tricks. And you would have learned that we talk of OVB as we failed to include variables in to the model that are relevant for explaining variation in the outcome variable.
 
-The example of explaining wage variation with schooling does provide an excellent platform to explain why some variables are not good variables to explain although, on first sight, they may explain variation in the outcome variable (This mirrors the explanition Angrist and Pischke (2015, chapter 6). Let's replicate @eq-woods but without the time dimension, and also use £s£ rather than $x$ for schooling. 
+The example of explaining wage variation with schooling does provide an excellent platform to explain why some variables are not good variables to explain although, on first sight, they may explain variation in the outcome variable (This mirrors the explanition Angrist and Pischke (2015, chapter 6). Let's replicate @eq-woods but without the time dimension, and also use $s$ rather than $x$ for schooling. 
 
 $$
 y_{i} = \beta_0  + \beta_1 s_{i} + \beta_2 a_{i} + u_{i}.
-$$ {#ed-woods2}
+$$ {#eq-woods2}
 
 Being well aware that jobs in different industries pay very different salaries (finance - high salaries, construction - low salaries), your fellow student Fred proposes that you should really include dummy variables representing the different industries employee $i$ works in as an explanatory variables as surely that will explain why some people earn more than others.
 
