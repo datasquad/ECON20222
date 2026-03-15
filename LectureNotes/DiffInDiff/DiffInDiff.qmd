@@ -486,7 +486,7 @@ increase in the federal minimum wage to \$4.75 in October 1996, which
 affected Pennsylvania but not New Jersey.
 
 
-![](../../images/CK2000.png) {#fig-CK2000}
+![](../../images/CK2000.png){#fig-CK2000}
 
 The common trends assumption does look not good.  Angrist and Pischke conclude that "Pennsylvania may not provide a very good measure of counterfactual employment rates in New Jersey in the absence of a minimum wage change".
 
@@ -951,7 +951,7 @@ Here $d_s$ is the ever-treated dummy which indicates whether state $s$ is treate
 
 * it has 2 pre-treatment periods, which means that common trends can be tested;
 * it has 2 post-treatment periods, to illustrate how $\tau$ might evolve over time;
-* has common entry.
+* has common entry (we will discuss the staggered entry case in @sec-staggared).
 
 Now change the above example so that some treated groups are
 treated in $t=3$ (early) whereas others are treated in $t=4$ (late):
@@ -964,7 +964,7 @@ treated in $t=3$ (early) whereas others are treated in $t=4$ (late):
 | $t=4$ | 0         | 1       | 1       |
 
 
-This is called **staggered entry**, and causes all sorts of econometric problems!
+This is called **staggered entry**, and causes all sorts of econometric problems! See the discussion in @sec-staggared for an important follow-up on this.
 
 
 ::: {.callout-tip}
@@ -1070,14 +1070,211 @@ In other words, all the post-treatment interaction terms reduce to a single trea
 y_{st}= \eta + \alpha d_s + \sum_{k=2}^T\lambda_k f^k_t + \tau d_s p_t+ \textbf{z}_{st}\mathbf{\gamma} + u_{st}.
 \end{equation}
 
-This is effectively the same as @eq-e1316, which is where we started this subsection.
+This is effectively the same as @eq-e1316: 
+
+$$y_{ist} = \lambda_t + \alpha_s + \tau w_{st} + \mathbf{z}_{ist} \mathbf{\gamma} + u_{ist}$$ 
+
+which is where we started this subsection. Both equation include 
+
+* time-fixed effects ($\sum_{k=2}^T\lambda_k f^k_t$ and \lambda_t), 
+* state/unit fixed effects ($\alpha d_s $ and $\alpha_s$)
+* the time varying treatment variable (remembering that we are assuming common entry) ($\tau d_s p_t$ and $\tau w_{st}$),
+* control variables ($\textbf{z}_{st}\mathbf{\gamma}$ and $\mathbf{z}_{ist} \mathbf{\gamma} $), recalling that for @eq-e1316 we explicitly allowed for individual level observations. 
+
+
+### A simplified specification with $T=4$ and common entry
+
+
+In this subsection, we repeat most of the above, but where $T=4$ and there is common entry at $t=q=3$. This should make the analysis more transparent. The covariates are dropped for clarity.
+
+Substitute $T=4$ into Equation~(U):
+
+$$ y_{st} = \eta + \alpha d_s + \lambda_2 f^2_t + \lambda_3 f^3_t + \lambda_4 f^4_t + \omega_2 d_s f^2_t + \tau_3 d_s f^3_t + \tau_4 d_s f^4_t + u_{st}.$$ {#eq-eT4fs}
+
+Note that the time-dummies $f^2_t$, $f^3_t$ and $f^4_t$ are explicitly shown. We define the post-treatment dummy as $p_t \equiv f^3_t + f^4_t$.
+
+The fully-saturated model has 8 aggregated averages, 4 treated and 4 control. It also has 8 parameters.
+To see how the observed outcomes evolve over time:
+
+\begin{align*}
+E (y_1 | d=0) &= \eta                         \\
+E (y_2 | d=0) &= \eta +          \qquad \lambda_{2}  \\
+E (y_3 | d=0) &= \eta +          \qquad \lambda_{3}  \\
+E (y_4 | d=0) &= \eta +          \qquad \lambda_{4}  \\
+E (y_1 | d=1) &= \eta + \alpha                \\
+E (y_2 | d=1) &= \eta + \alpha + \lambda_{2} + \omega_2 \\
+E (y_3 | d=1) &= \eta + \alpha + \lambda_{3} + \tau_3  \\
+E (y_4 | d=1) &= \eta + \alpha + \lambda_{4} + \tau_4.
+\end{align*}
+
+Now subtract the first expression from the second, and the fifth from the sixth:
+
+\begin{align*}
+E (y_2 | d=0) - E (y_1 | d=0)  &= \lambda_{2} \\
+E (y_2 | d=1) - E (y_1 | d=1)  &= \lambda_{2} + \omega_2
+\end{align*}
+
+In words, $\lambda_2$ is the change (or "trend") in outcome between $t=1$ and $t=2$ for the control states and $\lambda_2 + \omega_2$ is the same for treated states (remember we normalise $\lambda_1=0$). That is, they only move in parallel (have a common trend) when $\omega_2=0$.  (In both time periods, the difference between treated and control states is $\alpha$.) In other words, to test for common trends in the pre-treatment years, test
+
+$$H_0: \omega_2=0.$$
+
+Now suppose $H_0$ is not rejected. Repeating for $t=2$ and $t=3$,
+
+\begin{align*}
+E (y | d, t=3) - E (y | d, t=2) &= \lambda_{3}-\lambda_{2} \quad \text{if $d=0$};\\
+&= \lambda_{3}-\lambda_{2} + \tau_3 \quad \text{if $d=1$}.
+\end{align*}
+
+Now the two types of state do not move in parallel because of the treatment effect $\tau_3$. Said differently, $\tau_3$ is a difference-in-difference. It is important to emphasise that it cannot be interpreted as a treatment effect (ATT) unless $\omega_2=0$.
+
+Finally, repeating for $t=3$ and $t=4$,
+
+\begin{align*}
+E (y | d, t=4) - E (y | d, t=3) &= \lambda_{4}-\lambda_{3} \quad \text{if $d=0$};\\
+&= \lambda_{4}-\lambda_{3} + \tau_4 - \tau_3 \quad \text{if $d=1$}.
+\end{align*}
+
+Clearly, if both $\tau$'s are the same, the control and treated states are moving in parallel again. This is similar to the classic Card/Krueger-style figure, but with one extra pre-treatment period and one extra post period added.
+
+To test homogeneous treatment effects, test:
+
+$$H_1: \tau_3=\tau_4.$$
+
+Recall that one can never test common trends in the treatment year (or afterwards) (see @sec-commonT above) it will always remain an assumption. When $H_1$ is imposed
+
+$$\tau_3 d_s f^3_t + \tau_4 d_s f^4_t =\tau d_s (f^3_t + f^4_t) = \tau d_s p_t = \tau w_{st}.$$
+
+![Fitted values from Equation (R). The data are simulated. There 4 years, 134 treated units and 379
+control units](../../images/DiDT4commonentry.png)
+
+One should test both hypotheses separately. Logically, it make sense to test $H_0$ first. The restricted model, which imposes common trends and homogeneous treatment effects, is written (substitute $T=4$ into Equation~(U)):
+
+$$y_{st} = \eta + \alpha d_s + \lambda_2 f^2_t + \lambda_3 f^3_t + \lambda_4 f^4_t + \tau d_s p_t + u_{st}.$$ {#eq-eT4r}
+
+To summarise, the fully saturated model (@eq-eT4fs), has 8 parameters, the restricted model with common trends and homogeneous treatment effects (@eq-eT4r) has 6 parameters, and the 2 restrictions are $\tau_3=\tau_4$ and $\omega_2=0$.
+
+
+
+
+We complete this section with an event study time plot which can be obtained after estimating the (R) model.
+
+![An Event Study Graph.](../../images/DiDT4event.png)
+
+This shows the coefficients $\omega_1$, $\tau_3$ and $\tau_4$. Here $\omega_2$ was imposed to 0 and instead $\omega_1$ was estimated. The argument remains the same, $H_0$ is now that $\omega_1=0$.
+
+Here the common pre-policy trends test is not rejected ($\omega_2=0$). The treatment effects are very significant and the point estimates fall slightly (but the fall is not significant, $\tau_3=\tau_4$. This type of plot is very instructive.
+
+## Staggared entry {#sec-staggared}
+
+Let us restate model @eq-e1316, which is a very flexible specification
+
+$$y_{ist} = \lambda_t + \alpha_s + \tau w_{st} + \mathbf{z}_{ist} \mathbf{\gamma} + u_{ist}$$ {#eq-e1316}
+
+where $i=1,\dots,N_{st}$ and $s=1,\dots S; t=1,\dots,T$. This is flexible as the treatment variable $w_{st}$ (equal to 1 if the policy is in place at time $t$ in state $s$) allows the policy to start in different periods for different states $s$. 
+
+In the following discussion we then imposed common entry which allowed us to write the policy variable as the more restrictive $d_s p_t$. In that restricted version we could then think about the fully saturated model (U) which also delivered event study plots as useful visualisation.
+
+Now we shall return to thinking about the more general staggared entry case. Unfortunately we now know that this methodology (estimating @eq-e1316) relies on very restrictive assumptions and is likely to result in very biased estimated. In particular, when we have staggared policy entry, the situation complicates significantly if policy effects are not constant through time or, if they are constant through time but differ between states (policy has a stronger effect in some states compared to others). 
+
+There is a growing and important recent literature that describes the issue and proposes ways to deal with such a setup. An accessible summary of some of these developments is provided in Baker et al (2022).
+
+The following describes a simple way to deal with such a situation. Indeed, this approach is  the building block to some of the more complex methodologies to obtain useful policy parameter estimates in situations with staggared entry. Let's assume we have 5 time periods and 6 states (A to F). The following illustrates the policy pattern accross time and states.
+
+| $w_{st}$| State A | State B | State C | State D | State E | State F |
+|---------|---------|---------|---------|---------|---------|---------|
+| $t=1$   | 0       | 0       | 0       | 0       | 0       | 0       |
+| $t=2$   | 0       | 0       | 0       | 0       | 0       | 0       |
+| $t=3$   | 0       | 0       | 1       | 1       | 0       | 0       |
+| $t=4$   | 0       | 0       | 1       | 1       | 1       | 1       |
+| $t=5$   | 0       | 0       | 1       | 1       | 1       | 1       |
+
+States A and B never implement the policy and are very obviously in the control group. States C and D implement the policy from $t=3$ onwards. States E and F only implement the policy from $t=4$ onwards. 
+
+If policy effects are time varying and/or have different strengths in different states, estimating @eq-e1316 using the data from all 6 states will deliver biased policy estimates. It has been shown that under some circumstances they can even have the wrong sign, meaning that an estimate can show a negative impact when the true policy effect is positive.
+
+The simple solution is to estimate two models. 
+
+* Model 1 with states A, B (control) and C and D (treatment). In this setup we have common entry.
+* Model 2 with states A, B (control) and E and F (treatment). In this setup we have common entry.
+
+As both models have a common entry setup, the difficulties with staggared entry do not arise. We then obtain two policy effect estimates for the different entry times. One could then think about whether there are sensible ways to summarise these, but this is beyond the purpose of this write-up
+
+## Placebo tests and the common trends assumption
+
+It is apparent from the above discussion that the common trend assumption is the crucial building block when it comes to implementing a difference in difference model to estimate the effect of a policy. The following thinking is crucial for an empirical economist/econometrician.
+
+1. Acknowledge the crucial assumption. Here common trends
+2. Then gather evidence that allows you to either make the assumption more plausible or to demonstrate that the assumption is shaky. 
+3. If in 2. the assumption proved shaky then you can rethink your setup and see whether you can change
+
+One of the tools for step 2 we already learned, testing for pre-policy common trends (see @sec-TWFEheterotaus). If we were to reject the hypothesis of common pre-policy trends, this will make it less plausible to assume that, in absence of treatment, that the treatment and control group would evolve with the same trend.
+
+Here we will briefly describe a second method that is often used to deliver evidence to support or weaken the common trends assumption. It is called a Placebo test. Assume we are looking at the whether the introduction of strict firearm laws has had an effect on homicides by fireams (Siegel et al., 2019). The outcome variable here is deaths by homicide (measured by deaths by 100,000 population) and the setting is the US where different states introduce different policies at different times (staggered entry).
+
+Let's say you did find that there is an effect of harsher gun policies in the sense that such policies have a negative effect on homicide deaths (i.e. they result in fewer deaths as intended by the policy). Would you expect such policies to also have an impact on deaths by lung cancer? No, absolutly not. So if you repeated the analysis, exchanging homicide deaths with lung cancer deaths you would expect a zero effect. Importantly, the intervention remains the gun policy! This is a placebo test. We are testing the impact on something for which we would expect a zero effect.
+
+So if you find a zero effect, then this will strengthen your confidence that the general set-up, including the common trends assumption, is appropriate. Should you find that the gun policy has an effect on deaths by lung cancer this is an indication that the set-up, and consequently the common trends assumption, may not be defendable. And of course that will compromise your causal interpretation of your earlier finding that gun policy has a negative effect on homicide deaths.
+
+What should you do if your evidence casts doubt on your setup? One obvious thing to do is to reconsider your control group. Could you build a different control group that delivers a set-up that has a more defendable common trend assumption.
+
+::: {.callout-note}
+
+#### Two-way fixed effect, TWFE
+
+#### Practice: Placebo tests 
+
+The following questions propose placebo tests. Decide whether the proposed placebo test is sensible or not.
+
+Study: Effect of harsher gun policies on homicide deaths.
+
+Placebo: Effect of harsher gun policies on deaths by stroke.
+
+`r mcq(c(answer = "good Placebo test", "not a good Placebo test"))`
+
+Study: Effect of CO2 tax on CO2 emissions.
+
+Placebo: Effect of CO2 tax on windfarm output.
+
+`r mcq(c("good Placebo test",answer = "not a good Placebo test"))`
+
+Study: Effect of legalisation of recreational drugs on mental health outcomes in college students.
+
+Placebo: Effect of legalisation of recreational drugs on maths grades in college.
+
+`r mcq(c("good Placebo test",answer = "not a good Placebo test"))`
+
+Study: Effect of legalisation of recreational drugs on mental health outcomes in college students.
+
+Placebo: Effect of legalisation of recreational drugs on fuel prices at gas stations.
+
+`r mcq(c(answer = "good Placebo test","not a good Placebo test"))`
+
+:::
+
+## Summary
+
+In this section we learnd that the Difference-in-Difference methodology can be used to estimate treatment effects in a panel or repeated cross-sectional setup. 
+
+The DiD methodology uses the information from a control group (which need not be identical to the treatment group) to construct a counterfactual for the treatment group. This is what the actual outcome of the treatment group is compared to in order to estimate the policy effect.
+
+As causal inference can never happen without assumptions it is important to understand that the assumption used to construct this counterfactual is that, in absence of the policy, the treatment group would have had similar changes in the outcome variable as the control group. This is the core of the DiD methodology.
+
+The section explained which models can be used to estimate this policy effect, how to incorporate multiple pre and post-policy time periods, how to allow for multiple units in the treatment and control group, how to estimate time-varying policy effects and finally how to gather information that either strengthens the identifying assumption or shines a light on the assumption being a shaky one.
+
+Finally the section also briefly discussed the difficulties when there is staggered entry, meaning that different units implement a policy, but not at the same time. We also briefly explained a simple technique to deal with such situations.
 
 
 ## Reading
 
 * Angrist, J.D. and J-S. Pischke (2015) Mastering Metrics. The Path from Cause to Effect. Princeton University Press: Princeton.
 
+* Baker, A.C., D.F. Larcker and C.C.Y. Wang (2022) How much should we trust staggered difference-in-differences estimates?, Journal of Financial Economics, 144, 370-395, [doi.org/10.1016/j.jfineco.2022.01.004](https://doi.org/10.1016/j.jfineco.2022.01.004).
+
+* Becker, R. (2026) Firearm Laws and Homicide Deaths, R - Workthrough for Siegel et al., accessed March 2026, [https://datasquad.github.io/ECLR/examples.html](https://datasquad.github.io/ECLR/examples.html)
+
 * Stewart, Mark B. (2004) The Employment Effects of the National Minimum Wage. The Economic Journal, 114, pp. C110–16. 
+
+* Siegel, M., M. Pahn, Z. Xuan, E. Fleegler and D. Hemenway (2019) The Impact of State Firearm Laws on Homicide and Suicide Deaths in the USA, 1991–2016: a Panel Study, J Gen Intern Med 34(10):2021–8. [doi.org/10.1007/s11606-019-04922-x](https://doi.org/10.1007/s11606-019-04922-x)
 
 * Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage, 8th edition, Section 13.2. Policy Analysis with Pooled Cross-Section Data.
 
