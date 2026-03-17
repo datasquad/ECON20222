@@ -44,6 +44,14 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 [Lecture Code](https://datasquad.github.io/ECON20222/LectureCodes/Panel_Lecture_6.html)
 
+## Difference in Difference
+
+[Notes](https://datasquad.github.io/ECON20222/LectureNotes/DiffInDiff/DiffInDiff.html)
+
+[Lecture Code](https://datasquad.github.io/ECON20222/Demo Class/Demo_Class_DiD_Workthrough.pdf)
+
+
+
 # Computer Labs
 
 [Computer Lab 1](https://datasquad.github.io/ECON20222/ComputerLabs/Comp_Lab_1_2526.html)

@@ -10,8 +10,8 @@ format:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE)
-student_view <- 'hide'   # set to 'hide' to not reveal output, 'markup' to show
-solution_echo <- FALSE   # set to FALSE to not show full code, TRUE to show full code
+student_view <- 'markup'   # set to 'hide' to not reveal output, 'markup' to show
+solution_echo <- TRUE   # set to FALSE to not show full code, TRUE to show full code
 library(webexercises)
 ```
 
@@ -510,6 +510,26 @@ stargazer_HC(lm.A,lm.B,lm.C)
 ```
 
 If you get this right residual standard error for model (C) should be 6.008.
+
+```{r, echo = solution_echo, results=student_view, output = TRUE}
+# Model answer for Model B coefficient interpretation questions
+# Model B:
+
+# it is important to be 100% about the units in which the variables are measured
+# dep var: share of wind in elec production (percentage, e.g. 3 = 3%)
+# Urban.pc: percentage of population living in urban areas (e.g. 59 = 59%)
+# Pop.den: population per square meters 
+# est model
+# s = -2.503-0.004*pop.den +0.122*urban.pc +errors
+
+# literal interpretation (useful intermediary step for yourself):
+# if urban.pc increases by 1 unit then (c.p.) we should expect s to increase by 0.122.
+# now with meaning:
+# if urban.pc increases by 1 percentage point then (c.p.) we should expect s to increase by 0.122%.
+
+# if pop.den increases by 1 unit then (c.p.) we should expect s to decrease by 0.004.
+# if pop.den increases by 1 person per square km then (c.p.) we should expect s to decrease by 0.004%.
+```
 
 :::
 

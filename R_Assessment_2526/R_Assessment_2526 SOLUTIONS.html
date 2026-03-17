@@ -3491,7 +3491,7 @@ margin: 1em 0;
 9                    Malawi      MWI         92.34973
 10             Sierra Leone      SLE         90.00000</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lowest GDP.pc</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>LT_fossil <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, gdp.pc) <span class="sc">%&gt;%</span> </span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(gdp.pc) <span class="sc">%&gt;%</span> </span>
@@ -3509,7 +3509,7 @@ margin: 1em 0;
 9                          Chad      TCD 1306.8327
 10                  Afghanistan      AFG 1313.5778</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `solar_share_elec&quot;</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>LT_solar <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, solar_share_elec) <span class="sc">%&gt;%</span> </span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(solar_share_elec)) <span class="sc">%&gt;%</span> </span>
@@ -3527,7 +3527,7 @@ margin: 1em 0;
 9      Somalia      SOM         16.66667
 10      Jordan      JOR         15.28578</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `hydro_share_elec&quot;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># highest `wind_share_elec&quot;</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>LT_wind <span class="ot">&lt;-</span> en.data.r.<span class="fl">2022.</span>elec <span class="sc">%&gt;%</span>  </span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(country, iso_code, wind_share_elec) <span class="sc">%&gt;%</span> </span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">arrange</span>(<span class="fu">desc</span>(wind_share_elec)) <span class="sc">%&gt;%</span> </span>
@@ -3692,6 +3692,25 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 </div>
 </div>
 <p>If you get this right residual standard error for model (C) should be 6.008.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model answer for Model B coefficient interpretation questions</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Model B:</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co"># it is important to be 100% about the units in which the variables are measured</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dep var: share of wind in elec production (percentage, e.g. 3 = 3%)</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Urban.pc: percentage of population living in urban areas (e.g. 59 = 59%)</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Pop.den: population per square meters </span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co"># est model</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="co"># s = -2.503-0.004*pop.den +0.122*urban.pc +errors</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="co"># literal interpretation (useful intermediary step for yourself):</span></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="co"># if urban.pc increases by 1 unit then (c.p.) we should expect s to increase by 0.122.</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co"># now with meaning:</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="co"># if urban.pc increases by 1 percentage point then (c.p.) we should expect s to increase by 0.122%.</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="co"># if pop.den increases by 1 unit then (c.p.) we should expect s to decrease by 0.004.</span></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a><span class="co"># if pop.den increases by 1 person per square km then (c.p.) we should expect s to decrease by 0.004%.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </section>
@@ -3714,10 +3733,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 <li>Plot B: <code>Urban.pc</code> on the horizontal axis and <code>fossil_share_elec</code> on the vertical axis</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>plot.A <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>gdp.pc, <span class="at">y=</span>low_carbon_share_elec)) <span class="sc">+</span> </span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;gdp.pc v low carbon share in electricity production&quot;</span>)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>plot.A</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plot.A <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>gdp.pc, <span class="at">y=</span>low_carbon_share_elec)) <span class="sc">+</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;gdp.pc v low carbon share in electricity production&quot;</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>plot.A</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3725,10 +3744,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>plot.B <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>Urban.pc, <span class="at">y=</span>fossil_share_elec)) <span class="sc">+</span> </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Urban.pc v fossil share in electricity production&quot;</span>)</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>plot.B</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>plot.B <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(en.data.r.<span class="fl">2022.</span>elec, <span class="fu">aes</span>(<span class="at">x=</span>Urban.pc, <span class="at">y=</span>fossil_share_elec)) <span class="sc">+</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Urban.pc v fossil share in electricity production&quot;</span>)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>plot.B</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3755,12 +3774,12 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 <li>Plot D: Time-series plot for <code>wind_share_elec</code>. Different countries should show in differently colored lines.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(iso_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DEU&quot;</span>,<span class="st">&quot;CHN&quot;</span>, <span class="st">&quot;USA&quot;</span>))</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>plot.C <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>solar_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Solar share in electricity production&quot;</span>)</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>plot.C</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> en.data.r <span class="sc">%&gt;%</span> <span class="fu">filter</span>(iso_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;DEU&quot;</span>,<span class="st">&quot;CHN&quot;</span>, <span class="st">&quot;USA&quot;</span>))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>plot.C <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>solar_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Solar share in electricity production&quot;</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>plot.C</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3768,10 +3787,10 @@ Note:                                                     *p&lt;0.1; **p&lt;0.05
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>plot.D <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>wind_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Wind share in electricity production&quot;</span>)</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>plot.D</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>plot.D <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>wind_share_elec, <span class="at">colour =</span> iso_code)) <span class="sc">+</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Wind share in electricity production&quot;</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>plot.D</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
