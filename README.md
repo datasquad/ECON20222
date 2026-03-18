@@ -40,11 +40,15 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 ## Panel Data Methods
 
+[Lecture Slides]((https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-7---Panel-Data.pdf))
+
 [Notes](https://datasquad.github.io/ECON20222/LectureNotes/PanelDataMethods/PanelDataMethods.html)
 
 [Lecture Code](https://datasquad.github.io/ECON20222/LectureCodes/Panel_Lecture_6.html)
 
 ## Difference in Difference
+
+[Lecture Slides]((https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-7---DiffInDiff.pdf))
 
 [Notes](https://datasquad.github.io/ECON20222/LectureNotes/DiffInDiff/DiffInDiff.html)
 

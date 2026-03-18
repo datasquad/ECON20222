@@ -1272,6 +1272,8 @@ Finally the section also briefly discussed the difficulties when there is stagge
 
 * Becker, R. (2026) Firearm Laws and Homicide Deaths, R - Workthrough for Siegel et al., accessed March 2026, [https://datasquad.github.io/ECLR/examples.html](https://datasquad.github.io/ECLR/examples.html)
 
+* Cunningham, S. (2026), Chapter 9 Difference-in-Difference, [https://mixtape.scunning.com/09-difference_in_differences](https://mixtape.scunning.com/09-difference_in_differences) (accessed 17/3/2026)
+
 * Stewart, Mark B. (2004) The Employment Effects of the National Minimum Wage. The Economic Journal, 114, pp. C110–16. 
 
 * Siegel, M., M. Pahn, Z. Xuan, E. Fleegler and D. Hemenway (2019) The Impact of State Firearm Laws on Homicide and Suicide Deaths in the USA, 1991–2016: a Panel Study, J Gen Intern Med 34(10):2021–8. [doi.org/10.1007/s11606-019-04922-x](https://doi.org/10.1007/s11606-019-04922-x)
