@@ -40,7 +40,7 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 ## Panel Data Methods
 
-[Lecture Slides]((https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-7---Panel-Data.pdf))
+[Lecture Slides](https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-7---Panel-Data.pdf)
 
 [Notes](https://datasquad.github.io/ECON20222/LectureNotes/PanelDataMethods/PanelDataMethods.html)
 

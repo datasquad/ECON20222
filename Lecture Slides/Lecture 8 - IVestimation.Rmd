@@ -242,6 +242,7 @@ $$
 
 
 
+
 ## Check 3 conditions for a valid Instrumental Variable
 
 * **AIV1** Is $z$ uncorrelated with $u$ ? Cannot test this. Probably No. Because father's education will be correlated with father's ability, and ability is correlated through generations.
@@ -293,20 +294,42 @@ $$
 * This is all because the $R_{x, z}^{2}$ is very small.
 * Weak instruments are a real problem in micro-econometrics. Angrist and Krueger (1991) is the classic early example.
 
+## Where can instruments come from 
 
-## IV from randomisation
+* It is often hard to justify the exclusion restriction. 
+* Finding good instruments can be hard
+* Some examples:
+  + **Naturally random processes** like rainfall or wind direction.  
+  this can be a valid instrument if you can argue that the particular outcome of the process on a day/week had an impact on the $x$ variable 
+  But rainfall averages, prevailing wind directions are likely to not be excludable for many outcomes 
+  + **Randomisation**. Sometimes there are random elements in allocation processes, either by design or they just happen to be there. If there is randomisation, but it is not perfect, i.e. not everyone does what you want them to do, then randomisation can serve as an instrument.
 
-A common source of an instrument is some element of randomisation.
 
-Of course, if we had a RCT (like the Finnish Basic Income example), then there would be no problem. The treatment variable can be used to establish causal effects.
+## IV from Natural processes
 
-But there will often be randomisation schemes that fall "short" of a RCT.
+* Effect of Air pollution ($x$) on Mortality ($y$), Wind direction ($z$) creates random exposure to air pollution (Anderson, 2020)
+* Effect of political protest ($x$) on political outcomes (elections, legislation, $y$), rainfall ($z$) $\rightarrow$ political protest ($x$) $\rightarrow$ elections/laws ($y$), (see Demo Class 4) 
 
-* A random subset of students may get an email to encourage them to read the textbook. Can a dummy variable indicating who got the email be an instrument for reading the textbook?
+## IV from randomisation I
+
+Consider you want to invesigate what impact jail sentences ($x$) have on later life outcomes ($y$) for the people sentenced (or their families). (see Aizer and Doyle, 2015)
+
+* In any such examples it is basically impossible to think of $x$ as exogenous. The punishment is a function of the crime which is the result of all the life circumstances
+* But the extend of the punishment is not only a function of the crime, and the person sentenced, it is determined by a judge.
+* Some judges are known to be harsher than others, which means that a portion of somone's sentence will be unrelated to the circumstances of the crime and the background of the perpetrator
+* In the US (and perhaps some other countries) judges are randomly assigned. This random assignment ($z$) can be used as an instrument
+
+## IV from randomisation II
+
+If we had a RCT (like the Finnish Basic Income example), then there would be no problem. The treatment variable ($X$) is exogenous. But there will often be randomisation schemes that fall "short" of a RCT.
+
+* You are interested in whether reading the textbook (or other reading) ($x$) actually supports student learning ($y$).
+* $x$ is clearly endogenous.
+* A random subset of students may get an email to encourage them to read the textbook. Can a dummy variable indicating who got the email ($z$) be an instrument for reading the textbook?
 
 \begin{eqnarray}
-  y &=& \alpha + \beta x + u
-  x = \gamma + \delta * x + e
+  y &=& \alpha + \beta x + u\\
+  x &=& \gamma + \delta * z + e
 \end{eqnarray}
 
 where $y$ is grade in QM, $x$ represents the average time a week you spend on reading the textbook and $z$ is 1 if you received the email encouraging the textbook reading and 0 otherwise.
@@ -319,14 +342,31 @@ What are we hoping for?
 * $Cov(x,z)\neq 0$
 * $z$ does not belong into the model for $y$.
 
-We also need that there is monotonicity in $\Delta x/\Delta z$, which means that receiving $z$ does not have opposite effects on students.
+We also need that there is monotonicity in $\Delta x/\Delta z$, which means that receiving $z$ does not have a positive effect on some and a negative effect on other students.
+
+If these assumptions hold then 
+
+* Estimating $y$ on $x$ (plus controls) by OLS is biased
+* Estimating the reduced form of $y$ on $z$ (plus controls) gives you the Intention to Treat Effect (ITT)
+* Estimating $y$ on $x$ by IV gives the local average treatment effect (LATE) 
+
+LATE is the average effect for those that are "swayed" by the email.
+
+## Summary
+
+* IV tackles the problem of endogeneity of $x$ by extracting some variation of $x$ that can be said to be exogenous. 
+* The difficulty lies in finding instruments. 
+* Imperfect Randomisation schemes are often a source of instruments
 
 ## References
 
 * Wooldridge, Introductory Econometrics, Ch.15
 * Angrist and Pischke, Mastering 'Metrics, Ch. 3
 * Stock and Watson, Introduction to Econometrics, Ch.12
-
+* Huntington-Klein, N. (2021), The Effect: An Introduction to Research Design and Causality, CRC Press, Chp. 19.
+* Madestam, A., Shoag, D., Veuger, S. and Yanagizawa-Drott, D. (2013) Do political protests matter? Evidence from the Tea Party movement. The Quarterly Journal of Economics (2013), 16331685. doi:10.1093/qje/qjt021 [MSVY]
+* Anderson, M.A. (2020) As the Wind Blows: The Effects of Long-Term Exposure to Air Pollution on Mortality, [Journal of the European Economic Association, 18, 1886–1927](https://academic.oup.com/jeea/article/18/4/1886/5580747)
+* Aizer, A. and J.J. Doyle (2015) Juvenile incarceration, human capital, and future crime: Evidence from randomly assigned judges. The Quarterly Journal of Economics, 130, 759–803.
 
 
 
