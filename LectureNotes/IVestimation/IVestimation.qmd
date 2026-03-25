@@ -1,0 +1,242 @@
+---
+title: "Instrumental Variables (IV) Estimation"
+format: 
+  html:
+    toc: true
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(webexercises)
+```
+
+```{r, echo = FALSE, results='asis'}
+# Uncomment to change widget colours:
+#style_widgets(incorrect = "goldenrod", correct = "purple", highlight = "firebrick")
+```
+
+
+## Introduction 
+
+In the Panel-data section we discussed an example of using information from data on twins to estimate the effect of schooling on wages. We proposed the following model
+
+$$
+\log y_{fi} = \beta_0 + \beta_1 s_{fi} + \mathbf{x}'_f
+\mathbf{b} + a_f + u_{fi} \qquad i=1,2
+$$
+
+Here, subscript $f$ stands for family, while subscript $i = 1,2$ indicated twin 1 or 2 in family $f$. The reason why we suspected that there may be issues in estimating the above model, either by pooled OLS, and even more so when using a difference model (calculating the difference between siblings) was that there is the distinct possibility of individuals misreporting their own amount of schooling $s_{fi}$.
+
+As discussed in the endogeneity section, this will cause the $s_{it}$ variable to be endogenous, causing a bias in the estimation of $\beta_1$.
+
+The method introduced here, IV Estimation, is a tool that, sometimes, can be used to deal with this issue. Towards the end of the chapter we will return to this example.
+
+
+
+
+
+
+
+
+## Some econometric details
+
+Both the long-levels and short-differenced regressions can be written as
+
+$$\log y = \beta_0 + \beta_1 s^* + u,$$
+
+where both $s^*$, the self-report, and $z^*$, the cross-sibling report,
+are measured with error:
+\[
+s = s^* + e \qquad z = z^* + m.
+\]
+We know from Section~\ref{sub:ME} that the (asymptotic) bias in OLS is
+given by:
+\[
+\text{plim}\betahat_1 = \beta_1 \left(1-\frac{\Var(e)}{\Var(s)} \right).
+\]
+Now the IV estimator is given by:
+\[
+\betatilde_1 = \frac{\Covhat(\log y,z)}{\Covhat(s,z)} =
+\frac{\Covhat(\beta_0 + \beta_1 s^* + u,z)}{\Covhat(s^* + e,z)}.
+\]
+
+First consider the asymptotic bias in IV when the cross-sibling report
+is not measured with error, $m=0$. Whilst not the case here, it shows
+how IV can be used to solve ME problems in general.
+\begin{multline*}
+\text{plim}(\betatilde_1) =
+\frac{\text{plim}[\Covhat(\beta_0 + \beta_1 s^* + u,z)]}{\text{plim}[\Covhat(s^* + e,z)]}=
+\frac{\Cov (\beta_0 + \beta_1 s^* + u,z) } {\Cov (s^* + e,z) } =  \\
+\frac{\beta_1 \Cov (s^*,z) + \Cov(u,z)}{\Cov (s^* + e,z) } =
+\frac{\beta_1 \Cov (s^*,z) + 0}{\Cov (s^*,z) } = \beta_1.
+\end{multline*}
+The key assumption, in general, is that the instrument is uncorrelated
+with the measurement error,  $\Cov (e,z)=0$ (as well as the equation
+error $u$).
+
+Now consider the asymptotic bias in IV when the cross-sibling report
+\ul{is} measured with error, $m \neq 0$.
+\begin{multline*}
+\text{plim}(\betatilde_1) =
+\frac{\text{plim}[\Covhat(\beta_0 + \beta_1 s^* + u,z)]}{\text{plim}[\Covhat(s^* + e,z)]}=
+\frac{\Cov (\beta_0 + \beta_1 s^* + u,z^* + m) } {\Cov (s^* + e,z^* + m) } =  \\
+\frac{\beta_1 \Cov (s^*,z^* + m) + \Cov(u,z^* + m)}{\Cov (s^* + e,z^* + m) } =
+\frac{\beta_1 \Cov (s^*,z^* + m) + 0}{\Cov (s^* + e,z^* + m) } = \dots?
+\end{multline*}
+
+For this to equal $\beta_1$, we need:
+\[
+\Cov (s^*, m) = \Cov (z^*, e)  =\Cov (e, m) =0.
+\]
+There is no reason why the ME in cross-sibling report, $m$, should be
+correlated with the true own years-of-education.  And the same the other
+way round.  The correlation between the two MEs is more contentious.  MM
+say:  ``Uncorrelatedness of reporting errors across siblings is a strong
+assumption, but is a natural starting point \dots''
+
+If $\Cov (e, m) \neq 0$, then $z$ is not an exogenous instrument.
+However, exludability is a very reasonable assumption, and the $F$ tests
+for relevance are easily big enough (observed $s$ is strongly correlated
+with observed $z$, even in differences).
+
+
+
+
+
+
+## Reading
+
+Reading
+
+* Angrist, J.D. and J-S. Pischke (2015) Mastering Metrics. The Path from Cause to Effect. Chp 3, Princeton University Press: Princeton.
+
+* Cunningham, S. (2026), Chapter 7 Instrumental Variables, [https://mixtape.scunning.com/09-difference_in_differences](https://mixtape.scunning.com/09-difference_in_differences) (accessed 17/3/2026)
+
+* Wooldridge, J. (2025) Introductory Econometrics: A Modern Approach, Cengage, 8th edition, Section 15.1-15.4. Policy Analysis with Pooled Cross-Section Data.
+
+
+
+
+# DELETE
+
+## Example Questions
+
+### Fill-In-The-Blanks (`fitb()`)
+
+Create fill-in-the-blank questions using `fitb()`, providing the answer as the first argument.
+
+- 2 + 2 is `r fitb(4)`
+
+You can also create these questions dynamically, using variables from your R session.
+
+```{r}
+x <- sample(2:8, 1)
+```
+
+- The square root of `r x^2` is: `r fitb(x)`
+
+The blanks are case-sensitive; if you don't care about case, use the argument `ignore_case = TRUE`.
+
+- What is the letter after D? `r fitb("E", ignore_case = TRUE)`
+
+If you want to ignore differences in whitespace use, use the argument `ignore_ws = TRUE` (which is the default) and include spaces in your answer anywhere they could be acceptable.
+
+- How do you load the tidyverse package? `r fitb(c("library( tidyverse )", "library( \"tidyverse\" )", "library( 'tidyverse' )"), ignore_ws = TRUE, width = "20")`
+
+You can set more than one possible correct answer by setting the answers as a vector.
+
+- Type a vowel: `r fitb(c("A", "E", "I", "O" , "U"), ignore_case = TRUE)`
+
+You can use regular expressions to test answers against more complex rules.
+
+- Type any 3 letters: `r fitb("^[a-zA-Z]{3}$", width = 3, regex = TRUE)`
+
+### Multiple Choice (`mcq()`)
+
+- "Never gonna give you up, never gonna: `r mcq(c("let you go", "turn you down", "run away", answer = "let you down"))`"
+- "I `r mcq(c(answer = "bless the rains", "guess it rains", "sense the rain"))` down in Africa" -Toto
+
+### True or False (`torf()`)
+
+- True or False? You can permute values in a vector using `sample()`. `r torf(TRUE)`
+
+### Longer MCQs (`longmcq()`)
+
+When your answers are very long, sometimes a drop-down select box gets formatted oddly. You can use `longmcq()` to deal with this. Since the answers are long, It's probably best to set up the options inside an R chunk with `echo=FALSE`. 
+
+**What is a p-value?**
+
+```{r}
+opts_p <- c(
+   "the probability that the null hypothesis is true",
+   answer = "the probability of the observed, or more extreme, data, under the assumption that the null-hypothesis is true",
+   "the probability of making an error in your conclusion"
+)
+```
+
+`r longmcq(opts_p)`
+
+**What is true about a 95% confidence interval of the mean?**
+
+```{r}
+# use sample() to randomise the order
+opts_ci <- sample(c(
+  answer = "if you repeated the process many times, 95% of intervals calculated in this way contain the true mean",
+  "there is a 95% probability that the true mean lies within this range",
+  "95% of the data fall within this range"
+))
+```
+
+`r longmcq(opts_ci)`
+
+## Checked sections
+
+Create sections with the class `webex-check` to add a button that hides feedback until it is pressed. Add the class `webex-box` to draw a box around the section (or use your own styles).
+
+::: {.webex-check .webex-box}
+
+I am going to learn a lot: `r torf(TRUE)`
+
+```{r, results='asis'}
+opts <- c(
+   "the probability that the null hypothesis is true",
+   answer = "the probability of the observed, or more extreme, data, under the assumption that the null-hypothesis is true",
+   "the probability of making an error in your conclusion"
+)
+
+cat("What is a p-value?", longmcq(opts))
+```
+
+:::
+
+
+
+## Hidden solutions and hints
+
+You can fence off a solution area that will be hidden behind a button using `hide()` before the solution and `unhide()` after, each as inline R code.  Pass the text you want to appear on the button to the `hide()` function.
+
+If the solution is a code chunk, instead of using `hide()` and `unhide()`, simply set the `webex.hide` chunk option to TRUE, or set it to the string you wish to display on the button.
+
+**Recreate the scatterplot below, using the built-in `cars` dataset.**
+
+```{r}
+with(cars, plot(speed, dist))
+```
+
+
+`r hide("I need a hint")`
+
+See the documentation for `plot()` (`?plot`)
+
+`r unhide()`
+
+<!-- note: you could also just set webex.hide to TRUE -->
+
+```{r, echo = TRUE, eval = FALSE}
+#| webex.hide: "Click here to see the solution"
+plot(cars$speed, cars$dist)
+```

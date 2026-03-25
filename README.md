@@ -54,6 +54,12 @@ Lecturers: [Ralf Becker](https://datasquad.github.io/ralffbecker/index.html), Yi
 
 [Lecture Code](https://datasquad.github.io/ECON20222/Demo Class/Demo_Class_DiD_Workthrough.pdf)
 
+## Instrumental Variables Estimation
+
+[Lecture Slides]((https://datasquad.github.io/ECON20222/Lecture Slides/Lecture-8---IVestimation.pdf))
+
+[Lecture Code](https://datasquad.github.io/ECON20222/LectureCodes/IV_Lecture_8_code.html)
+
 
 
 # Computer Labs

@@ -19,7 +19,7 @@ library(webexercises)
 #style_widgets(incorrect = "goldenrod", correct = "purple", highlight = "firebrick")
 ```
 
-These notes are larely based on notes initially written by my colleague Martyn Andrews.
+These notes are largely based on notes initially written by my colleague Martyn Andrews.
 
 
 ## Introduction and Set-up

@@ -604,15 +604,51 @@ where $t=q$ is when the common entry happens.
 
 ## Common trends again
 
+Clearly the common trends assumption is crucial to allowing causal inference. It can **never be proven** to be either correct or false. It always remains an assumption. But you can produce evidence that makes the assumption more less plausible:
+
 * Testing pre-policy trends
-* Placebo tests
+* Placebo tests (see notes)
 
--> careful control group composition
+What to do if the assumption looks shaky?
 
-## Staggared Entry
+* careful control group composition
+* would constant state specific trends be an alternative identifying assumption 
+  + no pre-policy test available
+  + but placebo tests are possible
 
-Difficult
-re-estimate for treatment groups with common entry
+## Staggered Entry
+
+When policy starts at different periods:
+
+![](../images/DiDstaggered1.PNG)
+
+## Staggered Entry
+
+Could we use (DID3), the TWFE model?
+
+$$y_{i s t}=\lambda_{t}+\alpha_{s}+\tau w_{s t}+\mathbf{z}_{i s t} \boldsymbol{\gamma}+u_{i s t} \quad  (DID3)$$
+
+The variable $w_{st}$ could  capture the state dependent pattern of policy adoption.
+
+Unfortunately, the answer is no if:
+
+* Policy effects are not constant through time, and/or
+* Policy effects differ between states
+
+## Staggered Entry - What to do
+
+There is a lot of recent research on this (see Baker et al, 2022).
+
+A simple way to deal with this:
+
+* Separate the treatment group into several treatment groups where all treatment states/units have common entry
+* Then estimate separate models for each of these groups
+
+Many of the modern, more complex, methodologies described in Baker et al. (2022) use this as their building blocks
+
+## Staggered Entry - What to do
+
+![](../images/DiDstaggered2.PNG)
 
 ## Concluding comments
 
@@ -648,6 +684,7 @@ Some extensions not discussed in these slides in detail are
 * Finding a before/after for some policy is relatively easy-but is there a control group for whom/where the policy was not introduced?
 * Having $T>2$ is important for looking at common trends.
 * Do you have common entry or staggered entry?
+* Have you considered multiple outcome variables?
 
 ## Group projects
 
@@ -670,3 +707,6 @@ Some extensions not discussed in these slides in detail are
 * Angrist and Pischke, Mastering 'Metrics, Ch. 5
 * Stock and Watson, Introduction to Econometrics, Ch.13.4
 * Cunningham, The MixTape, Ch. 9
+* Baker et al. (2022)
+
+Full references in the Lecture Notes
