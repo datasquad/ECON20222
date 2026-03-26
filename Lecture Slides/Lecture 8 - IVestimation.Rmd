@@ -1,6 +1,6 @@
 ---
-title: "Difference in Difference"
-subtitle: "ECON20222 - Lecture 7"
+title: "Instrumental Variables Estimation"
+subtitle: "ECON20222 - Lecture 8"
 author: "Ralf Becker and Yidi Sun"
 date: ""
 output: 
@@ -18,9 +18,11 @@ knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE)
 
 ## Introduction and Plan
 
+
 * DiD approach to policy estimation was to make assumptions that allowed us to create a counterfactual that can be used to compare a treatment groups outcomes with
 * Instrumental variables (IV) estimation uses a different approach to make causal statements
 * Identify variation in a variable of interest that can be assumed to be exogenous
+* This is potentially usable in cross-section data with only one time period
 
 ## Endogeneity Recap
 The recurring theme throughout this unit is omitted variables bias caused by unobserved heterogeneity:
@@ -84,7 +86,7 @@ $$
 ## Intuition for Instrumental Variables
 
 * Consider the wage-education example.
-* Suppose $\Delta z=1$ leads to $\Delta x=0.2$ years increase in education. This then leads to $\Delta x=UKP 500$ more annual earnings.
+* Suppose $\Delta z=1$ leads to $\Delta x=0.2$ years increase in education. This then leads to $\Delta y=UKP 500$ more annual earnings.
 * The causal effect of $x$ on $y$ is $\Delta y / \Delta x=500 / 0.2=2,500$ pounds per year of education:
 
 $$
@@ -118,7 +120,7 @@ and $x$ is endogenous:
 In order for a variable, $z$, to serve as a valid instrument for $x$, the following must be true
 
 1. The instrument must be exogenous:  
-\begin{equation*}*
+\begin{equation*}
 \operatorname{Cov}(z, u)=0 \tag{AIV1}
 \end{equation*}
 
@@ -135,8 +137,7 @@ In order for a variable, $z$, to serve as a valid instrument for $x$, the follow
 * **AIV2** We can see whether $\operatorname{Cov}(z, x) \neq 0$ by testing $H_{0}: \pi_{1}=0$ in  
 \begin{equation*}
 x=\pi_{0}+\pi_{1} z+v \tag{3}
-\end{equation*}
-
+\end{equation*}  
 Often known as the first-stage regression.
 
 * **AIV3** We have to use common sense and/or economic theory to decide whether $z$ should be in (1)
@@ -155,8 +156,7 @@ In the wage/education example, could use (a) family background variables, eg fat
 * Apply the Covariance Operator using $z$ to (1) (the simple regression model):  
 $$
 \operatorname{Cov}(z, y)=\beta_{1} \operatorname{Cov}(z, x)+\operatorname{Cov}(z, u)
-$$
-
+$$  
 At this stage we have assumed AIV3 is true.
 
 * Now impose AIV1:  
@@ -215,7 +215,7 @@ The regression of $y$ on $z$ and a constant is the reduced form for $y$.
 $$
 \beta_{1}=\frac{\Delta y / \Delta z=\beta_{1} \pi_{1}}{\Delta x / \Delta z=\pi_{1}} .
 $$
-* Taking the reduced form (for $y$) estimator and dividing by the first stage estimator is sometimes called the Wals estimator.
+* Taking the reduced form (for $y$) estimator and dividing by the first stage estimator is sometimes called the Wald estimator.
 
 ## Inference with IV Estimation
 
