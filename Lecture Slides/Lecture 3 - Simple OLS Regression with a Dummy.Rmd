@@ -553,18 +553,18 @@ Some raw diffs
     \centering
     \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/logpay_gender.png}
 \end{figure}
-Reference: R work \texttt{Regression\_Intro\_1.pdf}
+Reference: R work \texttt{Regression\_Intro\_1.html}
+
 ## BHPS/US Example
 Some raw diffs
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/logpay_degree.png}
 \end{figure}
-Reference: R work \texttt{Regression\_Intro\_1.pdf}
+Reference: R work \texttt{Regression\_Intro\_1.html}
 
 ## BHPS/US Example
 \begin{itemize}
-    \item The R work is contained in \texttt{Regression\_Intro\_1.pdf}.
     \item In \texttt{20222\_USoc\_extract.dta}, about half of the sample (59{,}216 observations) are in paid employment. 
     Their ages vary substantially, and therefore they also differ considerably in their years of work experience, among other characteristics.
     \item When we take logs of real hourly pay and regress on a male dummy variable, we obtain an estimate of 0.183(0.0051). This says, on average earn\(0.183\) log-points more than females which converts to 20.1\%.
@@ -574,12 +574,10 @@ Reference: R work \texttt{Regression\_Intro\_1.pdf}
 \end{itemize}
 
 ## Outlook
-Next week: Lecture 4 Endogeneity
-Lecture 5: Multiple regression
+Next week: Lecture 4 Endogeneity, Lecture 5 Multiple regression
 \begin{itemize}
     \item In multiple regression, one can run both regressions simultaneously; that is, more than one right-hand-side (RHS) variable (in addition to the constant) can be included. One typically obtains similar, though not identical, estimates and standard errors.
     \item There are additional variables in \texttt{20222\_USoc\_extract.dta} relating to individuals’ ethnicity, place of residence, and the size of the firm that employs them. These are multi-category dummy variables. Multiple regression applies in this context as well, although some recoding is required beforehand.
-    \item Multiple regression is covered in Lecture~5.
     \item The differences-in-differences methodology can also be implemented using multiple regression (covered in Lecture~7).
     \item Indeed, multiple regression is the workhorse technique in almost all of microeconometrics.
 \end{itemize}

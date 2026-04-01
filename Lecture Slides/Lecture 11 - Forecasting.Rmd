@@ -1,0 +1,473 @@
+---
+title: "Forecasting"
+subtitle: "ECON20222 - Lecture 10"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE)
+```
+
+## Aim for today
+\begin{itemize}
+    \item Identify the presence of seasonal features in a time-series
+    \item Use AR models to produce single step ahead forecasts
+    \item Use AR models to produce multiple step ahead forecasts
+    \item Evaluate and compare different forecasts
+\end{itemize}
+
+## Forecast Sources
+Forecasts are either
+\begin{itemize}
+    \item totally made up
+    \item obtained from betting markets (usually for binary events), \\
+    e.g.\ \texttt{https://www.predictit.org/markets}
+    \item obtained from surveys, e.g.\ \texttt{https://www.ecb.europa.eu/stats/ecb\_surveys/survey\_of\_professional\_forecasters/html/index.en.html}
+    \item obtained from formal forecasting models
+\end{itemize}
+
+
+## Forecasting basics
+Let’s say we have a time series $y_t$, for $t = 1, \ldots, T$ where $T$ is the last available observation.
+
+The aim is to use the observations available to obtain 1 step - or more generally $h$ step ahead forecasts.
+
+\begin{equation*}
+E(y_{T+1} \mid y_T, y_{T-1}, y_{T-2}, \ldots) = E(y_{T+1} \mid I_T) = \hat{y}_{T+1 \mid T}
+\end{equation*}
+
+\begin{equation*}
+E(y_{T+h} \mid y_T, y_{T-1}, y_{T-2}, \ldots) = E(y_{T+h} \mid I_T) = \hat{y}_{T+h \mid T}
+\end{equation*}
+
+We call $I_t$ the information set.
+
+\begin{enumerate}
+    \item We use the data in the information set to estimate a model representing the process
+    \item We then use this estimated model to obtain a forecast
+\end{enumerate}
+
+## Forecasting basics
+\begin{itemize}
+    \item We may want to use information from other time-series, $x_t$, $z_t$ etc.
+    \item This opens up more complex models and the additional information may add quality to the forecast.
+    \item But if you forecast multiple steps ahead then we need forecasts for these ($x$ and $z$) to obtain forecasts for $y$.
+\end{itemize}
+
+
+
+## Forecasting basics
+When forecasting we know from the outset that our forecast is not going to hit the actual outcome and hence we should expect the forecast error
+
+\begin{equation*}
+\epsilon_{T+1 \mid T} = y_{T+1} - \hat{y}_{T+1 \mid T}
+\end{equation*}
+
+to be unequal to 0. Note that $y_{T+1}$ is the actual observation which we don’t have at time $T$.
+
+
+$\rightarrow$ interval forecasts (see below)
+
+
+## Forecasting basics - Uncertainty
+
+We should expect forecasts to be imperfect for the following reasons:
+
+\begin{itemize}
+    \item Even the best model will not capture all the random variation
+    \item Which variables are relevant for forecasting $y$?
+    \item What is the right model?
+    \item When estimating a model we will have uncertainty about the parameters.
+\end{itemize}
+
+All of these are actually quite harmless when carefully modelled, \textbf{but} significant forecast errors will arise if there are changes in the process which effect the process such that:
+
+\begin{itemize}
+    \item the overall (unconditional mean) of the process changes
+    \item the trend of a series changes
+\end{itemize}
+
+## Our working example - female unemployment rate
+
+Download: Female unemployment rate (YCPL in database LMS)
+ur_female <- read.csv("../data/YCPL.csv")
+
+## Our working example - female unemployment rate
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/F_unemployment.png}
+\end{figure}
+
+## Our working example - female unemployment rate
+Here we focus on a forecasting model which only uses the unemployment
+rate itself. In particular we look at an autoregressive (AR) forecasting
+model.
+ACF contains all the information which can be used for forecasting
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/F_unemployment_acf.png}
+\end{figure}
+
+
+## Data properties
+Recall that we want to work with series which are stationary. Clearly the unemployment rate, \texttt{urt} is not.
+
+We will therefore work with the first difference
+
+## The forecast package
+\begin{itemize}
+    \item To implement forecasting in R we will rely on the \texttt{forecast} package (remember to install and then load)
+    \item This is written by Rob Hyndman (Monash University).
+    \item The \texttt{forecast} package requires the data to be in \texttt{ts} format not the \texttt{xts} format in which they are delivered from the \texttt{pdfetch} package
+\end{itemize}
+
+ur_ts <- ts(as.numeric(ur_female),
+            start = c(1992,4), frequency = 12)
+
+\begin{itemize}
+    \item Use \texttt{?ts} to see details of the \texttt{ts} function
+\end{itemize}
+
+
+## Looking out for seasonalities
+Use a special function which recognises the frequency of 1993
+them “year-by-year” data and plots
+
+ggseasonplot(ur_ts)
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_seasonalities.png}
+\end{figure}
+No obvious seasonalities appear. But see later. 
+
+## Forecasting from AR Model
+
+In our dataset $t = 1, \ldots, T$ from April 1992 ($t = 1$) to Jan 2025 ($t = T$).  
+We want to obtain forecasts for Feb 2025 ($T+1$), Mar 2025 ($T+2$), etc.
+
+The model we want to forecast from
+\begin{equation}
+\Delta ur_t = \alpha + \beta_1 \, \Delta ur_{t-1} + \beta_2 \, \Delta ur_{t-2} + u_t
+\end{equation}
+
+\begin{enumerate}
+    \item We obtain parameter estimates by estimating this model on all available data ($I_T$) 
+    $\Rightarrow \hat{\alpha}, \hat{\beta}_1, \hat{\beta}_2$ \\
+    We also obtain the sample variance of the residuals ($s_u^2$)
+    \item Use this model for forecasting
+\end{enumerate}
+
+
+## Forecasting from AR Model - Point forecasts
+
+Recall that the information set we used to estimate the model is the set of information available to us:  
+$I_T = ur_T$, $ur_{T-1}$, $ur_{T-2}$ $\ldots$ or in differences 
+$I_T = \Delta ur_T, \Delta ur_{T-1}, \Delta ur_{T-2}, \ldots$
+
+Restate the AR model for the period for which you want to forecast
+\begin{equation*}
+\Delta ur_{T+1} = \alpha + \beta_1 \, \Delta ur_T + \beta_2 \, \Delta ur_{T-1} + u_{T+1}
+\end{equation*}
+Now form expectations conditional on $I_T$
+\begin{align}
+E[\Delta ur_{T+1} \mid I_T] 
+&= E[\alpha + \beta_1 \, \Delta ur_T + \beta_2 \, \Delta ur_{T-1} + u_{T+1} \mid I_T] \notag \\
+&= \alpha + \beta_1 \, E[\Delta ur_T \mid I_T] + \beta_2 \, E[\Delta ur_{T-1} \mid I_T]
+\end{align}
+where we recognise that
+
+\begin{equation*}
+E[u_{T+1} \mid I_T] = 0, \quad E[\alpha \mid I_T] = \alpha, \quad 
+E[\beta_1 \mid I_T] = \beta_1, \quad E[\beta_2 \mid I_T] = \beta_2
+\end{equation*}
+$E[\Delta ur_{T+1} \mid I_T]$ is a point forecast, the \textbf{one best} forecast value.
+
+## Forecasting from AR Model - Point forecasts
+The forecasting equation (2) requires two more steps before we can use it:
+
+\begin{itemize}
+    \item Replace the unknown fixed coefficients with sample estimates, eg replace $\alpha$ with $\hat{\alpha}$
+    \item Notice that: $E[\Delta ur_T \mid I_T] = \Delta ur_T$ and $E[\Delta ur_{T-1} \mid I_T] = \Delta ur_{T-1}$
+\end{itemize}
+
+\begin{equation}
+E[\Delta ur_{T+1} \mid I_T] = \hat{\alpha} + \hat{\beta}_1 \, \Delta ur_T + \hat{\beta}_2 \, \Delta ur_{T-1}
+\end{equation}
+
+After estimating the AR(2) model with information up to time $T$ we have all the information on the right-hand side.
+
+$E[\Delta ur_{T+1} \mid I_T]$ is our best estimate for the unemployment rate next period ($T+1$) made at time $T$. 
+Note that we ``lost'' the error term as we assumed $E[u_{T+1} \mid I_T] = 0$. 
+But we still recognise that in any particular period we are likely to get a non-zero $u_{T+1}$ ($\rightarrow$ Interval forecasts)
+
+## Forecasting from AR Model - Point forecasts
+
+\textbf{Multi-step ahead forecasts}
+
+Say we want to forecast a value two months ahead ($T+2$). Restate (2) for $T+2$:
+
+\begin{equation}
+E[\Delta ur_{T+2} \mid I_T] = \alpha + \beta_1 \, E[\Delta ur_{T+1} \mid I_T] + \beta_2 \, E[\Delta ur_T \mid I_T]
+\end{equation}
+
+Replace the parameters with sample estimates and check which values are already in $I_T$:
+
+\begin{equation}
+E[\Delta ur_{T+2} \mid I_T] = \hat{\alpha} + \hat{\beta}_1 \, E[\Delta ur_{T+1} \mid I_T] + \hat{\beta}_2 \, \Delta ur_T
+\end{equation}
+
+We are left with $E[\Delta ur_{T+1} \mid I_T]$, but that is of course the value of our one-step ahead forecast, and so we can substitute this value from (3).
+
+Recursively we can build up forecasts one period at a time.
+
+
+## Forecasting from AR Model - R implementation
+At the core of estimating these models in R is the Arima function.
+Arima stands for \textbf{A}uto\textbf{R}egressive \textbf{I}ntegrated \textbf{M}oving \textbf{A}verage.
+order = c(2,0,0) estimates an AR(2) model.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_AR2.png}
+\end{figure}
+
+## Forecasting from AR Model - R implementation
+Above we introduced the AR(2) model as in equation (1).
+
+\begin{equation*}
+\Delta ur_t = \alpha + \beta_1 \, \Delta ur_{t-1} + \beta_2 \, \Delta ur_{t-2} + u_t
+\end{equation*}
+
+The \texttt{Arima} function estimates a slightly different (but equivalent) version:
+
+\begin{equation*}
+(\Delta ur_t - m) = \beta_1 (\Delta ur_{t-1} - m) + \beta_2 (\Delta ur_{t-2} - m) + u_t
+\end{equation*}
+
+Note that instead of a constant we have the new term $m$. For stationary series this is the value towards which a very long-range forecast will converge (and it is basically the same as the sample mean - see \texttt{mean} in output).
+
+
+## Forecasting from AR Model - R implementation
+So far we did the equivalent to Step 1
+
+\textbf{Step 1}
+We obtain parameter estimates by estimating this model on all available data ($I_T$) 
+$\Rightarrow$ $\hat{\alpha}, \hat{\beta}_1, \hat{\beta}_2$. 
+We also obtain the sample variance of the residuals ($s_u^2$). Saved in \texttt{fit\_dur}.
+
+\textbf{Step 2} is to use this model to forecast. This is done using the \texttt{forecast} function 
+(here we forecast $h = 12$ months ahead).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_AR2step2.png}
+\end{figure}
+The object \texttt{for\_dur} now contains the forecasts (and a whole lot more)
+
+## Forecasting from AR Model - R implementation
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_forecast_dur.png}
+\end{figure}
+There isn’t a whole lot happening in the forecast. It quickly converges to $mean = -0.0098$
+
+## Forecasting from AR Model - Differences and Levels
+
+We build the model in differences $\Delta ur_t$ as the levels ($ur_t$) were not stationary.  
+But in the end we may be interested in the level of the unemployment rate.
+
+Getting a forecast for the level is fairly straightforward
+
+\begin{tabular}{lccccc}
+\hline
+Time & $t$ & $ur_t$ & $\Delta ur_t$ & $E[\Delta ur_t \mid I_T]$ & $E[ur_t \mid I_T]$ \\
+\hline
+Nov 2024 & $T-2$ & 4.3 & 0.0 &  &  \\
+Dec 2024 & $T-1$ & 4.3 & 0.1 &  &  \\
+Jan 2025 & $T$   & 4.4 & 0.0 &  &  \\
+Feb 2025 & $T+1$ &     &     & 0.0136 & 4.4136 \\
+Mar 2025 & $T+2$ &     &     & -0.0060 & 4.4076 \\
+\ldots   &       &     &     &        &        \\
+\hline
+\end{tabular}
+
+## Forecasting from AR Model - Differences and Levels
+
+The \texttt{forecast} package makes this procedure somewhat simpler.
+
+We feed into \texttt{Arima} the series we are really interested in (\texttt{ur\_ts}) and if we need to difference once then we use \texttt{order = c(2,1,0)}, where
+
+\begin{itemize}
+    \item the first entry tells R that we want an AR(2) model,
+    \item the second entry tells R that we want to difference the series once
+    \item the third entry tells R that we need an MA(0) component (not covered here)
+\end{itemize}
+
+fit_ur <- Arima(ur_ts, order = c(2,1,0))
+for_ur <- forecast(fit_ur, h = 12)
+
+The forecasts will then be calculated for \texttt{ur\_ts} directly.
+
+## Forecasting from AR Model - Differences and Levels
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_plot_arima210.png}
+\end{figure}
+
+## Forecasting from AR models - Interval forecasts
+
+We know that forecasts will not be perfect. (Just like the in-sample fit is not perfect).
+The way this is expressed is by creating interval forecasts:
+
+\begin{equation}
+P\big(lb \leq E[\Delta ur_{T+1} \mid I_T] \leq ub\big) = 1 - sig
+\end{equation}
+The smaller $sig$ the wider the interval, and the more certain $(1 - sig)$ we are that the actual value will end up in that interval.
+The 80\% and 95\% forecast intervals are shown in the previous graph.
+
+## Automatic order selection
+The \texttt{forecast} package has a function (\texttt{auto.arima}) which instructs R to find the model with the best order (according to an information criterion).
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_aos.png}
+\end{figure}
+
+
+## Automatic order selection
+The chosen model is ARIMA$(3,1,3)(2,0,0)[12]$. Without any details, this output indicates that
+
+\begin{itemize}
+    \item the procedure has found an AR(3) component
+    \item the procedure wants to difference once to achieve stationarity
+    \item the procedure has found an MA(3) component (no further details here)
+    \item the procedure has found that there is some seasonality (at the 12 month / 1 year period)
+    \item to cater for this seasonality it also included $ur_{t-12}$ and $ur_{t-24}$ to capture this seasonal dependence
+\end{itemize}
+
+
+## Automatic order selection
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_aos_arima313.png}
+\end{figure}
+
+## Forecast Evaluation
+So far we forecast for 2025 and if we wanted to evaluate how well we did we would have to wait for a year to obtain realised values.
+
+Let’s turn back time and pretend we are at the end of 2017 and want to forecast for 2018. As we have these values we can then evaluate how well the forecast model did.
+
+We create a shortened series which finishes in Dec 2017.
+
+ur_ts_17 <- window(ur_ts,end = c(2017,12))
+
+## Forecast Evaluation
+Repeat the earlier exercise.
+
+\begin{itemize}
+    \item Estimate AR(2) model and forecast 12 months ahead (Jan to Dec 2018)
+    \item Let \texttt{auto.arima} select the best model and forecast Jan to Dec 2018
+\end{itemize}
+fit_ur_17 <- Arima(ur_ts_17,order = c(2,1,0))
+for_ur_17 <- forecast(fit_ur_17, h =12)
+fit_ur_a_17 <- auto.arima(ur_ts_17)
+for_ur_a_17 <- forecast(fit_ur_a_17, h =12)
+
+## Forecast Evaluation
+Then we plot the two forecast series against the actual realisations
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_FE_plot.png}
+\end{figure}
+
+## Forecast Evaluation
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_forecastevaluation.png}
+\end{figure}
+
+## Forecast Evaluation - Numerical
+We can see that the seasonal model from \texttt{auto.arima} fits the data better. 
+It, at least anticipates that the unemployment rate continued to drop.
+
+Numerical measures of forecast accuracy compare the forecast to the observation. 
+A range of measures exist, e.g.\ the Root Mean Square Error (RMSE)
+
+\begin{equation}
+RMSE = \sqrt{\frac{1}{12} \sum_{h=1}^{12} \left( E[ur_{T+h} \mid I_T] - ur_{T+h} \right)^2}
+\end{equation}
+
+Smaller RMSE is better.
+
+## Forecast Evaluation - Numerical
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_numerical.png}
+\end{figure}
+
+
+## Forecasting failure - Covid-19
+Let’s consider data up until Jan 2020 and use the information available at that time to forecast the female unemployment rate for the 12 months after.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_failure1.png}
+\end{figure}
+
+## Forecasting failure - Covid-19
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L11_failureplot.png}
+\end{figure}
+
+## Forecasting failure - Covid-19
+
+On a previous slide we argued that minor forecast ``failures'' will be due to random variation, failure to include all relevant variables, using the wrong model and parameter uncertainty.
+
+We mentioned earlier that the key model features which will result in bad forecasts are:
+
+\begin{itemize}
+    \item the overall (unconditional mean) of the process changes
+    \item the trend of a series changes
+\end{itemize}
+
+An unforecastable event like Covid will affect both these and hence the forecast ``failure''.
+
+## Forecasting - Scenarios
+Importantly, all forecasts are \textbf{contingent} on certain assumptions.  
+Basically we need to assume that the model used is and \textbf{will stay} to be the correct model.
+
+Therefore you often get \textbf{scenarios} rather than \textbf{forecasts}.  
+For instance the Office for Budget Responsibility’s Covid-19 Scenario.
+
+The key scenario assumption in April 2020 was
+
+\begin{quote}
+\textit{This was a scenario rather than a forecast, based on the illustrative assumption that people’s movements (and thus economic activity) would be heavily restricted for three months and would get back to normal over the subsequent three months.}
+\end{quote}
+
+## Forecasting - Scenarios
+We mentioned earlier that the key model features which will result in bad forecasts are:
+
+\begin{itemize}
+    \item the overall (unconditional mean) of the process changes
+    \item the trend of a series changes
+\end{itemize}
+
+If the above assumption is inappropriate, we will see changes in these model features and significant deviations from any scenario predictions.
+
+## Summary
+
+\begin{itemize}
+    \item AR models can be used to produce forecasts (one and multiple step ahead)
+    \item Order selection is very important
+    \item But acknowledge forecast uncertainty (using intervals)
+    \item Implementation in R is very straightforward
+    \item Tend to work well for short-term forecasts as, in the short-run, it is likely that overall mean and trend remain unchanged
+\end{itemize}

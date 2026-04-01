@@ -1,0 +1,764 @@
+---
+title: "Multiple Regression"
+subtitle: "ECON20222 - Lecture 5"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Multiple Regression \(K=3\)
+Multiple (or multivariate) regression is when we have more than one RHS variable (or covariate or regressor). Consider:
+
+\begin{equation}
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + u.
+\end{equation}
+
+Assume we have a sample of data:
+\[
+\{(y_i, x_{1i}, x_{2i}) : i = 1, \dots, n\}.
+\]
+
+There are $K=3$ parameters to estimate. We need three exogeneity assumptions (moment conditions):
+
+\begin{align}
+E(u) &= 0 \quad \text{(A1)} \\
+\text{Cov}(u, x_1) &= 0 \quad \text{(A2)} \\
+\text{Cov}(u, x_2) &= 0 \quad \text{(A3)}
+\end{align}
+
+## Multiple Regression \(K\geq 3\)
+
+The model extends to $K$ covariates:
+
+\begin{equation}
+y = \beta_0 + \beta_1 x_1 + \cdots + \beta_K x_K + u.
+\end{equation}
+
+## When multiple regression fails
+Multiple regression fails when:
+
+\begin{enumerate}
+\item Any regressor has no variation:
+\[
+\hat{Var(x_{ki})} = 0.
+\]
+\item There exists an exact linear combination between the \( x_{ki} \)s:
+\[
+\lambda_1 x_{1i} + \lambda_2 x_{2i} = \lambda_0.
+\]
+\end{enumerate}
+
+This is known as \textbf{perfect multicollinearity}.
+
+Examples:
+\begin{align}
+x_{1i} &= -\lambda_2 x_{2i} \quad (\lambda_1 = 1, \lambda_0 = 0) \\
+x_{1i} + x_{2i} &= 1 \quad (\lambda_1 = \lambda_2 = \lambda_0 = 1)
+\end{align}
+
+## Firm-size and wages
+\begin{itemize}
+\item Larger firms pay higher wages than smaller firms.
+
+\item In \texttt{20222 USoc extract.dta}, there is a variable which records
+firm-size as one of K = 9 bands or bins or buckets::
+
+
+$[1,2], [3,9], [10,24], [25,49], [50,99], [100,199], $
+$[200,499], [500,999], [1000,\infty)$
+
+\item \texttt{fsize} is actually an integer-valued ordered \textbf{multi-category
+variable} that records the mid-point of each bin:
+
+\[
+1, 6, 17, 37, 75, 150, 350, 750, 1500.
+\]
+
+\end{itemize}
+
+## Firm-size and wages
+
+\begin{itemize}
+\item The Key summary statistics
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/summary.png}
+\end{figure}
+\end{itemize}
+
+
+
+## Firm-size and wages: Model
+\begin{itemize}
+\item There are two strategies: (a) non-parametric (b) parametric.
+
+\item For (a), we ``create'' $K = 9$ dummy variables:
+\end{itemize}
+
+\[
+x_{1i} =
+\begin{cases}
+1 & \text{if } 1 \le f_i^* \le 2 \\
+0 & \text{else}
+\end{cases}
+\qquad \text{or} \qquad
+x_{1i} = \mathbf{1}(1 \le f_i^* \le 2)
+\]
+
+\[
+x_{2i} =
+\begin{cases}
+1 & \text{if } 3 \le f_i^* \le 9 \\
+0 & \text{else}
+\end{cases}
+\qquad \text{or} \qquad
+x_{2i} = \mathbf{1}(3 \le f_i^* \le 9)
+\]
+
+\[
+\vdots
+\]
+\vspace{-0.5cm}
+\[
+x_{9i} =
+\begin{cases}
+1 & \text{if } f_i^* \ge 1000 \\
+0 & \text{else}
+\end{cases}
+\qquad \text{or} \qquad
+x_{9i} = \mathbf{1}(f_i^* \ge 1000)
+\]
+
+\begin{itemize}
+\item The $x_k$s are \texttt{fsize\_f1}, \texttt{fsize\_f6}, \ldots, \texttt{fsize\_f1500} in Ralf's pdf.
+
+\item $f_k$ is \texttt{mfsize9} (recoded to \texttt{fsize}).
+\end{itemize}
+
+
+## Visualising the data
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/datavisualisation.png}
+\end{figure}
+
+
+
+## Dummy Variable Trap
+
+\begin{itemize}
+
+\item The regression we wish run is written:
+\[
+\log y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i}
++ \cdots + \beta_9 x_{9i} + u_i .
+\]
+
+\item \underline{However}, the computer cannot compute OLS estimates because
+\[
+x_{1i} + x_{2i} + \cdots + x_{9i} = 1
+\quad \text{for every individual } i.
+\]
+
+This example of \textbf{perfect multi-collinearity} is also known as the
+\textbf{dummy variable trap}.
+
+\item We therefore drop a dummy, and actually choose the largest
+firm-size category:
+\begin{equation}
+\log y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_8 x_8
++ \beta_0 + u. 
+\end{equation}
+
+\end{itemize}
+
+
+## Empirical Results
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{/Users/gitrepos/images/regression1.png}
+\end{figure}
+
+
+## Interpreting the regression
+\begin{itemize}
+
+\item Repeating the $K=2$ case in Lecture 3, the $\beta$s are
+interpreted as:
+\[
+\beta_1 \equiv 
+\mathbb{E}(\log y \mid x_1 = 1)
+- 
+\mathbb{E}(\log y \mid x_9 = 1)
+\]
+\[
+\vdots
+\]
+\[
+\beta_8 \equiv 
+\mathbb{E}(\log y \mid x_8 = 1)
+-
+\mathbb{E}(\log y \mid x_9 = 1)
+\]
+
+\[
+\beta_0 \equiv 
+\mathbb{E}(\log y \mid x_9 = 1)
+\]
+
+\begin{itemize}
+\item The $\beta$s can also be written:
+\end{itemize}
+\[
+\beta_1 \equiv 
+\mathbb{E}(\log y \mid 1 \le f^* \le 2)
+-
+\mathbb{E}(\log y \mid f^* \ge 1000)
+\]
+\[
+\vdots
+\]
+\[
+\beta_8 \equiv 
+\mathbb{E}(\log y \mid 500 \le f^* \le 999)
+-
+\mathbb{E}(\log y \mid f^* \ge 1000)
+\]
+\[
+\beta_0 \equiv 
+\mathbb{E}(\log y \mid f^* \ge 1000)
+\]
+\end{itemize}
+
+## Interpreting the regression
+\begin{itemize}
+\item In words, $\beta_0$ is average log real hourly wage for the omitted or
+base category (working for a firm employing 1000+ workers).
+\item All the other $\beta_k$s are intepreted as the population raw diﬀerential
+in log real hourly wages between the firm-size category that $\beta_k$ “belongs to” and the largest firm-size category.
+\item These are estimated by the corresponding raw diﬀerentials and are
+measured in log-points.
+\end{itemize}
+
+
+## Estimating the regression
+\begin{itemize}
+
+\item The results are in Ralf's \texttt{Regression\_Multiple.html}.
+
+\item See the \underline{second} regression for the estimation of (8).
+
+\item The parameters are interpreted as above. The estimate on the
+constant is $2.615$ $(0.007)$ and is average log-pay for those working
+in the largest firm-size category (1000+).
+
+\item The estimate on \texttt{fsize\_f1} is $-0.548$ and is the raw differential
+in log real hourly wage between those in the smallest firm-size
+category (1--2) and those in the largest firm-size category (1000+).
+It is large, and converts to a differential of about $-42.2\%$.
+
+\item In both cases, exactly the same estimates can be calculated from
+the \texttt{tibble}.
+
+\end{itemize}
+
+
+## Do we really have 59k data points?
+\begin{itemize}
+
+\item Just as there were 2 population means when we have a gender
+dummy, here we have:
+\[
+\mathbb{E}(\log y \mid k = j), 
+\qquad j = 1, \ldots, 9.
+\]
+
+\item This means there are just 9 fitted values, depending on which
+firm-size category the individual belongs to.
+
+\item But there are 58,789 individual-years (datapoints).
+
+\item So one can think of regression as ``collapsing'' the data to just 9
+data-points:
+\[
+\left\{ \left( \overline{\log y_k},\, f_k \right) : 
+k = 1, \ldots, 9 \right\}.
+\]
+
+\item See the earlier \texttt{tibble}. All the regression does is
+replicate this information.
+
+\item So what is the benefit of having micro-econometric data?
+Each cell-mean $\overline{\log y_k}$ is estimated from $n_k$ obs.
+Without knowing $n_k$, inference is not possible.
+
+\end{itemize}
+
+##
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/regressionplot.png}
+\end{figure}
+
+
+## Modelling the 9 datapoints
+
+\begin{itemize}
+
+\item In the next 4 slides, we model these 9 datapoints.
+
+\item These are the red blobs. They seem to follow some non-linear
+relationship.
+
+\item What is the blue line? It is the second \textbf{parametric}
+strategy we could adopt for modelling this relationship.
+Here we choose a log--log model:
+\[
+\log y = \delta_0 + \delta_1 \log f + \text{error}.
+\]
+
+\end{itemize}
+
+## Empirical results
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/parametricresults.png}
+\end{figure}
+
+## Alternative parametric models
+
+\begin{itemize}
+
+\item One can see that log--log relationship is a reasonable fit.
+The estimate of $\hat{\delta}_1$ is $0.0896$ $(0.0014)$.
+It is an elasticity (unit-free).
+
+\item Other \textbf{parametric} models could be fitted, eg a quadratic:
+\[
+\log y = \delta_0 + \delta_1 f + \delta_2 f^2 + \text{error}.
+\]
+
+The relationship between log-pay and age is often modelled like this.
+
+\end{itemize}
+
+
+## Conclusion
+\begin{itemize}
+\item Multiple regression is the basic tool in econometrics.
+\item We have illustrated its use in just one example.
+\item Many more examples will appear later.
+\item It seems to be the case that large firms pay more than smaller
+firms. But only the raw data have been used.
+\item So we cannot interpret this relationship as causal. We could and
+should add more covariates, like age and education, but . . .
+\item OLS cannot deal the fact that individuals choose where to work,
+and know that larger firms pay more than smaller ones, ceteris
+paribus. Similarly, good firms will choose to hire workers with high innate ability (unobserved)
+and pay them more. 
+\end{itemize}
+
+
+## Controlling for observables
+\begin{itemize}
+
+\item The basic idea is that we add as many relevant variables as we can
+to a model, to mitigate/minimise \underline{some} of the effect of omitted
+variables bias (OVB). Recall Lecture 4.
+
+\item But there is often something fundamentally unobserved.
+
+\item In
+\[
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_K x_K + u
+\]
+\[
+= \beta_0 + \beta_1 x_1 + \mathbf{x}'\mathbf{b} + u
+\]
+
+$\beta_1$ is the effect of interest. All the other variables are
+\textbf{controls}.
+
+\item Notation:
+\[
+\mathbf{x}' = (x_2, \ldots, x_K)
+\qquad
+\mathbf{b}' = (\beta_2, \ldots, \beta_K).
+\]
+
+\item Often $x_1$ is a dummy $d$.
+
+\item A concrete example is at the end of this topic.
+
+\end{itemize}
+
+## Long and short regressions
+\begin{itemize}
+
+\item When estimating
+\[
+y = \beta_0 + \beta_1 d + \mathbf{x}'\mathbf{b} + u
+\]
+the conditional differential is
+\[
+\mathbb{E}(y \mid \mathbf{x}', d = 1)
+-
+\mathbb{E}(y \mid \mathbf{x}', d = 0).
+\]
+
+\item When estimating
+\[
+y = \beta_0 + \beta_1 d + u
+\]
+the unconditional differential is
+\[
+\mathbb{E}(y \mid d = 1)
+-
+\mathbb{E}(y \mid d = 0).
+\]
+
+\item But do the OLS estimates differ from each other?
+Define $\widehat{\beta}_1$ as the OLS estimate from the long regression
+and $\widetilde{\beta}_1$ as the OLS estimate from the short regression.
+
+\item When the long contains one extra regressor we already know what
+happens (almost) \ldots
+
+\end{itemize}
+
+## OVB again
+\begin{itemize}
+
+\item Compare the estimates from:
+\[
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e 
+\qquad \text{(L)}
+\]
+\[
+y = \beta_0 + \beta_1 x_1 + u,
+\qquad \text{(S)}
+\]
+
+with $\mathrm{Cov}(e, x_1) = \mathrm{Cov}(e, x_2) = \mathbb{E}(e) = 0$.
+
+\item When estimating (S), the OVB formula from Lecture 4 says:
+\[
+\mathrm{Bias}(\widetilde{\beta}_1)
+\equiv
+\mathbb{E}(\widetilde{\beta}_1) - \beta_1
+=
+\beta_2
+\frac{\mathrm{Cov}(x_2, x_1)}{\mathrm{Var}(x_1)}
+=
+\beta_2 \delta_1,
+\]
+
+where $\delta_1$ is the ``slope'' parameter:
+\[
+x_2 = \delta_0 + \delta_1 x_1 + \text{error}.
+\]
+
+\item When estimating (L), the OVB formula says the bias is zero:
+\[
+\mathrm{Bias}(\widehat{\beta}_1)
+\equiv
+\mathbb{E}(\widehat{\beta}_1) - \beta_1
+=
+0.
+\]
+
+\end{itemize}
+
+## OVB again
+\begin{itemize}
+
+\item \[
+\mathbb{E}(\widetilde{\beta}_1) - \mathbb{E}(\widehat{\beta}_1)
+= \beta_2 \delta_1.
+\]
+
+\item It turns out that this holds \underline{exactly} in the data:
+\[
+\widetilde{\beta}_1 - \widehat{\beta}_1
+=
+\widehat{\beta}_2 \widehat{\delta}_1.
+\]
+
+\item When the long regression is longer than 2 covariates
+\[
+y = \beta_0 + \beta_1 x_1 + \beta_2 x_2
++ \cdots + \beta_K x_K + e,
+\qquad \text{(L$'$)}
+\]
+
+the formula does not hold exactly, but it still works in principle.
+
+\item This formula is very, very useful.
+
+\end{itemize}
+
+## Lifetime earnings and a university degree
+
+\begin{itemize}
+
+\item Consider the model:
+\[
+y = \beta_0 + \tau d + \beta_1 a + \beta_2 a^2
++ \mathbf{x}'\mathbf{b} + u
+\]
+
+where $y$ is earnings, $d$ is a graduate dummy, and $a$ is age.
+
+\item If we assume all the RHS variables are exogenous:
+\[
+\mathbb{E}(y \mid a, \mathbf{x}', d = 1)
+=
+\beta_0 + \tau + \beta_1 a + \beta_2 a^2
++ \mathbf{x}'\mathbf{b}
+\]
+\[
+\mathbb{E}(y \mid a, \mathbf{x}', d = 0)
+=
+\beta_0 + \beta_1 a + \beta_2 a^2
++ \mathbf{x}'\mathbf{b}
+\]
+
+and so
+\[
+\tau
+=
+\mathbb{E}(y \mid a, \mathbf{x}', d = 1)
+-
+\mathbb{E}(y \mid a, \mathbf{x}', d = 0)
+\]
+
+is the so-called \textbf{conditional differential}
+(or \textbf{conditional treatment effect} if appropriate).
+
+\item Conceptually different from the \textbf{unconditional differential}
+\[
+\mathbb{E}(y \mid d = 1)
+-
+\mathbb{E}(y \mid d = 0).
+\]
+
+\end{itemize}
+
+## Two parallel CEFs
+\begin{itemize}
+
+\item Because everything comes from the same regression, everything
+nets out, especially age $a$.
+
+\item In other words, the 2 so-called \textbf{Conditional Expectation
+Functions} (CEFs) are parallel when plotted in the same picture.
+
+\item Plotting them can be pain because of the term $\mathbf{x}'\mathbf{b}$,
+after its been estimated:
+\[
+\mathbf{x}'\widehat{\mathbf{b}}
+=
+\widehat{\beta}_2 \,\overline{x}_2
++ \cdots +
+\widehat{\beta}_K \,\overline{x}_K
+\]
+
+But it only affects the constant.
+
+\item The next slide shows what happens in the BHPS/US.
+
+\item But is the slide after more realistic?
+
+\end{itemize}
+
+## 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/plot1.png}
+\end{figure}
+
+## 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/plot2.png}
+\end{figure}
+
+
+## Two non-parallel CEFs
+\begin{itemize}
+
+\item How do we make the age-relationship vary by $d$?
+Add 2 interaction terms:
+\[
+y = \beta_0 + \beta_1 a + \beta_2 a^2
++ \tau_0 d + \tau_1 da + \tau_2 da^2
++ \mathbf{x}'\mathbf{b} + u.
+\]
+
+\item Rewriting the CEFs:
+\[
+\mathbb{E}(y \mid a, \mathbf{x}', d = 1)
+=
+\beta_0 + \beta_1 a + \beta_2 a^2
++ \tau_0 + \tau_1 a + \tau_2 a^2
++ \mathbf{x}'\mathbf{b}
+\]
+\[
+\mathbb{E}(y \mid a, \mathbf{x}', d = 0)
+=
+\beta_0 + \beta_1 a + \beta_2 a^2
++ \mathbf{x}'\mathbf{b}
+\]
+
+and so
+\[
+\mathbb{E}(y \mid a, \mathbf{x}', d = 1)
+-
+\mathbb{E}(y \mid a, \mathbf{x}', d = 0)
+=
+\tau_0 + \tau_1 a + \tau_2 a^2.
+\]
+
+\item This can be computed at any age.
+The IFS do this at $a = 29$.
+
+\item For a Lifetime Earnings measure:
+\[
+\int_{a=18}^{65}
+(\tau_0 + \tau_1 a + \tau_2 a^2)\, da
+=
+\left[
+\tau_0 a
++ \frac{\tau_1}{2} a^2
++ \frac{\tau_2}{3} a^3
+\right]_{18}^{65}.
+\]
+
+\end{itemize}
+
+## 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/images/table1.png}
+\end{figure}
+
+
+## Walker and Zhu
+
+\begin{itemize}
+\item "Differences by degree: Evidence of the net financial rates of
+return to undergraduate study for England and Wales"
+\item WZ extend the framework as follows.
+First write our non-parallel models as:
+\[
+\log y
+=
+(\beta_0 + \tau_0)
++
+(\beta_1 + \tau_1)a
++
+(\beta_2 + \tau_2)a^2
++
+\mathbf{x}'\mathbf{b}
++
+u
+\qquad \text{if } d = 1
+\]
+
+\[
+\log y
+=
+\beta_0 + \beta_1 a + \beta_2 a^2
++
+\mathbf{x}'\mathbf{b}
++
+u
+\qquad \text{if } d = 0
+\]
+\item Instead of 2 categories, we could have $Q$:
+\[
+\log y_q
+=
+\beta_0^q
++
+\beta_1^q a_q
++
+\beta_2^q a_q^2
++
+\sum_j \lambda^{jq} D_q^j
++
+\mathbf{x}_q'\mathbf{b}^q
++
+u_q,
+\qquad q = 1, \ldots, Q
+\]
+\item Instead of looking at graduate ($d=1$) and else ($d=0$),
+WZ condition on those eligible to go to university and split these by $q$:
+\begin{itemize}
+\item STEM, LEM, COMB, OSSAH; first class, upper second, below upper second, degree class missing.
+\end{itemize}
+
+\end{itemize}
+
+## Walker and Zhu
+\begin{itemize}
+
+\item This is WZ's Equation (2), except ours is a population model
+whereas there's is a sample model (data are indexed by $i$).
+
+\item The $D^j$'s are dummies for `qualification' category/level:
+doctoral, master, PGCE, \ldots, first degree, 2+ A-levels.
+
+\item Hence the $\lambda^{jq}$'s are:
+\[
+\lambda^{jq}
+=
+\mathbb{E}(\log y \mid \mathbf{x}', \text{qual} = j)
+-
+\mathbb{E}(\log y \mid \mathbf{x}', \text{qual} = 0)
+\qquad
+\text{for } q = 1, \ldots, Q
+\]
+
+\item WZ use the Labour Force Survey (LFS), whereas the above is from
+BHPS/US. Why?: much better info on degree.
+
+\item The LFS is a rolling panel (each $i$ observed 5 quarters then exit).
+BHPS/US is `proper' panel.
+
+\item WZ split by gender throughout (absolutely standard) whereas my
+results above are for males.
+
+\end{itemize}
+
+## Walker and Zhu
+\begin{itemize}
+\item WZ model the real hourly wage rate, logged, whereas I model
+real annual pay, unlogged. WZ also worry about lifetime earnings,
+NPVs, IRRs.
+\item WZ write down their model in terms of years of labour market
+experience (the latent variable) but proxy it by age.
+This raises issues relating to measurement error biases.
+I model age from the outset.
+\item There are lots of tables of descriptives (xtabs), figures,
+and regressions. This is because their analysis is multi-dimensional,
+relating to:
+\begin{itemize}
+\item educational attainment/level
+\item degree classification
+\item degree subject
+\item gender
+\item age/experience
+\end{itemize}
+
+\end{itemize}
+

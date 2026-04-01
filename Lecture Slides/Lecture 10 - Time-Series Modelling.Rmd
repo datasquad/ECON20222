@@ -1,0 +1,567 @@
+---
+title: "Time-Series Modelling"
+subtitle: "ECON20222 - Lecture 10"
+author: "Ralf Becker and Yidi Sun"
+date: ""
+output: 
+  beamer_presentation:
+    includes:
+     in_header: ../latex_template.tex 
+     #in_header: ../latex_student.tex  # use for student version
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning = FALSE)
+```
+
+## Aim for today
+\begin{itemize}
+    \item Understand the basic features of time-series data
+    \item Understand autocorrelation
+    \item Understand the difference between stationary and non-stationary data and the different consequences of dealing with these
+    \item Understand how to build dynamic models that can be used for forecasting
+\end{itemize}
+
+## Purpose of time-series modelling (TS modelling)
+There are typically three things econometricians want to achieve with time-series modelling
+
+\begin{enumerate}
+    \item \textbf{Establishing causal relationships} between time-series. \\
+    This is very difficult and in general causal relationships are more difficult to establish with TS modelling. It is not impossible but getting convincing exogenous variation is difficult.
+    \item Understanding the \textbf{dynamics in relationships between variables}. \\
+    Questions like, ``If the Central Bank changes the base rate, how long will it take for this to carry through to mortgage rates?'' This is perfectly possible as long as we don’t make strong causal statements (the CB may change base rates because mortgage rates are very low!!!).
+    \item \textbf{Forecasting one or several time series}. \\
+    This is possibly the most common purpose of TS modelling. We will focus on this.
+\end{enumerate}
+
+
+## Import some data into R
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/realGDP_data.png}
+\end{figure}
+\texttt{pdfetch} functions allow you to directly tap a number of large data
+depositories:
+\begin{itemize}
+\item Bundesbank
+\item Office for National Statistics (ONS)
+\item Eurostats
+\item FRED, etc
+\end{itemize}
+
+## An example
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/UK_realGDP_old.png}
+\end{figure}
+
+
+## An example
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/UK_realGDP_recent.png}
+\end{figure}
+
+## The autocorrelation function (ACF)
+Recall the correlation coefficient between two random variables $z_i$ and $p_i$ for two cross-sectional variables (index $i$):
+
+\[
+\mathrm{Corr}(z_i, p_i) = \frac{\mathrm{Cov}(z_i, p_i)}{\mathrm{sd}(z_i)\,\mathrm{sd}(p_i)}
+\]
+
+\begin{itemize}
+    \item a measure that expresses the strength of relationship between $z_i$ and $p_i$
+    \item it takes values in the interval $[-1,1]$
+\end{itemize}
+
+
+## The autocorrelation function (ACF)
+Consider the $y_t = rGDP_t$ time series
+
+\begin{itemize}
+    \item we now use the subscript $t$
+    \item the subscript goes from $t = 1, \ldots, T$ where $T$ indicates how many observations we have
+    \item here observations are quarterly (but other series can have other frequencies: e.g.\ annual, monthly, weekly, daily, hourly, etc.)
+    \item here observations are from Q1 1955 to Q4 2023 (276 observations)
+\end{itemize}
+
+The ACF expresses how observations are correlated to observations 1, 2, 3 or $k$ observations prior.
+
+How can you calculate a correlation of a series with itself?
+
+## The autocorrelation function (ACF)
+Let’s consider the time series $y_t$ and the series one period prior, $y_{t-1}$. We also call $y_{t-1}$ a one period lag of $y_t$.
+
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Observation & $y_t$ & $y_{t-1}$ \\
+\hline
+1   & $y_{1955Q1}$ & NA \\
+2   & $y_{1955Q2}$ & $y_{1955Q1}$ \\
+3   & $y_{1955Q3}$ & $y_{1955Q2}$ \\
+4   & $y_{1955Q4}$ & $y_{1955Q3}$ \\
+$\vdots$ & $\vdots$ & $\vdots$ \\
+275 & $y_{2023Q3}$ & $y_{2023Q2}$ \\
+276 & $y_{2023Q4}$ & $y_{2023Q3}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Now we have ``two'' series for which we can calculate a correlation coefficient. We call this the first order autocorrelation coefficient $\rho_1$.
+
+An ACF is a collection of autocorrelation coefficients calculated for longer lags $k$, $\rho_k$.
+
+## The autocorrelation function (ACF)
+In R this ACF is easily calculated using the acf function.
+
+temp_acf <- acf(rGDP)
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/acf_rgdp.png}
+\end{figure}
+
+## The autocorrelation function (ACF)
+\begin{itemize}
+    \item The GDP series is strongly upward trending for most of the time
+    \item this is common for many macroeconomic series
+    \item this results in an ACF which has large $\rho_k$ for fairly large values of $k$ ($\rho_8 = 0.914$)
+    \item we call this a persistent series
+\end{itemize}
+
+
+## Two further examples
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/employment_inflation.png}
+\end{figure}
+
+These are data at a monthly frequency.
+
+## The ACF
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/acf_employment_inflation.png}
+\end{figure}
+
+
+## The ACF
+\begin{itemize}
+    \item the ACF shows that the unemployment rate is also very persistent and the ACF only slowly converges to 0. $\Rightarrow$ a series can be persistent without time trend
+    \item The inflation rate is not persistent and the autocorrelation quickly drops towards 0.
+    \item But there are peaks of autocorrelation at frequencies 6 and 12 indicating some seasonal variation.
+\end{itemize}
+
+The ACF tells us something about how informative today’s observation is for that in 1, 2, 3 or $k$ periods ahead.
+
+\begin{itemize}
+    \item If the ACF decays quickly to 0 then today’s info is not very valuable for forecasting long into the future
+    \item If the ACF decays slowly then today’s info is valuable for future observations
+\end{itemize}
+
+## Sationary and Nonstationary Series
+The ACF expresses how persistent a series is.
+
+\begin{itemize}
+    \item A series that is extremely persistent is called a \textbf{nonstationary} series.
+    \item A series that is not very persistent is called a \textbf{stationary} series.
+\end{itemize}
+
+Here: rGDP and unemployment rate are nonstationary. Inflation rate is stationary.
+
+\begin{itemize}
+    \item In general, series with a time-trend are nonstationary
+    \item Some series without a time trend are also nonstationary (e.g.\ female unemployment rate)
+    \item \textbf{BUT} there is a huge grey area in between.
+\end{itemize}
+
+Formal statistical tests exist (e.g.\ Augmented Dickey-Fuller test) to decide (but they can be contradictory) and are not dealt with here. Here we eye-ball the series and look at how slowly the ACF converges to 0.
+
+
+## Transformations
+An important time-series transformation we consider is that of differencing a series.
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+Observation & $y_t$ & $y_{t-1}$ & $\Delta y_t$ \\
+\hline
+2 & $y_{1955Q2}$ & $y_{1955Q1}$ & $y_{1955Q2} - y_{1955Q1} = \Delta y_{1955Q2}$ \\
+3 & $y_{1955Q3}$ & $y_{1955Q2}$ & $y_{1955Q3} - y_{1955Q2} = \Delta y_{1955Q3}$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Often we are actually much more interested in the difference of a series rather than the level. GDP is a case in point, the growth rate is what we are really interested in!
+The GDP growth rate can be approximated for small growth rates by (assuming that $y_t$ is the GDP series)
+\begin{equation}
+gGDP_t = \frac{y_t - y_{t-1}}{y_{t-1}}
+\end{equation}
+or
+\begin{equation}
+gGDP_t = \ln(y_t) - \ln(y_{t-1})
+\end{equation}
+
+## ACF of differenced series
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/acf_differenced series.png}
+\end{figure}
+Figure 1: TS and ACF plots for growth in GDP and unemployment rate, ONS
+
+Differencing can turn nonstationary series into a stationary series.
+
+
+## A simple regression
+\textbf{Cross-Section Data}
+
+\begin{equation}
+y_t = \alpha + \beta x_t + u_t
+\end{equation}
+
+\begin{align}
+E(u) &= 0 \\
+E(u \mid x) &= 0
+\end{align}
+
+this implied that $x_t$ was exogenous.
+
+\textbf{Time-Series Data}
+
+\begin{equation}
+ur_t = \alpha + \beta \, rGDP_t + u_t
+\end{equation}
+
+## A simple regression
+let’s look at the end of the data table
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_datatable.png}
+\end{figure}
+
+## A simple regression
+let’s look at the end of the data table
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_slr.png}
+\end{figure}
+
+## A simple regression - residual autocorrelation
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_res-autocorr.png}
+\end{figure}
+
+## A simple regression - testing for residual autocorrelation
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_bgtest.png}
+\end{figure}
+
+
+## A simple regression - HAC standard errors
+When we estimate a regression which has autocorrelated error terms we need to apply a different formula to calculate standard errors for coefficients in a regression model (autoregressive heteroscedasticity consistent - HAC).
+
+\begin{itemize}
+    \item They are called Newey-West standard errors.
+    \item They are implemented in \texttt{stargazer\_HAC.r}.
+    \item This will not change the coefficient estimates.
+    \item Will change the standard errors to the coefficients and hence inference (which will be incorrect if you don’t use them).
+    \item If you have time-series data, in doubt, use Newey-West standard errors.
+    \item But crucial problems remain (see next slides).
+\end{itemize}
+
+In this example the standard errors only change marginally and hence are not shown here.
+
+## Spurious Regression
+We will explore what can happen if we run a regression involving nonstationary variables.
+
+Let’s get some datasets from EUROSTAT.
+
+\begin{itemize}
+    \item \% of agricultural area Total fully converted and under conversion to organic farming in Germany [\texttt{Org}]
+    \item Thousands of passengers travelling to and from Norway by boat [\texttt{Pass}]
+    \item \% of population with tertiary education in Italy [\texttt{Tert}]
+    \item Primary Energy Consumption, Million tons of oil equivalent, in Poland [\texttt{Ene}]
+\end{itemize}
+
+
+## A set of time-series
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/timeseries_1.png}
+\end{figure}
+
+## A set of time-series
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/timeseries_2.png}
+\end{figure}
+
+
+## Spurious Regression - An example
+\begin{equation}
+ Ene_t = \alpha + \gamma \, Org_t + u_t
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/spurious_eg.png}
+\end{figure}
+
+## Spurious Regression
+All possible combinations of simple regressions between the four variables.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/spurious_results.png}
+\end{figure}
+
+## (Unmasking of a) Spurious Regression
+One way how you can unmask the spuriousness, if both series are trending is to include a time trend
+
+
+mod_sr2 <- lm(Ene.Cons.PO ~ Organic.Farming.GE + index(data_sr),
+              data = data_sr)
+
+
+or estimate a model in the differences of variables rather than the levels
+
+
+mod_sr3 <- lm(diff(Ene.Cons.PO) ~ diff(Organic.Farming.GE),
+              data = data_sr)
+              
+## (Unmasking of a) Spurious Regression
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{/Users/gitrepos/ECON20222/images/unmask.png}
+\end{figure}
+
+## Spurious Regression - A summary
+If you estimate a regression between two nonstationary series:
+
+\begin{itemize}
+    \item Do not mistake very significant coefficients or large $R^2$ values for evidence of a substantial link between two series
+    \item when regressing nonstationary series (in particular but not only when the series have a time-trend) will very likely deliver a spurious correlation \textbf{beyond} the common time trend
+    \item When series are nonstationary but don’t have a time-trend then you should consider estimating a regression in differences (recall differencing can turn nonstationary series into stationary ones)
+\end{itemize}
+
+For all these reasons, when considering time-series data, we need to \textbf{use stationary data. If not estimated coefficients will be, in general, neither unbiased nor consistent} and cannot be interpreted.
+
+## A simple regression - but better
+From the discussion on spurious regressions we have learned that estimating a model in differences can protect you against spurious regressions.
+
+\begin{equation}
+\Delta ur_t = \alpha + \beta \, \Delta rGDP_t + u_t
+\end{equation}
+
+where we use growth rates (or log differences)
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_sl.png}
+\end{figure}
+
+## A simple regression - but better
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_sl_results.png}
+\end{figure}
+
+## A simple regression - but better
+Let's have a look at the residuals
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/L10_residuals.png}
+\end{figure}
+
+## A simple regression - but better
+\begin{itemize}
+    \item We can see that, at lag 2, there is a small amount of autocorrelation in the residuals.
+    \item Breusch--Godfrey test: p-value of 0.0097
+    \item What is the consequence? As residuals are stationary, HAC standard errors will deal with inference issues
+\end{itemize}
+
+
+## Adding dynamic effects
+
+In the model we estimated:
+
+\begin{equation}
+\Delta ur_t = \alpha + \beta \, \Delta rGDP_t + u_t
+\end{equation}
+
+all the action happened in one time period $(t)$.
+
+We need to consider that effects in the economy may take some time.  
+This fact will motivate two major generalisations.
+
+\begin{itemize}
+    \item Include lags of the explanatory variable
+    \item Include lags of the dependent variable
+\end{itemize}
+
+\vspace{0.5em}
+
+\begin{align}
+\Delta ur_t &= \alpha_0 + \alpha_1 \Delta ur_{t-1} + \alpha_2 \Delta ur_{t-2} + \dots + \alpha_p \Delta ur_{t-p} \notag \\
+&\quad + \beta_0 \, \Delta rGDP_t + \beta_1 \, \Delta rGDP_{t-1} + \dots + \beta_k \, \Delta rGDP_{t-k} + u_t
+\notag
+\end{align}
+
+## Autoregressive Distributed Lag (ADL) models
+mod5 <- lm(d_lur ~ lag(d_lur,1) + lag(d_lur,2) +
+           d_lgdp + lag(d_lgdp,1) + lag(d_lgdp,2),
+           data = reg_data)
+           
+Here we use the \texttt{lag(series, k)} function which calculates the $k$ period lag of \texttt{series}.          
+
+
+## Autoregressive Distributed Lag (ADL) models
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{/Users/gitrepos/ECON20222/images/ADL_results.png}
+\end{figure}
+
+## Forecasting models
+
+Are the above models useful forecasting models?
+
+
+\begin{align*}
+\Delta ur_t &= \alpha_0 + \alpha_1 \Delta ur_{t-1} + \alpha_2 \Delta ur_{t-2} + \dots + \alpha_p \Delta ur_{t-p} \notag\\
+&\quad + \beta_0 \, \Delta rGDP_t + \beta_1 \, \Delta rGDP_{t-1} + \dots + \beta_k \, \Delta rGDP_{t-k} + u_t
+\notag
+\end{align*}
+
+\begin{itemize}
+    \item Say you estimated the above models using data up to Q3 2018.
+    \item Hence you have estimated coefficients
+    \item Could you use it to forecast the value in Q4 2018?
+\end{itemize}
+
+No, if we want to forecast $\Delta ur_{2018Q4}$ we would need $\Delta rGDP_{2018Q4}$! 
+But we don’t have that. We would first need a forecast for $\Delta rGDP_{2018Q4}$ 
+to then forecast $\Delta ur_{2018Q4}$. We call these conditional forecasts.
+
+## Forecasting models
+To build a useful forecasting model we remove all contemporaneous terms from the right hand side, such that we can produce forecasts for period $t$ only having information at time (say) $t-1$.
+
+We remove the $\beta_0 \, \Delta rGDP_t$ term from our model:
+
+mod6 <- lm(d_lur ~ lag(d_lur,1) + lag(d_lur,2) +
+           lag(d_lgdp,1) + lag(d_lgdp,2), data = reg_data)
+
+## Forecasting models
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/forecasting_results.png}
+\end{figure}
+
+
+## Autoregressive models
+\begin{itemize}
+    \item We are interested in forecasting the unemployment rate changes, $\Delta ur_t$, but we still need observations for $rGDP_{t-1}$ and further lags.
+    \item Realistically there may be other series we may want to consider: e.g.\ interest rate, inflation, wages, etc.
+    \item Can we forecast $\Delta ur_t$ with nothing else but the history of $\Delta ur_t$?
+\end{itemize}
+
+\textbf{Yes}, we call these \textbf{autoregressive (AR) models}
+
+\vspace{0.5em}
+
+\begin{equation*}
+\Delta ur_t = \alpha_0 + \alpha_1 \Delta ur_{t-1} + \alpha_2 \Delta ur_{t-2} + \dots + \alpha_p \Delta ur_{t-p} + u_t
+\end{equation*}
+
+We "merely" need to chose the lag length $p$!
+
+## Autoregressive models
+For starters we use $p= 2$ as above.
+
+mod7 <- lm(d_lur~lag(d_lur,1)+lag(d_lur,2),data = reg_data)
+
+## Autoregressive models
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{/Users/gitrepos/ECON20222/images/ar_results.png}
+\end{figure}
+
+
+## Lag Length - Information Criterion
+
+\vspace{1em}
+
+The last piece in the puzzle is how we determine the best lag length
+
+\begin{itemize}
+    \item Every additional lag will improve the in-sample fit of your model \\
+    $\Rightarrow$ Should we include as many lags as possible?
+    \item Will ``over-fit'' the model (to features in the data which are not generic but specific to the in-sample period) \\
+    $\Rightarrow$ Tends to make the forecasts more erratic/volatile.
+\end{itemize}
+
+This trade-off needs to be optimised. $\Rightarrow$ \textbf{Information Criteria}
+
+
+## Lag Length - Information Criterion
+ Trade-off between too many variables in model (bad) v in-sample fit (good). Information criteria quantify this trade-off.
+
+One example \textbf{Akaike Information Criterion (AIC)}
+
+In R:
+
+Where
+\begin{itemize}
+    \item \texttt{mod6} and \texttt{mod6\_4} are the ADL models with 2 and 4 lags respectively
+    \item \texttt{mod7} and \texttt{mod7\_4} are the AR models with 2 and 4 lags respectively
+\end{itemize}
+
+## Lag Length - Information Criterion
+\begin{table}[ht]
+\centering
+\caption{AIC for ADL and AR with 2 and 4 lags}
+
+\begin{tabular}{lcc}
+\hline\hline
+Model & N. of para & AIC \\
+\hline
+ADL (2 lags) & 6  & 674.3955 \\
+AR (2 lags)  & 4  & 691.5328 \\
+ADL (4 lags) & 10 & 669.0942 \\
+AR (4 lags)  & 6  & 682.9785 \\
+\hline\hline
+\end{tabular}
+
+\vspace{0.5em}
+
+\begin{tabular}{ll}
+\textit{Note:} & Number of parameters includes \\
+              & linear parameters and residual variance
+\end{tabular}
+
+\end{table}
+
+\vspace{0.5em}
+
+The optimal model (as per the trade off in the AIC criterion) is the model with the \textbf{lowest AIC}.
+
+\vspace{0.5em}
+
+Here ADL(4).
+
+
+## Summary 
+We learned that
+\begin{itemize}
+    \item the ACF encapsulates how persistent a time-series is
+    \item Time-series which are very persistent are called nonstationary
+    \item Using nonstationary series in simple regressions can lead to very misleading (spurious) results
+    \item Estimating models with either a time-trend or in differences can protect you against misleading results
+    \item To build forecasting models we need to ensure that we use explanatory variables which are available at the time of forecasting
+    \item AR models can be a convenient tool for forecasting
+    \item Information criteria can help us to select the right model for forecasting
+\end{itemize}
